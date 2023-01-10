@@ -5,6 +5,7 @@ theme: "PaperMod"
 paginate: 5
 
 params:
+  env: production
   defaultTheme: auto
   label:
     text: "Home"
