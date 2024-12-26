@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Stream-Cipher on Ash's blog</title><link>https://ashutosh1206.github.io/tags/stream-cipher/</link><description>Recent content in Stream-Cipher on Ash's blog</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Tue, 22 Nov 2016 00:00:00 +0000</lastBuildDate><atom:link href="https://ashutosh1206.github.io/tags/stream-cipher/index.xml" rel="self" type="application/rss+xml"/><item><title>Salad - RC3 CTF 2016</title><link>https://ashutosh1206.github.io/ctf/rc3-16-salad/</link><pubDate>Tue, 22 Nov 2016 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/rc3-16-salad/</guid><description>&lt;p>&lt;strong>Challenge Points&lt;/strong>: 100&lt;br>
+&lt;strong>Challenge Description&lt;/strong>:&lt;/p>
+&lt;blockquote>
+&lt;p>“The fault, dear Brutus, is not in our stars, but in ourselves.”&lt;br>
+(I.ii.141) Julius Caesar in William Shakespeare’s Julius Caesar&lt;/p>
+&lt;p>&lt;strong>Ciphertext&lt;/strong>: 7sj-ighm-742q3w4t&lt;/p>
+&lt;/blockquote>
+&lt;p>Since every flag in the CTF had to start with &amp;ldquo;RC3-2016&amp;rdquo;, we know partial plaintext value.&lt;/p>
+&lt;p>This led me to find a relation between the letters and the digits using the first 7 characters of the ciphertext and &amp;ldquo;RC3-2016&amp;rdquo;. The pattern that I could figure out was this:&lt;/p></description></item></channel></rss>
