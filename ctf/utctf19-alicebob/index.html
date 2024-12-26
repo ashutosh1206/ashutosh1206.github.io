@@ -1,78 +1,433 @@
-<!doctype html><html lang=en dir=auto><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>Alice sent Bob a meme - UTCTF | Ashutosh Ahelleya</title><meta name=keywords content="ECDLP,Pohlig-Hellman"><meta name=description content="Challenge Points:
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Alice sent Bob a meme - UTCTF | Ash&#39;s blog</title>
+<meta name="keywords" content="ECDLP, Pohlig-Hellman">
+<meta name="description" content="Challenge Points:
 Challenge Description:
 Eve is an Apple Employee who has access to the iMessage KeyStore (because there is nothing stopping them). They know Alice and Bob use iMessage instead of Signal, therefore they decrypted their messages and see that Alice has sent Bob a meme. Eve suspects more is going on. Can you confirm their suspicions?
 tl;dr
-Extract data from given images using binwalk Tranform given diophantine equation into a cubic curve and retrieve EC parameters Solve ECDLP given in extracted data using Pohlig Hellman Algorithm Preliminary Analysis We are given three images: meme."><meta name=author content="Ashutosh Ahelleya"><link rel=canonical href=https://ashutosh1206.github.io/ctf/utctf19-alicebob/><link crossorigin=anonymous href=/assets/css/stylesheet.bccfefac377bc340f06c260aed1bddf49a4354816d7c570d6aac75a997986c95.css integrity="sha256-vM/vrDd7w0DwbCYK7Rvd9JpDVIFtfFcNaqx1qZeYbJU=" rel="preload stylesheet" as=style><script defer crossorigin=anonymous src=/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG+9vmJ0cTS+ovo0FeA=" onload=hljs.initHighlightingOnLoad()></script>
-<link rel=icon href=https://ashutosh1206.github.io/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://ashutosh1206.github.io/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://ashutosh1206.github.io/favicon-32x32.png><link rel=apple-touch-icon href=https://ashutosh1206.github.io/apple-touch-icon.png><link rel=mask-icon href=https://ashutosh1206.github.io/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--hljs-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css integrity=sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0 crossorigin=anonymous><script defer src=https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js integrity=sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4 crossorigin=anonymous></script>
-<script defer src=https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js integrity=sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05 crossorigin=anonymous onload=renderMathInElement(document.body)></script><meta property="og:title" content="Alice sent Bob a meme - UTCTF"><meta property="og:description" content="Challenge Points:
+Extract data from given images using binwalk Tranform given diophantine equation into a cubic curve and retrieve EC parameters Solve ECDLP given in extracted data using Pohlig Hellman Algorithm Preliminary Analysis We are given three images: meme.">
+<meta name="author" content="Ashutosh Ahelleya">
+<link rel="canonical" href="https://ashutosh1206.github.io/ctf/utctf19-alicebob/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.bccfefac377bc340f06c260aed1bddf49a4354816d7c570d6aac75a997986c95.css" integrity="sha256-vM/vrDd7w0DwbCYK7Rvd9JpDVIFtfFcNaqx1qZeYbJU=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://ashutosh1206.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://ashutosh1206.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://ashutosh1206.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://ashutosh1206.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://ashutosh1206.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+<meta property="og:title" content="Alice sent Bob a meme - UTCTF" />
+<meta property="og:description" content="Challenge Points:
 Challenge Description:
 Eve is an Apple Employee who has access to the iMessage KeyStore (because there is nothing stopping them). They know Alice and Bob use iMessage instead of Signal, therefore they decrypted their messages and see that Alice has sent Bob a meme. Eve suspects more is going on. Can you confirm their suspicions?
 tl;dr
-Extract data from given images using binwalk Tranform given diophantine equation into a cubic curve and retrieve EC parameters Solve ECDLP given in extracted data using Pohlig Hellman Algorithm Preliminary Analysis We are given three images: meme."><meta property="og:type" content="article"><meta property="og:url" content="https://ashutosh1206.github.io/ctf/utctf19-alicebob/"><meta property="article:section" content="ctf"><meta property="article:published_time" content="2019-03-12T00:00:00+00:00"><meta property="article:modified_time" content="2019-03-12T00:00:00+00:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="Alice sent Bob a meme - UTCTF"><meta name=twitter:description content="Challenge Points:
+Extract data from given images using binwalk Tranform given diophantine equation into a cubic curve and retrieve EC parameters Solve ECDLP given in extracted data using Pohlig Hellman Algorithm Preliminary Analysis We are given three images: meme." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://ashutosh1206.github.io/ctf/utctf19-alicebob/" /><meta property="article:section" content="ctf" />
+<meta property="article:published_time" content="2019-03-12T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-03-12T00:00:00+00:00" /><meta property="og:site_name" content="Ash&#39;s blog" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Alice sent Bob a meme - UTCTF"/>
+<meta name="twitter:description" content="Challenge Points:
 Challenge Description:
 Eve is an Apple Employee who has access to the iMessage KeyStore (because there is nothing stopping them). They know Alice and Bob use iMessage instead of Signal, therefore they decrypted their messages and see that Alice has sent Bob a meme. Eve suspects more is going on. Can you confirm their suspicions?
 tl;dr
-Extract data from given images using binwalk Tranform given diophantine equation into a cubic curve and retrieve EC parameters Solve ECDLP given in extracted data using Pohlig Hellman Algorithm Preliminary Analysis We are given three images: meme."><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Ctfs","item":"https://ashutosh1206.github.io/ctf/"},{"@type":"ListItem","position":2,"name":"Alice sent Bob a meme - UTCTF","item":"https://ashutosh1206.github.io/ctf/utctf19-alicebob/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"Alice sent Bob a meme - UTCTF","name":"Alice sent Bob a meme - UTCTF","description":"Challenge Points:\nChallenge Description:\nEve is an Apple Employee who has access to the iMessage KeyStore (because there is nothing stopping them). They know Alice and Bob use iMessage instead of Signal, therefore they decrypted their messages and see that Alice has sent Bob a meme. Eve suspects more is going on. Can you confirm their suspicions?\ntl;dr\nExtract data from given images using binwalk Tranform given diophantine equation into a cubic curve and retrieve EC parameters Solve ECDLP given in extracted data using Pohlig Hellman Algorithm Preliminary Analysis We are given three images: meme.","keywords":["ECDLP","Pohlig-Hellman"],"articleBody":"Challenge Points:\nChallenge Description:\nEve is an Apple Employee who has access to the iMessage KeyStore (because there is nothing stopping them). They know Alice and Bob use iMessage instead of Signal, therefore they decrypted their messages and see that Alice has sent Bob a meme. Eve suspects more is going on. Can you confirm their suspicions?\ntl;dr\nExtract data from given images using binwalk Tranform given diophantine equation into a cubic curve and retrieve EC parameters Solve ECDLP given in extracted data using Pohlig Hellman Algorithm Preliminary Analysis We are given three images: meme.png, screenshot.jpg and bobresponse.jpg It basically contains a conversation between Alice and Bob in which they are sharing two images with each other - meme.png and bobresponse.png.\nTransforming it into mathematical equation, we get the following: $$ \\frac{a}{b+c} + \\frac{b}{a+c} + \\frac{c}{a+b} = N = 13 $$\nAfter attempting this problem on paper, we came to a conclusion that the problem given in this image is not simple as it looks like.\nHence we tried searching solutions for this online and found this paper: http://ami.ektf.hu/uploads/papers/finalpdf/AMI_43_from29to41.pdf\nExtracting data from PNG files Next, we binwalk given images - meme.png and bobresponse.png to see for any files hidden inside the images:\nHmm, looks like some challenge based on ECDLP. Okay, but how is it related to the diophantine equation we discussed in the above section?\nGetting Elliptic Curve parameters We find after reading this paper that homogenization of \\(\\frac{a}{b+c} + \\frac{b}{a+c} + \\frac{c}{a+b} = N = 13 \\) is a cubic curve:\n$$ y^2 = x^3 + (4*N^2 + 12*N - 3)*x^2 + 32*(N+3)*x $$ $$ y^2 = x^3 + (4N^2 + 12N - 3)x^2 + 32(N+3)x $$\nFor our challenge, N = 13. Hence,\n$$ y^2 = x^3 + 829x^2 + 512x$$\nIn our challenge, we also have one extra value in the file alice.txt extracted from meme.png: M. This made us guess (probably?) that M is the modulus of the given curve.\nWe get the following curve: $$ y^2 \\equiv x^3 + 829x^2 + 512x \\mod M $$\nLet us move to solving the ECDLP!\nSolving ECDLP: PH Algorithm P = (88610873236405736097813831550942828314268128800347374801890968111325912062058, 76792255969188554519144464321650537182337412449605253325780015124365585152539)\nWe also have value of $ Q = x*P $, where * is scalar multiplication of a point P with k on an Elliptic Curve.\nQ = (27543889954945113502256551007964501073506795938025836235838339960818915950890, 75922969573987021583641685217441284832467954055295272505357185824478295962572)\nWe also know one property about secret key x:\nx \u003c 84442469965344\nWe first checked if order of the base point P is factorisable, by using the following code:\nfrom sage.all import * M = 108453893951105886914206677306984937223705600011149354906282902016584483568647 a = 829 b = 512 E = EllipticCurve(GF(M), [0, a, 0, b, 0]) P = E((88610873236405736097813831550942828314268128800347374801890968111325912062058, 76792255969188554519144464321650537182337412449605253325780015124365585152539)) Q = E((27543889954945113502256551007964501073506795938025836235838339960818915950890, 75922969573987021583641685217441284832467954055295272505357185824478295962572)) _P_order = P.order() print factor(_P_order) We observe that order of the base point P is factorisable, making it favourable to Pohlig Hellman Algorithm:\n[2^5 * 3^2 * 617 * 1031 * 460919 * 1284352459083875752760636625085191848403737033002118694776855821]\nP also happens to be the generator of the curve, since order of subgroup generated by P is equal to cardinality of the curve E\nE.cardinality() == _P_order Pohlig Hellman for solving ECDLP Effectively reduce the time for DLP by solving DLP over factors of order of the base point of an Elliptic Curve!\n$$ \\_P\\_order = p_1^{k_1}*p_2^{k_2}*p_3^{k_3}*…*p_n^{k_n} $$\n$$ Q = x*P $$\nSince, order of P is _P_order, value of Q will repeat after every _P_order values.\nSimilarly,\n$$ Q*(\\_P\\_order/p_1^{k_1}) = x*(\\_P\\_order/p_1^{k_1})*P $$ becomes discrete logarithm problem over mod p1k1. Hence, if p1k1 is small, we can easily solve DLP over mod p1k1.\nThis can be generalised for all the factors p1k1, p2k2, …, pnkm to get:\n\\( x\\equiv a_1 \\mod p_1^{k_1} \\)\n\\( x\\equiv a_2 \\mod p_2^{k_2} \\)\n\\( x\\equiv a_3 \\mod p_3^{k_3} \\)\n\\( … \\)\n\\( x\\equiv a_n \\mod p_n^{k_m} \\)\nNow, we can apply CRT to get: $$ x\\mod p_1^{k_1}*p_2^{k_2}*p_3^{k_3}*…*p_n^{k_m} $$ $$ x\\mod \\_P\\_order $$\nApplying Pohlig Hellman algorithm to our challenge As one can see, one of the factors of order of P is too large to be solved within a reasonable amount of time. Here’s where the upper limit of secret value of x comes into place. We only need to solve DLP for factors such that their product is just greater than or equal to upper limit of x.\nWe implemented this in python/sage to get the secret key:\nfrom sage.all import * M = 108453893951105886914206677306984937223705600011149354906282902016584483568647 a = 829 b = 512 E = EllipticCurve(GF(M), [0, a, 0, b, 0]) P = E((88610873236405736097813831550942828314268128800347374801890968111325912062058, 76792255969188554519144464321650537182337412449605253325780015124365585152539)) Q = E((27543889954945113502256551007964501073506795938025836235838339960818915950890, 75922969573987021583641685217441284832467954055295272505357185824478295962572)) _cardinality = 108453893951105886914206677306984937224124703598890507204412378872931154667424 _P_order = 108453893951105886914206677306984937224124703598890507204412378872931154667424 _Q_order = 36151297983701962304735559102328312408041567866296835734804126290977051555808 print factor(_P_order) print factor(_Q_order) _order_factors = [32, 9, 617, 1031, 460919, 1284352459083875752760636625085191848403737033002118694776855821] assert reduce(lambda a, b: a*b, _order_factors) == _P_order list1 = [] for i in [9, 32, 617, 1031, 460919]: print \"Index: \", i Pi = (_P_order//i)*P print \"Pi: \", Pi print Pi.order() Qi = (_P_order//i)*Q print \"Qi: \", Qi print Qi.order() if is_prime(i): ans = discrete_log_rho(Qi, Pi, ord=i, operation='+') else: ans = Pi.discrete_log(Qi) assert ans*Pi == Qi print ans list1.append(ans) res = crt(list1, [9, 32, 617, 1031, 460919]) print res x = 1213123123131\nReferences An unusual cubic representation problem ","wordCount":"844","inLanguage":"en","datePublished":"2019-03-12T00:00:00Z","dateModified":"2019-03-12T00:00:00Z","author":{"@type":"Person","name":"Ashutosh Ahelleya"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://ashutosh1206.github.io/ctf/utctf19-alicebob/"},"publisher":{"@type":"Organization","name":"Ashutosh Ahelleya","logo":{"@type":"ImageObject","url":"https://ashutosh1206.github.io/favicon.ico"}}}</script></head><body id=top><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://ashutosh1206.github.io/ accesskey=h title="Home (Alt + H)">Home</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)"><svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg><svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://ashutosh1206.github.io/blog/ title=Blog><span>Blog</span></a></li><li><a href=https://ashutosh1206.github.io/archive/ title=Archive><span>Archive</span></a></li><li><a href=https://ashutosh1206.github.io/ctf/ title=CTF><span>CTF</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class=post-title>Alice sent Bob a meme - UTCTF</h1><div class=post-meta><span title='2019-03-12 00:00:00 +0000 UTC'>March 12, 2019</span>&nbsp;·&nbsp;Ashutosh Ahelleya</div></header><div class=post-content><p><strong>Challenge Points</strong>:<br><strong>Challenge Description</strong>:</p><blockquote><p>Eve is an Apple Employee who has access to the iMessage KeyStore (because there is nothing stopping them). They know Alice and Bob use iMessage instead of Signal, therefore they decrypted their messages and see that Alice has sent Bob a meme. Eve suspects more is going on. Can you confirm their suspicions?</p></blockquote><p>tl;dr</p><ol><li>Extract data from given images using binwalk</li><li>Tranform given diophantine equation into a cubic curve and retrieve EC parameters</li><li>Solve ECDLP given in extracted data using Pohlig Hellman Algorithm</li></ol><h2 id=preliminary-analysis>Preliminary Analysis<a hidden class=anchor aria-hidden=true href=#preliminary-analysis>#</a></h2><p>We are given three images: <strong>meme.png</strong>, <strong>screenshot.jpg</strong> and <strong>bobresponse.jpg</strong></p><p>It basically contains a conversation between Alice and Bob in which they are sharing two images with each other - <code>meme.png</code> and <code>bobresponse.png</code>.</p><p>Transforming it into mathematical equation, we get the following:
-$$ \frac{a}{b+c} + \frac{b}{a+c} + \frac{c}{a+b} = N = 13 $$</p><p>After attempting this problem on paper, we came to a conclusion that the problem given in this image is not simple as it looks like.</p><p>Hence we tried searching solutions for this online and found this paper:
-<a href=http://ami.ektf.hu/uploads/papers/finalpdf/AMI_43_from29to41.pdf>http://ami.ektf.hu/uploads/papers/finalpdf/AMI_43_from29to41.pdf</a></p><h2 id=extracting-data-from-png-files>Extracting data from PNG files<a hidden class=anchor aria-hidden=true href=#extracting-data-from-png-files>#</a></h2><p>Next, we binwalk given images - <code>meme.png</code> and <code>bobresponse.png</code> to see for any files hidden inside the images:</p><p><img loading=lazy src=/utctf19-alicebob-3.png alt=picture></p><p><img loading=lazy src=/utctf19-alicebob-4.png alt=picture></p><p>Hmm, looks like some challenge based on ECDLP. Okay, but how is it related to the diophantine equation we discussed in the above section?</p><h2 id=getting-elliptic-curve-parameters>Getting Elliptic Curve parameters<a hidden class=anchor aria-hidden=true href=#getting-elliptic-curve-parameters>#</a></h2><p>We find after reading <a href=http://ami.ektf.hu/uploads/papers/finalpdf/AMI_43_from29to41.pdf>this paper</a> that homogenization of \(\frac{a}{b+c} + \frac{b}{a+c} + \frac{c}{a+b} = N = 13 \) is a cubic curve:</p><p>$$ y^2 = x^3 + (4*N^2 + 12*N - 3)*x^2 + 32*(N+3)*x $$
-$$ y^2 = x^3 + (4N^2 + 12N - 3)x^2 + 32(N+3)x $$</p><p>For our challenge, N = 13. Hence,<br>$$ y^2 = x^3 + 829x^2 + 512x$$</p><p>In our challenge, we also have one extra value in the file <code>alice.txt</code> extracted from <code>meme.png</code>: <code>M</code>. This made us guess (probably?) that <code>M</code> is the modulus of the given curve.</p><p>We get the following curve:
-$$ y^2 \equiv x^3 + 829x^2 + 512x \mod M $$</p><p>Let us move to solving the ECDLP!</p><h2 id=solving-ecdlp-ph-algorithm>Solving ECDLP: PH Algorithm<a hidden class=anchor aria-hidden=true href=#solving-ecdlp-ph-algorithm>#</a></h2><blockquote><p>P = (88610873236405736097813831550942828314268128800347374801890968111325912062058, 76792255969188554519144464321650537182337412449605253325780015124365585152539)</p></blockquote><p>We also have value of $ Q = x*P $, where <code>*</code> is scalar multiplication of a point <code>P</code> with <code>k</code> on an Elliptic Curve.</p><blockquote><p>Q = (27543889954945113502256551007964501073506795938025836235838339960818915950890, 75922969573987021583641685217441284832467954055295272505357185824478295962572)</p></blockquote><p>We also know one property about secret key <code>x</code>:<br>x &lt; 84442469965344</p><p>We first checked if order of the base point <code>P</code> is factorisable, by using the following code:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>from</span> sage.all <span style=color:#f92672>import</span> <span style=color:#f92672>*</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>M <span style=color:#f92672>=</span> <span style=color:#ae81ff>108453893951105886914206677306984937223705600011149354906282902016584483568647</span>
-</span></span><span style=display:flex><span>a <span style=color:#f92672>=</span> <span style=color:#ae81ff>829</span>
-</span></span><span style=display:flex><span>b <span style=color:#f92672>=</span> <span style=color:#ae81ff>512</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>E <span style=color:#f92672>=</span> EllipticCurve(GF(M), [<span style=color:#ae81ff>0</span>, a, <span style=color:#ae81ff>0</span>, b, <span style=color:#ae81ff>0</span>])
-</span></span><span style=display:flex><span>P <span style=color:#f92672>=</span> E((<span style=color:#ae81ff>88610873236405736097813831550942828314268128800347374801890968111325912062058</span>, <span style=color:#ae81ff>76792255969188554519144464321650537182337412449605253325780015124365585152539</span>))
-</span></span><span style=display:flex><span>Q <span style=color:#f92672>=</span> E((<span style=color:#ae81ff>27543889954945113502256551007964501073506795938025836235838339960818915950890</span>, <span style=color:#ae81ff>75922969573987021583641685217441284832467954055295272505357185824478295962572</span>))
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>_P_order <span style=color:#f92672>=</span> P<span style=color:#f92672>.</span>order()
-</span></span><span style=display:flex><span>print factor(_P_order)
-</span></span></code></pre></div><p>We observe that order of the base point <code>P</code> is factorisable, making it favourable to Pohlig Hellman Algorithm:<br><strong>[2^5 * 3^2 * 617 * 1031 * 460919 * 1284352459083875752760636625085191848403737033002118694776855821]</strong></p><p><code>P</code> also happens to be the generator of the curve, since order of subgroup generated by <code>P</code> is equal to
-cardinality of the curve <code>E</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>E<span style=color:#f92672>.</span>cardinality() <span style=color:#f92672>==</span> _P_order
-</span></span></code></pre></div><h3 id=pohlig-hellman-for-solving-ecdlp>Pohlig Hellman for solving ECDLP<a hidden class=anchor aria-hidden=true href=#pohlig-hellman-for-solving-ecdlp>#</a></h3><p>Effectively reduce the time for DLP by solving DLP over factors of order of the base point of an Elliptic Curve!<br>$$ \_P\_order = p_1^{k_1}*p_2^{k_2}*p_3^{k_3}*&mldr;*p_n^{k_n} $$</p><p>$$ Q = x*P $$<br>Since, order of <code>P</code> is <code>_P_order</code>, value of <code>Q</code> will repeat after every <code>_P_order</code> values.</p><p>Similarly,<br>$$ Q*(\_P\_order/p_1^{k_1}) = x*(\_P\_order/p_1^{k_1})*P $$
-becomes discrete logarithm problem over mod p1k1. Hence, if p1k1 is small, we can easily solve DLP over
-mod p1k1.</p><p>This can be generalised for all the factors p1k1, p2k2, &mldr;, pnkm to get:<br>\( x\equiv a_1 \mod p_1^{k_1} \)<br>\( x\equiv a_2 \mod p_2^{k_2} \)<br>\( x\equiv a_3 \mod p_3^{k_3} \)<br>\( &mldr; \)<br>\( x\equiv a_n \mod p_n^{k_m} \)</p><p>Now, we can apply CRT to get:
-$$ x\mod p_1^{k_1}*p_2^{k_2}*p_3^{k_3}*&mldr;*p_n^{k_m} $$
-$$ x\mod \_P\_order $$</p><h3 id=applying-pohlig-hellman-algorithm-to-our-challenge>Applying Pohlig Hellman algorithm to our challenge<a hidden class=anchor aria-hidden=true href=#applying-pohlig-hellman-algorithm-to-our-challenge>#</a></h3><p>As one can see, one of the factors of order of <code>P</code> is too large to be solved within a reasonable amount of time.
-Here&rsquo;s where the upper limit of secret value of <code>x</code> comes into place. We only need to solve DLP for factors such that their product is just greater than or equal to upper limit of <code>x</code>.</p><p>We implemented this in python/sage to get the secret key:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>from</span> sage.all <span style=color:#f92672>import</span> <span style=color:#f92672>*</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>M <span style=color:#f92672>=</span> <span style=color:#ae81ff>108453893951105886914206677306984937223705600011149354906282902016584483568647</span>
-</span></span><span style=display:flex><span>a <span style=color:#f92672>=</span> <span style=color:#ae81ff>829</span>
-</span></span><span style=display:flex><span>b <span style=color:#f92672>=</span> <span style=color:#ae81ff>512</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>E <span style=color:#f92672>=</span> EllipticCurve(GF(M), [<span style=color:#ae81ff>0</span>, a, <span style=color:#ae81ff>0</span>, b, <span style=color:#ae81ff>0</span>])
-</span></span><span style=display:flex><span>P <span style=color:#f92672>=</span> E((<span style=color:#ae81ff>88610873236405736097813831550942828314268128800347374801890968111325912062058</span>, <span style=color:#ae81ff>76792255969188554519144464321650537182337412449605253325780015124365585152539</span>))
-</span></span><span style=display:flex><span>Q <span style=color:#f92672>=</span> E((<span style=color:#ae81ff>27543889954945113502256551007964501073506795938025836235838339960818915950890</span>, <span style=color:#ae81ff>75922969573987021583641685217441284832467954055295272505357185824478295962572</span>))
-</span></span><span style=display:flex><span>_cardinality <span style=color:#f92672>=</span> <span style=color:#ae81ff>108453893951105886914206677306984937224124703598890507204412378872931154667424</span>
-</span></span><span style=display:flex><span>_P_order <span style=color:#f92672>=</span> <span style=color:#ae81ff>108453893951105886914206677306984937224124703598890507204412378872931154667424</span>
-</span></span><span style=display:flex><span>_Q_order <span style=color:#f92672>=</span> <span style=color:#ae81ff>36151297983701962304735559102328312408041567866296835734804126290977051555808</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>print factor(_P_order)
-</span></span><span style=display:flex><span>print factor(_Q_order)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>_order_factors <span style=color:#f92672>=</span> [<span style=color:#ae81ff>32</span>, <span style=color:#ae81ff>9</span>, <span style=color:#ae81ff>617</span>, <span style=color:#ae81ff>1031</span>, <span style=color:#ae81ff>460919</span>, <span style=color:#ae81ff>1284352459083875752760636625085191848403737033002118694776855821</span>]
-</span></span><span style=display:flex><span><span style=color:#66d9ef>assert</span> reduce(<span style=color:#66d9ef>lambda</span> a, b: a<span style=color:#f92672>*</span>b, _order_factors) <span style=color:#f92672>==</span> _P_order
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>list1 <span style=color:#f92672>=</span> []
-</span></span><span style=display:flex><span><span style=color:#66d9ef>for</span> i <span style=color:#f92672>in</span> [<span style=color:#ae81ff>9</span>, <span style=color:#ae81ff>32</span>, <span style=color:#ae81ff>617</span>, <span style=color:#ae81ff>1031</span>, <span style=color:#ae81ff>460919</span>]:
-</span></span><span style=display:flex><span>    print <span style=color:#e6db74>&#34;Index: &#34;</span>, i
-</span></span><span style=display:flex><span>    Pi <span style=color:#f92672>=</span> (_P_order<span style=color:#f92672>//</span>i)<span style=color:#f92672>*</span>P
-</span></span><span style=display:flex><span>    print <span style=color:#e6db74>&#34;Pi: &#34;</span>, Pi
-</span></span><span style=display:flex><span>    print Pi<span style=color:#f92672>.</span>order()
-</span></span><span style=display:flex><span>    Qi <span style=color:#f92672>=</span> (_P_order<span style=color:#f92672>//</span>i)<span style=color:#f92672>*</span>Q
-</span></span><span style=display:flex><span>    print <span style=color:#e6db74>&#34;Qi: &#34;</span>, Qi
-</span></span><span style=display:flex><span>    print Qi<span style=color:#f92672>.</span>order()
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> is_prime(i):
-</span></span><span style=display:flex><span>        ans <span style=color:#f92672>=</span> discrete_log_rho(Qi, Pi, ord<span style=color:#f92672>=</span>i, operation<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;+&#39;</span>)
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>else</span>:
-</span></span><span style=display:flex><span>        ans <span style=color:#f92672>=</span> Pi<span style=color:#f92672>.</span>discrete_log(Qi)
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>assert</span> ans<span style=color:#f92672>*</span>Pi <span style=color:#f92672>==</span> Qi
-</span></span><span style=display:flex><span>    print ans
-</span></span><span style=display:flex><span>    list1<span style=color:#f92672>.</span>append(ans)
-</span></span><span style=display:flex><span>res <span style=color:#f92672>=</span> crt(list1, [<span style=color:#ae81ff>9</span>, <span style=color:#ae81ff>32</span>, <span style=color:#ae81ff>617</span>, <span style=color:#ae81ff>1031</span>, <span style=color:#ae81ff>460919</span>])
-</span></span><span style=display:flex><span>print res
-</span></span></code></pre></div><p><strong>x = 1213123123131</strong></p><h2 id=references>References<a hidden class=anchor aria-hidden=true href=#references>#</a></h2><ol><li><a href=http://ami.ektf.hu/uploads/papers/finalpdf/AMI_43_from29to41.pdf>An unusual cubic representation problem</a></li></ol></div><footer class=post-footer><ul class=post-tags><li><a href=https://ashutosh1206.github.io/tags/ecdlp/>ECDLP</a></li><li><a href=https://ashutosh1206.github.io/tags/pohlig-hellman/>Pohlig-Hellman</a></li></ul></footer></article></main><footer class=footer><span>&copy; 2023 <a href=https://ashutosh1206.github.io/>Ashutosh Ahelleya</a></span>
-<span>Powered by
-<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
-        <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg></a><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script></body></html>
+Extract data from given images using binwalk Tranform given diophantine equation into a cubic curve and retrieve EC parameters Solve ECDLP given in extracted data using Pohlig Hellman Algorithm Preliminary Analysis We are given three images: meme."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Ctfs",
+      "item": "https://ashutosh1206.github.io/ctf/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Alice sent Bob a meme - UTCTF",
+      "item": "https://ashutosh1206.github.io/ctf/utctf19-alicebob/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Alice sent Bob a meme - UTCTF",
+  "name": "Alice sent Bob a meme - UTCTF",
+  "description": "Challenge Points:\nChallenge Description:\nEve is an Apple Employee who has access to the iMessage KeyStore (because there is nothing stopping them). They know Alice and Bob use iMessage instead of Signal, therefore they decrypted their messages and see that Alice has sent Bob a meme. Eve suspects more is going on. Can you confirm their suspicions?\ntl;dr\nExtract data from given images using binwalk Tranform given diophantine equation into a cubic curve and retrieve EC parameters Solve ECDLP given in extracted data using Pohlig Hellman Algorithm Preliminary Analysis We are given three images: meme.",
+  "keywords": [
+    "ECDLP", "Pohlig-Hellman"
+  ],
+  "articleBody": "Challenge Points:\nChallenge Description:\nEve is an Apple Employee who has access to the iMessage KeyStore (because there is nothing stopping them). They know Alice and Bob use iMessage instead of Signal, therefore they decrypted their messages and see that Alice has sent Bob a meme. Eve suspects more is going on. Can you confirm their suspicions?\ntl;dr\nExtract data from given images using binwalk Tranform given diophantine equation into a cubic curve and retrieve EC parameters Solve ECDLP given in extracted data using Pohlig Hellman Algorithm Preliminary Analysis We are given three images: meme.png, screenshot.jpg and bobresponse.jpg It basically contains a conversation between Alice and Bob in which they are sharing two images with each other - meme.png and bobresponse.png.\nTransforming it into mathematical equation, we get the following: $$ \\frac{a}{b+c} + \\frac{b}{a+c} + \\frac{c}{a+b} = N = 13 $$\nAfter attempting this problem on paper, we came to a conclusion that the problem given in this image is not simple as it looks like.\nHence we tried searching solutions for this online and found this paper: http://ami.ektf.hu/uploads/papers/finalpdf/AMI_43_from29to41.pdf\nExtracting data from PNG files Next, we binwalk given images - meme.png and bobresponse.png to see for any files hidden inside the images:\nHmm, looks like some challenge based on ECDLP. Okay, but how is it related to the diophantine equation we discussed in the above section?\nGetting Elliptic Curve parameters We find after reading this paper that homogenization of \\(\\frac{a}{b+c} + \\frac{b}{a+c} + \\frac{c}{a+b} = N = 13 \\) is a cubic curve:\n$$ y^2 = x^3 + (4*N^2 + 12*N - 3)*x^2 + 32*(N+3)*x $$ $$ y^2 = x^3 + (4N^2 + 12N - 3)x^2 + 32(N+3)x $$\nFor our challenge, N = 13. Hence,\n$$ y^2 = x^3 + 829x^2 + 512x$$\nIn our challenge, we also have one extra value in the file alice.txt extracted from meme.png: M. This made us guess (probably?) that M is the modulus of the given curve.\nWe get the following curve: $$ y^2 \\equiv x^3 + 829x^2 + 512x \\mod M $$\nLet us move to solving the ECDLP!\nSolving ECDLP: PH Algorithm P = (88610873236405736097813831550942828314268128800347374801890968111325912062058, 76792255969188554519144464321650537182337412449605253325780015124365585152539)\nWe also have value of $ Q = x*P $, where * is scalar multiplication of a point P with k on an Elliptic Curve.\nQ = (27543889954945113502256551007964501073506795938025836235838339960818915950890, 75922969573987021583641685217441284832467954055295272505357185824478295962572)\nWe also know one property about secret key x:\nx \u003c 84442469965344\nWe first checked if order of the base point P is factorisable, by using the following code:\nfrom sage.all import * M = 108453893951105886914206677306984937223705600011149354906282902016584483568647 a = 829 b = 512 E = EllipticCurve(GF(M), [0, a, 0, b, 0]) P = E((88610873236405736097813831550942828314268128800347374801890968111325912062058, 76792255969188554519144464321650537182337412449605253325780015124365585152539)) Q = E((27543889954945113502256551007964501073506795938025836235838339960818915950890, 75922969573987021583641685217441284832467954055295272505357185824478295962572)) _P_order = P.order() print factor(_P_order) We observe that order of the base point P is factorisable, making it favourable to Pohlig Hellman Algorithm:\n[2^5 * 3^2 * 617 * 1031 * 460919 * 1284352459083875752760636625085191848403737033002118694776855821]\nP also happens to be the generator of the curve, since order of subgroup generated by P is equal to cardinality of the curve E\nE.cardinality() == _P_order Pohlig Hellman for solving ECDLP Effectively reduce the time for DLP by solving DLP over factors of order of the base point of an Elliptic Curve!\n$$ \\_P\\_order = p_1^{k_1}*p_2^{k_2}*p_3^{k_3}*…*p_n^{k_n} $$\n$$ Q = x*P $$\nSince, order of P is _P_order, value of Q will repeat after every _P_order values.\nSimilarly,\n$$ Q*(\\_P\\_order/p_1^{k_1}) = x*(\\_P\\_order/p_1^{k_1})*P $$ becomes discrete logarithm problem over mod p1k1. Hence, if p1k1 is small, we can easily solve DLP over mod p1k1.\nThis can be generalised for all the factors p1k1, p2k2, …, pnkm to get:\n\\( x\\equiv a_1 \\mod p_1^{k_1} \\)\n\\( x\\equiv a_2 \\mod p_2^{k_2} \\)\n\\( x\\equiv a_3 \\mod p_3^{k_3} \\)\n\\( … \\)\n\\( x\\equiv a_n \\mod p_n^{k_m} \\)\nNow, we can apply CRT to get: $$ x\\mod p_1^{k_1}*p_2^{k_2}*p_3^{k_3}*…*p_n^{k_m} $$ $$ x\\mod \\_P\\_order $$\nApplying Pohlig Hellman algorithm to our challenge As one can see, one of the factors of order of P is too large to be solved within a reasonable amount of time. Here’s where the upper limit of secret value of x comes into place. We only need to solve DLP for factors such that their product is just greater than or equal to upper limit of x.\nWe implemented this in python/sage to get the secret key:\nfrom sage.all import * M = 108453893951105886914206677306984937223705600011149354906282902016584483568647 a = 829 b = 512 E = EllipticCurve(GF(M), [0, a, 0, b, 0]) P = E((88610873236405736097813831550942828314268128800347374801890968111325912062058, 76792255969188554519144464321650537182337412449605253325780015124365585152539)) Q = E((27543889954945113502256551007964501073506795938025836235838339960818915950890, 75922969573987021583641685217441284832467954055295272505357185824478295962572)) _cardinality = 108453893951105886914206677306984937224124703598890507204412378872931154667424 _P_order = 108453893951105886914206677306984937224124703598890507204412378872931154667424 _Q_order = 36151297983701962304735559102328312408041567866296835734804126290977051555808 print factor(_P_order) print factor(_Q_order) _order_factors = [32, 9, 617, 1031, 460919, 1284352459083875752760636625085191848403737033002118694776855821] assert reduce(lambda a, b: a*b, _order_factors) == _P_order list1 = [] for i in [9, 32, 617, 1031, 460919]: print \"Index: \", i Pi = (_P_order//i)*P print \"Pi: \", Pi print Pi.order() Qi = (_P_order//i)*Q print \"Qi: \", Qi print Qi.order() if is_prime(i): ans = discrete_log_rho(Qi, Pi, ord=i, operation='+') else: ans = Pi.discrete_log(Qi) assert ans*Pi == Qi print ans list1.append(ans) res = crt(list1, [9, 32, 617, 1031, 460919]) print res x = 1213123123131\nReferences An unusual cubic representation problem ",
+  "wordCount" : "844",
+  "inLanguage": "en",
+  "datePublished": "2019-03-12T00:00:00Z",
+  "dateModified": "2019-03-12T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Ashutosh Ahelleya"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://ashutosh1206.github.io/ctf/utctf19-alicebob/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Ash's blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://ashutosh1206.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://ashutosh1206.github.io/" accesskey="h" title="Home (Alt + H)">Home</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://ashutosh1206.github.io/blog/" title="Blog">
+                    <span>Blog</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ashutosh1206.github.io/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ashutosh1206.github.io/archive/" title="Archive">
+                    <span>Archive</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ashutosh1206.github.io/ctf/" title="CTF">
+                    <span>CTF</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title">
+      Alice sent Bob a meme - UTCTF
+    </h1>
+    <div class="post-meta"><span title='2019-03-12 00:00:00 +0000 UTC'>March 12, 2019</span>&nbsp;·&nbsp;Ashutosh Ahelleya
+
+</div>
+  </header> 
+  <div class="post-content"><p><strong>Challenge Points</strong>:<br>
+<strong>Challenge Description</strong>:</p>
+<blockquote>
+<p>Eve is an Apple Employee who has access to the iMessage KeyStore (because there is nothing stopping them). They know Alice and Bob use iMessage instead of Signal, therefore they decrypted their messages and see that Alice has sent Bob a meme. Eve suspects more is going on. Can you confirm their suspicions?</p>
+</blockquote>
+<p>tl;dr</p>
+<ol>
+<li>Extract data from given images using binwalk</li>
+<li>Tranform given diophantine equation into a cubic curve and retrieve EC parameters</li>
+<li>Solve ECDLP given in extracted data using Pohlig Hellman Algorithm</li>
+</ol>
+<h2 id="preliminary-analysis">Preliminary Analysis<a hidden class="anchor" aria-hidden="true" href="#preliminary-analysis">#</a></h2>
+<p>We are given three images: <strong>meme.png</strong>, <strong>screenshot.jpg</strong> and <strong>bobresponse.jpg</strong>
+<!-- raw HTML omitted --></p>
+<p>It basically contains a conversation between Alice and Bob in which they are sharing two images with each other - <code>meme.png</code> and <code>bobresponse.png</code>.</p>
+<!-- raw HTML omitted -->
+<p>Transforming it into mathematical equation, we get the following:
+$$ \frac{a}{b+c} + \frac{b}{a+c} + \frac{c}{a+b} = N = 13 $$</p>
+<p>After attempting this problem on paper, we came to a conclusion that the problem given in this image is not simple as it looks like.</p>
+<p>Hence we tried searching solutions for this online and found this paper:
+<a href="http://ami.ektf.hu/uploads/papers/finalpdf/AMI_43_from29to41.pdf">http://ami.ektf.hu/uploads/papers/finalpdf/AMI_43_from29to41.pdf</a></p>
+<h2 id="extracting-data-from-png-files">Extracting data from PNG files<a hidden class="anchor" aria-hidden="true" href="#extracting-data-from-png-files">#</a></h2>
+<p>Next, we binwalk given images - <code>meme.png</code> and <code>bobresponse.png</code> to see for any files hidden inside the images:</p>
+<p><img loading="lazy" src="/utctf19-alicebob-3.png" alt="picture"  />
+</p>
+<p><img loading="lazy" src="/utctf19-alicebob-4.png" alt="picture"  />
+</p>
+<p>Hmm, looks like some challenge based on ECDLP. Okay, but how is it related to the diophantine equation we discussed in the above section?</p>
+<h2 id="getting-elliptic-curve-parameters">Getting Elliptic Curve parameters<a hidden class="anchor" aria-hidden="true" href="#getting-elliptic-curve-parameters">#</a></h2>
+<p>We find after reading <a href="http://ami.ektf.hu/uploads/papers/finalpdf/AMI_43_from29to41.pdf">this paper</a> that homogenization of \(\frac{a}{b+c} + \frac{b}{a+c} + \frac{c}{a+b} = N = 13 \) is a cubic curve:</p>
+<p>$$ y^2 = x^3 + (4*N^2 + 12*N - 3)*x^2 + 32*(N+3)*x $$
+$$ y^2 = x^3 + (4N^2 + 12N - 3)x^2 + 32(N+3)x $$</p>
+<p>For our challenge, N = 13. Hence,<br>
+$$ y^2 = x^3 + 829x^2 + 512x$$</p>
+<p>In our challenge, we also have one extra value in the file <code>alice.txt</code> extracted from <code>meme.png</code>: <code>M</code>. This made us guess (probably?) that <code>M</code> is the modulus of the given curve.</p>
+<p>We get the following curve:
+$$ y^2 \equiv x^3 + 829x^2 + 512x \mod M $$</p>
+<p>Let us move to solving the ECDLP!</p>
+<h2 id="solving-ecdlp-ph-algorithm">Solving ECDLP: PH Algorithm<a hidden class="anchor" aria-hidden="true" href="#solving-ecdlp-ph-algorithm">#</a></h2>
+<blockquote>
+<p>P = (88610873236405736097813831550942828314268128800347374801890968111325912062058, 76792255969188554519144464321650537182337412449605253325780015124365585152539)</p>
+</blockquote>
+<p>We also have value of $ Q = x*P $, where <code>*</code> is scalar multiplication of a point <code>P</code> with <code>k</code> on an Elliptic Curve.</p>
+<blockquote>
+<p>Q = (27543889954945113502256551007964501073506795938025836235838339960818915950890, 75922969573987021583641685217441284832467954055295272505357185824478295962572)</p>
+</blockquote>
+<p>We also know one property about secret key <code>x</code>:<br>
+x &lt; 84442469965344</p>
+<p>We first checked if order of the base point <code>P</code> is factorisable, by using the following code:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> sage.all <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>M <span style="color:#f92672">=</span> <span style="color:#ae81ff">108453893951105886914206677306984937223705600011149354906282902016584483568647</span>
+</span></span><span style="display:flex;"><span>a <span style="color:#f92672">=</span> <span style="color:#ae81ff">829</span>
+</span></span><span style="display:flex;"><span>b <span style="color:#f92672">=</span> <span style="color:#ae81ff">512</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>E <span style="color:#f92672">=</span> EllipticCurve(GF(M), [<span style="color:#ae81ff">0</span>, a, <span style="color:#ae81ff">0</span>, b, <span style="color:#ae81ff">0</span>])
+</span></span><span style="display:flex;"><span>P <span style="color:#f92672">=</span> E((<span style="color:#ae81ff">88610873236405736097813831550942828314268128800347374801890968111325912062058</span>, <span style="color:#ae81ff">76792255969188554519144464321650537182337412449605253325780015124365585152539</span>))
+</span></span><span style="display:flex;"><span>Q <span style="color:#f92672">=</span> E((<span style="color:#ae81ff">27543889954945113502256551007964501073506795938025836235838339960818915950890</span>, <span style="color:#ae81ff">75922969573987021583641685217441284832467954055295272505357185824478295962572</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>_P_order <span style="color:#f92672">=</span> P<span style="color:#f92672">.</span>order()
+</span></span><span style="display:flex;"><span>print factor(_P_order)
+</span></span></code></pre></div><p>We observe that order of the base point <code>P</code> is factorisable, making it favourable to Pohlig Hellman Algorithm:<br>
+<strong>[2^5 * 3^2 * 617 * 1031 * 460919 * 1284352459083875752760636625085191848403737033002118694776855821]</strong></p>
+<p><code>P</code> also happens to be the generator of the curve, since order of subgroup generated by <code>P</code> is equal to
+cardinality of the curve <code>E</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>E<span style="color:#f92672">.</span>cardinality() <span style="color:#f92672">==</span> _P_order
+</span></span></code></pre></div><h3 id="pohlig-hellman-for-solving-ecdlp">Pohlig Hellman for solving ECDLP<a hidden class="anchor" aria-hidden="true" href="#pohlig-hellman-for-solving-ecdlp">#</a></h3>
+<p>Effectively reduce the time for DLP by solving DLP over factors of order of the base point of an Elliptic Curve!<br>
+$$ \_P\_order = p_1^{k_1}*p_2^{k_2}*p_3^{k_3}*&hellip;*p_n^{k_n} $$</p>
+<p>$$ Q = x*P $$<br>
+Since, order of <code>P</code> is <code>_P_order</code>, value of <code>Q</code> will repeat after every <code>_P_order</code> values.</p>
+<p>Similarly,<br>
+$$ Q*(\_P\_order/p_1^{k_1}) = x*(\_P\_order/p_1^{k_1})*P $$
+becomes discrete logarithm problem over mod p<!-- raw HTML omitted -->1<!-- raw HTML omitted --><!-- raw HTML omitted -->k<!-- raw HTML omitted -->1<!-- raw HTML omitted --><!-- raw HTML omitted -->. Hence, if p<!-- raw HTML omitted -->1<!-- raw HTML omitted --><!-- raw HTML omitted -->k<!-- raw HTML omitted -->1<!-- raw HTML omitted --><!-- raw HTML omitted --> is small, we can easily solve DLP over
+mod p<!-- raw HTML omitted -->1<!-- raw HTML omitted --><!-- raw HTML omitted -->k<!-- raw HTML omitted -->1<!-- raw HTML omitted --><!-- raw HTML omitted -->.</p>
+<p>This can be generalised for all the factors p<!-- raw HTML omitted -->1<!-- raw HTML omitted --><!-- raw HTML omitted -->k<!-- raw HTML omitted -->1<!-- raw HTML omitted --><!-- raw HTML omitted -->, p<!-- raw HTML omitted -->2<!-- raw HTML omitted --><!-- raw HTML omitted -->k<!-- raw HTML omitted -->2<!-- raw HTML omitted --><!-- raw HTML omitted -->, &hellip;, p<!-- raw HTML omitted -->n<!-- raw HTML omitted --><!-- raw HTML omitted -->k<!-- raw HTML omitted -->m<!-- raw HTML omitted --><!-- raw HTML omitted --> to get:<br>
+\( x\equiv a_1 \mod p_1^{k_1} \)<br>
+\( x\equiv a_2 \mod p_2^{k_2} \)<br>
+\( x\equiv a_3 \mod p_3^{k_3} \)<br>
+\( &hellip; \)<br>
+\( x\equiv a_n \mod p_n^{k_m} \)</p>
+<p>Now, we can apply CRT to get:
+$$ x\mod p_1^{k_1}*p_2^{k_2}*p_3^{k_3}*&hellip;*p_n^{k_m} $$
+$$ x\mod \_P\_order $$</p>
+<h3 id="applying-pohlig-hellman-algorithm-to-our-challenge">Applying Pohlig Hellman algorithm to our challenge<a hidden class="anchor" aria-hidden="true" href="#applying-pohlig-hellman-algorithm-to-our-challenge">#</a></h3>
+<p>As one can see, one of the factors of order of <code>P</code> is too large to be solved within a reasonable amount of time.
+Here&rsquo;s where the upper limit of secret value of <code>x</code> comes into place. We only need to solve DLP for factors such that their product is just greater than or equal to upper limit of <code>x</code>.</p>
+<p>We implemented this in python/sage to get the secret key:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> sage.all <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>M <span style="color:#f92672">=</span> <span style="color:#ae81ff">108453893951105886914206677306984937223705600011149354906282902016584483568647</span>
+</span></span><span style="display:flex;"><span>a <span style="color:#f92672">=</span> <span style="color:#ae81ff">829</span>
+</span></span><span style="display:flex;"><span>b <span style="color:#f92672">=</span> <span style="color:#ae81ff">512</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>E <span style="color:#f92672">=</span> EllipticCurve(GF(M), [<span style="color:#ae81ff">0</span>, a, <span style="color:#ae81ff">0</span>, b, <span style="color:#ae81ff">0</span>])
+</span></span><span style="display:flex;"><span>P <span style="color:#f92672">=</span> E((<span style="color:#ae81ff">88610873236405736097813831550942828314268128800347374801890968111325912062058</span>, <span style="color:#ae81ff">76792255969188554519144464321650537182337412449605253325780015124365585152539</span>))
+</span></span><span style="display:flex;"><span>Q <span style="color:#f92672">=</span> E((<span style="color:#ae81ff">27543889954945113502256551007964501073506795938025836235838339960818915950890</span>, <span style="color:#ae81ff">75922969573987021583641685217441284832467954055295272505357185824478295962572</span>))
+</span></span><span style="display:flex;"><span>_cardinality <span style="color:#f92672">=</span> <span style="color:#ae81ff">108453893951105886914206677306984937224124703598890507204412378872931154667424</span>
+</span></span><span style="display:flex;"><span>_P_order <span style="color:#f92672">=</span> <span style="color:#ae81ff">108453893951105886914206677306984937224124703598890507204412378872931154667424</span>
+</span></span><span style="display:flex;"><span>_Q_order <span style="color:#f92672">=</span> <span style="color:#ae81ff">36151297983701962304735559102328312408041567866296835734804126290977051555808</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print factor(_P_order)
+</span></span><span style="display:flex;"><span>print factor(_Q_order)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>_order_factors <span style="color:#f92672">=</span> [<span style="color:#ae81ff">32</span>, <span style="color:#ae81ff">9</span>, <span style="color:#ae81ff">617</span>, <span style="color:#ae81ff">1031</span>, <span style="color:#ae81ff">460919</span>, <span style="color:#ae81ff">1284352459083875752760636625085191848403737033002118694776855821</span>]
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">assert</span> reduce(<span style="color:#66d9ef">lambda</span> a, b: a<span style="color:#f92672">*</span>b, _order_factors) <span style="color:#f92672">==</span> _P_order
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>list1 <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> [<span style="color:#ae81ff">9</span>, <span style="color:#ae81ff">32</span>, <span style="color:#ae81ff">617</span>, <span style="color:#ae81ff">1031</span>, <span style="color:#ae81ff">460919</span>]:
+</span></span><span style="display:flex;"><span>    print <span style="color:#e6db74">&#34;Index: &#34;</span>, i
+</span></span><span style="display:flex;"><span>    Pi <span style="color:#f92672">=</span> (_P_order<span style="color:#f92672">//</span>i)<span style="color:#f92672">*</span>P
+</span></span><span style="display:flex;"><span>    print <span style="color:#e6db74">&#34;Pi: &#34;</span>, Pi
+</span></span><span style="display:flex;"><span>    print Pi<span style="color:#f92672">.</span>order()
+</span></span><span style="display:flex;"><span>    Qi <span style="color:#f92672">=</span> (_P_order<span style="color:#f92672">//</span>i)<span style="color:#f92672">*</span>Q
+</span></span><span style="display:flex;"><span>    print <span style="color:#e6db74">&#34;Qi: &#34;</span>, Qi
+</span></span><span style="display:flex;"><span>    print Qi<span style="color:#f92672">.</span>order()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> is_prime(i):
+</span></span><span style="display:flex;"><span>        ans <span style="color:#f92672">=</span> discrete_log_rho(Qi, Pi, ord<span style="color:#f92672">=</span>i, operation<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;+&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>        ans <span style="color:#f92672">=</span> Pi<span style="color:#f92672">.</span>discrete_log(Qi)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">assert</span> ans<span style="color:#f92672">*</span>Pi <span style="color:#f92672">==</span> Qi
+</span></span><span style="display:flex;"><span>    print ans
+</span></span><span style="display:flex;"><span>    list1<span style="color:#f92672">.</span>append(ans)
+</span></span><span style="display:flex;"><span>res <span style="color:#f92672">=</span> crt(list1, [<span style="color:#ae81ff">9</span>, <span style="color:#ae81ff">32</span>, <span style="color:#ae81ff">617</span>, <span style="color:#ae81ff">1031</span>, <span style="color:#ae81ff">460919</span>])
+</span></span><span style="display:flex;"><span>print res
+</span></span></code></pre></div><p><strong>x = 1213123123131</strong></p>
+<h2 id="references">References<a hidden class="anchor" aria-hidden="true" href="#references">#</a></h2>
+<ol>
+<li><a href="http://ami.ektf.hu/uploads/papers/finalpdf/AMI_43_from29to41.pdf">An unusual cubic representation problem</a></li>
+</ol>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://ashutosh1206.github.io/tags/ecdlp/">ECDLP</a></li>
+      <li><a href="https://ashutosh1206.github.io/tags/pohlig-hellman/">Pohlig-Hellman</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://ashutosh1206.github.io/">Ash&#39;s blog</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

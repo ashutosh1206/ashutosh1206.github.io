@@ -1,211 +1,547 @@
-<!doctype html><html lang=en dir=auto><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>Locked Dungeons 2 - Swamp CTF | Ashutosh Ahelleya</title><meta name=keywords content="CBC-Bit-Flipping"><meta name=description content="Challenge Points: 498
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Locked Dungeons 2 - Swamp CTF | Ash&#39;s blog</title>
+<meta name="keywords" content="CBC-Bit-Flipping">
+<meta name="description" content="Challenge Points: 498
 Challenge Description:
 The Dungeon Keeper learned from its mistake. This next lock is protected by even stronger encryption. We’re so close to the final level…there has to be a way in.
-The Dark Dungeon series of crypto challenges were the only ones I enjoyed solving in the CTF. Rest of the crypto challenges were pathetic, involved a lot of guessing and were not really crypto challenges and can be called as puzzles."><meta name=author content="Ashutosh Ahelleya"><link rel=canonical href=https://ashutosh1206.github.io/ctf/swamp-locked-dungeons-2/><link crossorigin=anonymous href=/assets/css/stylesheet.bccfefac377bc340f06c260aed1bddf49a4354816d7c570d6aac75a997986c95.css integrity="sha256-vM/vrDd7w0DwbCYK7Rvd9JpDVIFtfFcNaqx1qZeYbJU=" rel="preload stylesheet" as=style><script defer crossorigin=anonymous src=/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG+9vmJ0cTS+ovo0FeA=" onload=hljs.initHighlightingOnLoad()></script>
-<link rel=icon href=https://ashutosh1206.github.io/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://ashutosh1206.github.io/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://ashutosh1206.github.io/favicon-32x32.png><link rel=apple-touch-icon href=https://ashutosh1206.github.io/apple-touch-icon.png><link rel=mask-icon href=https://ashutosh1206.github.io/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--hljs-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css integrity=sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0 crossorigin=anonymous><script defer src=https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js integrity=sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4 crossorigin=anonymous></script>
-<script defer src=https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js integrity=sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05 crossorigin=anonymous onload=renderMathInElement(document.body)></script><meta property="og:title" content="Locked Dungeons 2 - Swamp CTF"><meta property="og:description" content="Challenge Points: 498
+The Dark Dungeon series of crypto challenges were the only ones I enjoyed solving in the CTF. Rest of the crypto challenges were pathetic, involved a lot of guessing and were not really crypto challenges and can be called as puzzles.">
+<meta name="author" content="Ashutosh Ahelleya">
+<link rel="canonical" href="https://ashutosh1206.github.io/ctf/swamp-locked-dungeons-2/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.bccfefac377bc340f06c260aed1bddf49a4354816d7c570d6aac75a997986c95.css" integrity="sha256-vM/vrDd7w0DwbCYK7Rvd9JpDVIFtfFcNaqx1qZeYbJU=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://ashutosh1206.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://ashutosh1206.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://ashutosh1206.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://ashutosh1206.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://ashutosh1206.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+<meta property="og:title" content="Locked Dungeons 2 - Swamp CTF" />
+<meta property="og:description" content="Challenge Points: 498
 Challenge Description:
 The Dungeon Keeper learned from its mistake. This next lock is protected by even stronger encryption. We’re so close to the final level…there has to be a way in.
-The Dark Dungeon series of crypto challenges were the only ones I enjoyed solving in the CTF. Rest of the crypto challenges were pathetic, involved a lot of guessing and were not really crypto challenges and can be called as puzzles."><meta property="og:type" content="article"><meta property="og:url" content="https://ashutosh1206.github.io/ctf/swamp-locked-dungeons-2/"><meta property="article:section" content="ctf"><meta property="article:published_time" content="2018-04-03T00:00:00+00:00"><meta property="article:modified_time" content="2018-04-03T00:00:00+00:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="Locked Dungeons 2 - Swamp CTF"><meta name=twitter:description content="Challenge Points: 498
+The Dark Dungeon series of crypto challenges were the only ones I enjoyed solving in the CTF. Rest of the crypto challenges were pathetic, involved a lot of guessing and were not really crypto challenges and can be called as puzzles." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://ashutosh1206.github.io/ctf/swamp-locked-dungeons-2/" /><meta property="article:section" content="ctf" />
+<meta property="article:published_time" content="2018-04-03T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-04-03T00:00:00+00:00" /><meta property="og:site_name" content="Ash&#39;s blog" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Locked Dungeons 2 - Swamp CTF"/>
+<meta name="twitter:description" content="Challenge Points: 498
 Challenge Description:
 The Dungeon Keeper learned from its mistake. This next lock is protected by even stronger encryption. We’re so close to the final level…there has to be a way in.
-The Dark Dungeon series of crypto challenges were the only ones I enjoyed solving in the CTF. Rest of the crypto challenges were pathetic, involved a lot of guessing and were not really crypto challenges and can be called as puzzles."><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Ctfs","item":"https://ashutosh1206.github.io/ctf/"},{"@type":"ListItem","position":2,"name":"Locked Dungeons 2 - Swamp CTF","item":"https://ashutosh1206.github.io/ctf/swamp-locked-dungeons-2/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"Locked Dungeons 2 - Swamp CTF","name":"Locked Dungeons 2 - Swamp CTF","description":"Challenge Points: 498\nChallenge Description:\nThe Dungeon Keeper learned from its mistake. This next lock is protected by even stronger encryption. We’re so close to the final level…there has to be a way in.\nThe Dark Dungeon series of crypto challenges were the only ones I enjoyed solving in the CTF. Rest of the crypto challenges were pathetic, involved a lot of guessing and were not really crypto challenges and can be called as puzzles.","keywords":["CBC-Bit-Flipping"],"articleBody":"Challenge Points: 498\nChallenge Description:\nThe Dungeon Keeper learned from its mistake. This next lock is protected by even stronger encryption. We’re so close to the final level…there has to be a way in.\nThe Dark Dungeon series of crypto challenges were the only ones I enjoyed solving in the CTF. Rest of the crypto challenges were pathetic, involved a lot of guessing and were not really crypto challenges and can be called as puzzles.\nHowever, I did not get time to solve Dark-Dungeons-2 during the CTF, since I was stuck in Pagoda challenges that ate up almost all of my time during the CTF (I solved them during the CTF, but did not enjoy at all)\nSimilar challenge: HITCON CTF Quals 2017 - Secret Server\nLocked Dungeons-2 is an improved version of Locked-Dungeon-1 challenge from the same CTF. I will post a write-up of Locked Dungeons-1 soon.\nIn this challenge, we are given an encryption code that is running on the server: nc chal1.swampctf.com 1460\nLooking at the source code:\nif __name__ == \"__main__\": with open(\"flag.txt\") as fd: flag = fd.read() flag_size = len(flag) key=KEY insertion_range = flag_size//BLOCK_SIZE insertion_position = random.randrange(insertion_range)*BLOCK_SIZE mod_flag = flag[:insertion_position] + \"send_modflag_enc\" + flag[insertion_position:] aescipher = AESCipher(key) enc_mod_flag = aescipher.encrypt_wrapper(mod_flag, IV) sys.stdout.write(enc_mod_flag) sys.stdout.write('\\n') sys.stdout.flush() next_level = False for i in range(insertion_range): sys.stdout.write(\"What do you want me to do?\\n\") sys.stdout.flush() enc_recv_str = raw_input() dec_recv_str = aescipher.decrypt_wrapper(enc_recv_str) if \"get_modflag_md5\" in dec_recv_str: next_level = True sys.stdout.write(\"Dungeon goes deeper..\\n\") sys.stdout.flush() break else: sys.stdout.write(\"I am gonna ask again!\\n\") sys.stdout.flush() if next_level: len_enc_mod_flag = len(enc_mod_flag) inp_size_limit = int(len_enc_mod_flag*4/3) + 50 for i in xrange(500): enc_recv_str = raw_input() if len(enc_recv_str) \u003e inp_size_limit: continue dec_recv_str = aescipher.decrypt_wrapper(enc_strrecv_str) sys.stdout.write(b64encode(md5(dec_recv_str).digest())) sys.stdout.write(\"\\n\") sys.stdout.flush() The Vulnerability There are two levels in the challenge, each level involving the following attacks:\nCBC Bit Flipping Attack Byte by Byte decryption due to vulnerable unpadding Let us have a look at the first level: The program encrypts mod_flag = flag[:insertion_position] + “send_modflag_enc” + flag[insertion_position:] using AES in CBC mode. insertion_position is generated using a pseudo-random number generator, with its limits being from 0 to flag_size*16. Small enough to be brute-forced. To pass level-1, our motive as an attacker, is to flip “send_modflag_enc” to “get_modflag_md5\\x01”, given the ciphertext of mod_flag. The server allows decryption of ciphertext. We can do this using CBC Bit Flipping attack, about which you can read here: https://masterpessimistaa.wordpress.com/2017/05/03/cbc-bit-flipping-attack/\nThis is what decryption looks like in CBC mode: To pass level-1 we brute-force the program until insertion_position becomes zero, so that “send_modflag_enc” comes in the first block of ciphertext and we can then flip it easily as we are in control of the Initialisation Vector. We know can do this by changing IV to:\nIV = IV xor “send_modflag_enc” xor “get_modflag_md5\\x01” Code snippet implementing the brute force first and then Bit Flipping Attack on CBC mode:\nwhile fl == 0: r = remote(\"chal1.swampctf.com\",\"1460\") ct = r.recvline() ct = ct.replace(\"\\n\",\"\") ct = ct.decode(\"base64\") r.recvline() init_vector = ct[:16] ciphertext = ct[16:] res = xor(\"get_modflag_md5\\x00\",\"send_modflag_enc\") assert xor(res, \"send_modflag_enc\") == \"get_modflag_md5\\x00\" # CBC Bit Flipping Attack iv = xor(xor(\"get_modflag_md5\\x00\",\"send_modflag_enc\"), init_vector) send_string = (iv + ciphertext).encode(\"base64\").replace(\"\\n\",\"\") print \"Sending string: \", send_string r.sendline(send_string) recvline1 = r.recvline() print recvline1.strip(\"\\n\") if recvline1[:21] == \"Dungeon goes deeper..\": fl = 1 break r.close() Now that we have bypassed the first level of the challenge, we can look at the code for the second level: The server allows the user to decrypt the ciphertext, but only returns the md5 of the plaintext. Oops!\nLooks secure in the first place since a hash is a one-way function and it becomes such a long task to find a preimage. But when we look at the function for removing the padding after decryption:\nunpad = lambda inp: inp[:-ord(inp[-1])] Strange, isn’t it? No validation, no checks if the last character is really less than or equal to 16 or if it really satisfies PKCS#7 padding criteria? Totally vulnerable to Byte-at-a-time decryption!\nWe can flip last byte of second last block of ciphertext to make last byte of the plaintext equal to chr(len(plaintext)-1), so when the server decrypts it, it straight away removes all the characters in the plaintext other than the first character and returns the md5 hash of this character. We can now brute force the value returned by checking if it matches with the md5 hash of a printable character, if yes then that character is first character of the flag.\nFor the next character, flip last byte of second last block of ciphertext to make last byte of the plaintext equal to chr(len(plaintext)-2), so the server will now return the md5 hash of the first two characters of the plaintext, we have the first byte of plaintext from above, we just have to brute the second byte like we did above.\nDo the same to get all characters of the plaintext.\nLet’s see how we can implement this exploit:\nGiven the ciphertext containing the flag and “send_modflag_enc” prepended in the beginning (Since we have bypassed level-1, remember we had to brute force until insertion_position became 0? ), we have to add two more blocks of ciphertext ie. 32 bytes: 15*”a” + x + 16*”a”, x is the value we are going to brute force. We are adding two more random blocks to the ciphertext to be decrypted so that our Bit Flipping does not affect the original plaintext string (Remember CBC mode?)\nWe need to know the last byte of the plaintext who ciphertext is the payload that we will send, only then we will be able to flip it to the desired value. Note that we will have to do it only once for a session. I wrote the following script to implement this:\nfor i in range(len(flag)+1, 16): last_ptchar = '' if i == 1: for j in range(256): _ciphertext = init_vector + ciphertext _payload = _ciphertext + \"a\"*15 + chr(ord(\"a\") ^ (len(ct)+32-i) ^ j) + \"a\"*16 _payload = _payload.encode(\"base64\").replace(\"\\n\",\"\") print \"Sending payload: \", _payload assert len(_payload.decode(\"base64\")) % 16 == 0 assert len(_payload) \u003c= inp_size_limit r.sendline(_payload) hash1 = r.recvline() hash1 = hash1.replace(\"\\n\",\"\") print \"Hash: \", hash1 print \"Hash of s: \", hashlib.md5(\"s\").digest().encode(\"base64\").replace(\"\\n\",\"\") print \"\\n \\n\" if hash1 == hashlib.md5(\"s\").digest().encode(\"base64\").replace(\"\\n\",\"\"): last_ptchar += chr(j) print \"Last character of plaintext: \", chr(j).encode(\"hex\") break counter += 1 Now that we have our last character, we flip the last byte of second last block of our payload (‘x’) such that x = x xor (len(ct)+32-1) xor last_ptchar. Get the hash output from the server, check md5 hash of which character matches with the hash output. Repeat the same thing to get all the bytes of the plaintext.\nHere is the entire exploit script. Note that I had to run this script multiple times, updating the value of flag in each run with the value I got in the previous run. This is because the server allows only 500 requests per session.\nfrom pwn import * import IPython import string import hashlib printables = string.uppercase + string.lowercase + string.digits def xor(s1,s2): return \"\".join(chr(ord(a)^ord(b)) for a,b in zip(s1,s2)) fl = 0 while fl == 0: r = remote(\"chal1.swampctf.com\",\"1460\") ct = r.recvline() ct = ct.replace(\"\\n\",\"\") ct = ct.decode(\"base64\") r.recvline() init_vector = ct[:16] ciphertext = ct[16:] res = xor(\"get_modflag_md5\\x00\",\"send_modflag_enc\") assert xor(res, \"send_modflag_enc\") == \"get_modflag_md5\\x00\" # CBC Bit Flipping Attack iv = xor(xor(\"get_modflag_md5\\x00\",\"send_modflag_enc\"), init_vector) send_string = (iv + ciphertext).encode(\"base64\").replace(\"\\n\",\"\") print \"Sending string: \", send_string r.sendline(send_string) recvline1 = r.recvline() print recvline1.strip(\"\\n\") if recvline1[:21] == \"Dungeon goes deeper..\": fl = 1 break r.close() # Script stops as soon as the counter reaches 500 # 500 is the server request limit counter = 0 inp_size_limit = int(len(ct.encode(\"base64\"))*4/3) + 50 print \"[*] Brute Force Worked, now onto the exploit\" print \"Input string limit: \", inp_size_limit flag = \"\" # Original Ciphertext: ciphertext # Original IV: init_vector last_ptchar = '' for i in range(len(flag)+1, 16): if i == 1: for j in range(256): _ciphertext = init_vector + ciphertext _payload = _ciphertext + \"a\"*15 + chr(ord(\"a\") ^ (len(ct)+32-i) ^ j) + \"a\"*16 _payload = _payload.encode(\"base64\").replace(\"\\n\",\"\") print \"Sending payload: \", _payload assert len(_payload.decode(\"base64\")) % 16 == 0 assert len(_payload) \u003c= inp_size_limit r.sendline(_payload) hash1 = r.recvline() hash1 = hash1.replace(\"\\n\",\"\") print \"Hash: \", hash1 print \"Hash of s: \", hashlib.md5(\"s\").digest().encode(\"base64\").replace(\"\\n\",\"\") print \"\\n \\n\" if hash1 == hashlib.md5(\"s\").digest().encode(\"base64\").replace(\"\\n\",\"\"): print \"Gotit!\" last_ptchar = chr(j) print \"Last character of plaintext: \", chr(j).encode(\"hex\") # We already know that the first 16 characters of the plaintext is \"send_modflag_enc\" flag += \"s\" break counter += 1 else: print \"Counter: \", counter _ciphertext = init_vector + ciphertext _payload = _ciphertext + \"a\"*15 + chr(ord(\"a\") ^ (len(ct)+32-i) ^ last_ptchar) + \"a\"*16 _payload = _payload.encode(\"base64\").replace(\"\\n\",\"\") print \"Sending payload: \", _payload assert len(_payload.decode(\"base64\")) % 16 == 0 assert len(_payload) \u003c= inp_size_limit r.sendline(_payload) hash1 = r.recvline() hash1 = hash1.replace(\"\\n\",\"\") for j in printables: if hash1 == hashlib.md5(flag + j).digest().encode(\"base64\").replace(\"\\n\",\"\"): flag += j break Note that we took advantage of the fact that the first 16 characters of the plaintext are “send_modflag_enc”.\nThis will give us the flag: flag{Ev3n_dunge0ns_are_un5af3_wIth_vu1n_padding}\n","wordCount":"1479","inLanguage":"en","datePublished":"2018-04-03T00:00:00Z","dateModified":"2018-04-03T00:00:00Z","author":{"@type":"Person","name":"Ashutosh Ahelleya"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://ashutosh1206.github.io/ctf/swamp-locked-dungeons-2/"},"publisher":{"@type":"Organization","name":"Ashutosh Ahelleya","logo":{"@type":"ImageObject","url":"https://ashutosh1206.github.io/favicon.ico"}}}</script></head><body id=top><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://ashutosh1206.github.io/ accesskey=h title="Home (Alt + H)">Home</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)"><svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg><svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://ashutosh1206.github.io/blog/ title=Blog><span>Blog</span></a></li><li><a href=https://ashutosh1206.github.io/archive/ title=Archive><span>Archive</span></a></li><li><a href=https://ashutosh1206.github.io/ctf/ title=CTF><span>CTF</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class=post-title>Locked Dungeons 2 - Swamp CTF</h1><div class=post-meta><span title='2018-04-03 00:00:00 +0000 UTC'>April 3, 2018</span>&nbsp;·&nbsp;Ashutosh Ahelleya</div></header><div class=post-content><p><strong>Challenge Points</strong>: 498<br><strong>Challenge Description</strong>:</p><blockquote><p>The Dungeon Keeper learned from its mistake. This next lock is protected by even stronger encryption. We’re so close to the final level…there has to be a way in.</p></blockquote><p>The Dark Dungeon series of crypto challenges were the only ones I enjoyed solving in the CTF. Rest of the crypto challenges were pathetic, involved a lot of guessing and were not really crypto challenges and can be called as puzzles.</p><p>However, I did not get time to solve Dark-Dungeons-2 during the CTF, since I was stuck in Pagoda challenges that ate up almost all of my time during the CTF (I solved them during the CTF, but did not enjoy at all)</p><p>Similar challenge: <strong>HITCON CTF Quals 2017</strong> - Secret Server</p><p>Locked Dungeons-2 is an improved version of Locked-Dungeon-1 challenge from the same CTF. I will post a write-up of Locked Dungeons-1 soon.</p><p>In this challenge, we are given an encryption code that is running on the server: <code>nc chal1.swampctf.com 1460</code></p><p>Looking at the source code:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#66d9ef>if</span> __name__ <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;__main__&#34;</span>:
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>with</span> open(<span style=color:#e6db74>&#34;flag.txt&#34;</span>) <span style=color:#66d9ef>as</span> fd:
-</span></span><span style=display:flex><span>        flag <span style=color:#f92672>=</span> fd<span style=color:#f92672>.</span>read()
-</span></span><span style=display:flex><span>    flag_size <span style=color:#f92672>=</span> len(flag)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    key<span style=color:#f92672>=</span>KEY
-</span></span><span style=display:flex><span>    insertion_range <span style=color:#f92672>=</span> flag_size<span style=color:#f92672>//</span>BLOCK_SIZE
-</span></span><span style=display:flex><span>    insertion_position <span style=color:#f92672>=</span> random<span style=color:#f92672>.</span>randrange(insertion_range)<span style=color:#f92672>*</span>BLOCK_SIZE
-</span></span><span style=display:flex><span>    mod_flag <span style=color:#f92672>=</span> flag[:insertion_position] <span style=color:#f92672>+</span> <span style=color:#e6db74>&#34;send_modflag_enc&#34;</span> <span style=color:#f92672>+</span> flag[insertion_position:]
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    aescipher <span style=color:#f92672>=</span> AESCipher(key)
-</span></span><span style=display:flex><span>    enc_mod_flag <span style=color:#f92672>=</span> aescipher<span style=color:#f92672>.</span>encrypt_wrapper(mod_flag, IV)
-</span></span><span style=display:flex><span>    sys<span style=color:#f92672>.</span>stdout<span style=color:#f92672>.</span>write(enc_mod_flag)
-</span></span><span style=display:flex><span>    sys<span style=color:#f92672>.</span>stdout<span style=color:#f92672>.</span>write(<span style=color:#e6db74>&#39;</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#39;</span>)
-</span></span><span style=display:flex><span>    sys<span style=color:#f92672>.</span>stdout<span style=color:#f92672>.</span>flush()
-</span></span><span style=display:flex><span>    next_level <span style=color:#f92672>=</span> <span style=color:#66d9ef>False</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> i <span style=color:#f92672>in</span> range(insertion_range):
-</span></span><span style=display:flex><span>        sys<span style=color:#f92672>.</span>stdout<span style=color:#f92672>.</span>write(<span style=color:#e6db74>&#34;What do you want me to do?</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>)
-</span></span><span style=display:flex><span>        sys<span style=color:#f92672>.</span>stdout<span style=color:#f92672>.</span>flush()
-</span></span><span style=display:flex><span>        enc_recv_str <span style=color:#f92672>=</span> raw_input()
-</span></span><span style=display:flex><span>        dec_recv_str <span style=color:#f92672>=</span> aescipher<span style=color:#f92672>.</span>decrypt_wrapper(enc_recv_str)
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> <span style=color:#e6db74>&#34;get_modflag_md5&#34;</span> <span style=color:#f92672>in</span> dec_recv_str:
-</span></span><span style=display:flex><span>            next_level <span style=color:#f92672>=</span> <span style=color:#66d9ef>True</span>
-</span></span><span style=display:flex><span>            sys<span style=color:#f92672>.</span>stdout<span style=color:#f92672>.</span>write(<span style=color:#e6db74>&#34;Dungeon goes deeper..</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>)
-</span></span><span style=display:flex><span>            sys<span style=color:#f92672>.</span>stdout<span style=color:#f92672>.</span>flush()
-</span></span><span style=display:flex><span>            <span style=color:#66d9ef>break</span>
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>else</span>:
-</span></span><span style=display:flex><span>            sys<span style=color:#f92672>.</span>stdout<span style=color:#f92672>.</span>write(<span style=color:#e6db74>&#34;I am gonna ask again!</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>)
-</span></span><span style=display:flex><span>            sys<span style=color:#f92672>.</span>stdout<span style=color:#f92672>.</span>flush()
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> next_level:
-</span></span><span style=display:flex><span>        len_enc_mod_flag <span style=color:#f92672>=</span> len(enc_mod_flag)
-</span></span><span style=display:flex><span>        inp_size_limit <span style=color:#f92672>=</span> int(len_enc_mod_flag<span style=color:#f92672>*</span><span style=color:#ae81ff>4</span><span style=color:#f92672>/</span><span style=color:#ae81ff>3</span>) <span style=color:#f92672>+</span> <span style=color:#ae81ff>50</span>
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>for</span> i <span style=color:#f92672>in</span> xrange(<span style=color:#ae81ff>500</span>):
-</span></span><span style=display:flex><span>            enc_recv_str <span style=color:#f92672>=</span> raw_input()
-</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> len(enc_recv_str) <span style=color:#f92672>&gt;</span> inp_size_limit:
-</span></span><span style=display:flex><span>                <span style=color:#66d9ef>continue</span>
-</span></span><span style=display:flex><span>            dec_recv_str <span style=color:#f92672>=</span> aescipher<span style=color:#f92672>.</span>decrypt_wrapper(enc_strrecv_str)
-</span></span><span style=display:flex><span>            sys<span style=color:#f92672>.</span>stdout<span style=color:#f92672>.</span>write(b64encode(md5(dec_recv_str)<span style=color:#f92672>.</span>digest()))
-</span></span><span style=display:flex><span>            sys<span style=color:#f92672>.</span>stdout<span style=color:#f92672>.</span>write(<span style=color:#e6db74>&#34;</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>)
-</span></span><span style=display:flex><span>            sys<span style=color:#f92672>.</span>stdout<span style=color:#f92672>.</span>flush()
-</span></span></code></pre></div><h2 id=the-vulnerability>The Vulnerability<a hidden class=anchor aria-hidden=true href=#the-vulnerability>#</a></h2><p>There are two levels in the challenge, each level involving the following attacks:</p><ol><li>CBC Bit Flipping Attack</li><li>Byte by Byte decryption due to vulnerable unpadding</li></ol><p>Let us have a look at the first level:
-<img loading=lazy src=/swamp18-lockeddungeons-1.png alt=picture></p><ol><li>The program encrypts <strong>mod_flag</strong> = flag[:insertion_position] + “send_modflag_enc” + flag[insertion_position:] using AES in CBC mode.</li><li><em>insertion_position</em> is generated using a pseudo-random number generator, with its limits being from 0 to flag_size*16. Small enough to be brute-forced.</li></ol><p>To pass level-1, our motive as an attacker, is to flip “send_modflag_enc” to “get_modflag_md5\x01”, given the ciphertext of <strong>mod_flag</strong>. The server allows decryption of ciphertext. We can do this using CBC Bit Flipping attack, about which you can read here: <a href=https://masterpessimistaa.wordpress.com/2017/05/03/cbc-bit-flipping-attack/>https://masterpessimistaa.wordpress.com/2017/05/03/cbc-bit-flipping-attack/</a></p><p>This is what decryption looks like in CBC mode:
-<img loading=lazy src=/ctfzone18-ussh-11.png alt=picture></p><p>To pass level-1 we brute-force the program until <em>insertion_position</em> becomes zero, so that “send_modflag_enc” comes in the first block of ciphertext and we can then flip it easily as we are in control of the <strong>Initialisation Vector</strong>. We know can do this by changing IV to:</p><pre><code>IV = IV xor “send_modflag_enc” xor “get_modflag_md5\x01”
-</code></pre><p>Code snippet implementing the brute force first and then Bit Flipping Attack on CBC mode:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#66d9ef>while</span> fl <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span>:
-</span></span><span style=display:flex><span>    r <span style=color:#f92672>=</span> remote(<span style=color:#e6db74>&#34;chal1.swampctf.com&#34;</span>,<span style=color:#e6db74>&#34;1460&#34;</span>)
-</span></span><span style=display:flex><span>    ct <span style=color:#f92672>=</span> r<span style=color:#f92672>.</span>recvline()
-</span></span><span style=display:flex><span>    ct <span style=color:#f92672>=</span> ct<span style=color:#f92672>.</span>replace(<span style=color:#e6db74>&#34;</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>,<span style=color:#e6db74>&#34;&#34;</span>)
-</span></span><span style=display:flex><span>    ct <span style=color:#f92672>=</span> ct<span style=color:#f92672>.</span>decode(<span style=color:#e6db74>&#34;base64&#34;</span>)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    r<span style=color:#f92672>.</span>recvline()
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    init_vector <span style=color:#f92672>=</span> ct[:<span style=color:#ae81ff>16</span>]
-</span></span><span style=display:flex><span>    ciphertext <span style=color:#f92672>=</span> ct[<span style=color:#ae81ff>16</span>:]
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    res <span style=color:#f92672>=</span> xor(<span style=color:#e6db74>&#34;get_modflag_md5</span><span style=color:#ae81ff>\x00</span><span style=color:#e6db74>&#34;</span>,<span style=color:#e6db74>&#34;send_modflag_enc&#34;</span>)
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>assert</span> xor(res, <span style=color:#e6db74>&#34;send_modflag_enc&#34;</span>) <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;get_modflag_md5</span><span style=color:#ae81ff>\x00</span><span style=color:#e6db74>&#34;</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    <span style=color:#75715e># CBC Bit Flipping Attack</span>
-</span></span><span style=display:flex><span>    iv <span style=color:#f92672>=</span> xor(xor(<span style=color:#e6db74>&#34;get_modflag_md5</span><span style=color:#ae81ff>\x00</span><span style=color:#e6db74>&#34;</span>,<span style=color:#e6db74>&#34;send_modflag_enc&#34;</span>), init_vector)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    send_string <span style=color:#f92672>=</span> (iv <span style=color:#f92672>+</span> ciphertext)<span style=color:#f92672>.</span>encode(<span style=color:#e6db74>&#34;base64&#34;</span>)<span style=color:#f92672>.</span>replace(<span style=color:#e6db74>&#34;</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>,<span style=color:#e6db74>&#34;&#34;</span>)
-</span></span><span style=display:flex><span>    print <span style=color:#e6db74>&#34;Sending string: &#34;</span>, send_string
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    r<span style=color:#f92672>.</span>sendline(send_string)
-</span></span><span style=display:flex><span>    recvline1 <span style=color:#f92672>=</span> r<span style=color:#f92672>.</span>recvline()
-</span></span><span style=display:flex><span>    print recvline1<span style=color:#f92672>.</span>strip(<span style=color:#e6db74>&#34;</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>)
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> recvline1[:<span style=color:#ae81ff>21</span>] <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;Dungeon goes deeper..&#34;</span>:
-</span></span><span style=display:flex><span>        fl <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span>
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>break</span>
-</span></span><span style=display:flex><span>    r<span style=color:#f92672>.</span>close()
+The Dark Dungeon series of crypto challenges were the only ones I enjoyed solving in the CTF. Rest of the crypto challenges were pathetic, involved a lot of guessing and were not really crypto challenges and can be called as puzzles."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Ctfs",
+      "item": "https://ashutosh1206.github.io/ctf/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Locked Dungeons 2 - Swamp CTF",
+      "item": "https://ashutosh1206.github.io/ctf/swamp-locked-dungeons-2/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Locked Dungeons 2 - Swamp CTF",
+  "name": "Locked Dungeons 2 - Swamp CTF",
+  "description": "Challenge Points: 498\nChallenge Description:\nThe Dungeon Keeper learned from its mistake. This next lock is protected by even stronger encryption. We’re so close to the final level…there has to be a way in.\nThe Dark Dungeon series of crypto challenges were the only ones I enjoyed solving in the CTF. Rest of the crypto challenges were pathetic, involved a lot of guessing and were not really crypto challenges and can be called as puzzles.",
+  "keywords": [
+    "CBC-Bit-Flipping"
+  ],
+  "articleBody": "Challenge Points: 498\nChallenge Description:\nThe Dungeon Keeper learned from its mistake. This next lock is protected by even stronger encryption. We’re so close to the final level…there has to be a way in.\nThe Dark Dungeon series of crypto challenges were the only ones I enjoyed solving in the CTF. Rest of the crypto challenges were pathetic, involved a lot of guessing and were not really crypto challenges and can be called as puzzles.\nHowever, I did not get time to solve Dark-Dungeons-2 during the CTF, since I was stuck in Pagoda challenges that ate up almost all of my time during the CTF (I solved them during the CTF, but did not enjoy at all)\nSimilar challenge: HITCON CTF Quals 2017 - Secret Server\nLocked Dungeons-2 is an improved version of Locked-Dungeon-1 challenge from the same CTF. I will post a write-up of Locked Dungeons-1 soon.\nIn this challenge, we are given an encryption code that is running on the server: nc chal1.swampctf.com 1460\nLooking at the source code:\nif __name__ == \"__main__\": with open(\"flag.txt\") as fd: flag = fd.read() flag_size = len(flag) key=KEY insertion_range = flag_size//BLOCK_SIZE insertion_position = random.randrange(insertion_range)*BLOCK_SIZE mod_flag = flag[:insertion_position] + \"send_modflag_enc\" + flag[insertion_position:] aescipher = AESCipher(key) enc_mod_flag = aescipher.encrypt_wrapper(mod_flag, IV) sys.stdout.write(enc_mod_flag) sys.stdout.write('\\n') sys.stdout.flush() next_level = False for i in range(insertion_range): sys.stdout.write(\"What do you want me to do?\\n\") sys.stdout.flush() enc_recv_str = raw_input() dec_recv_str = aescipher.decrypt_wrapper(enc_recv_str) if \"get_modflag_md5\" in dec_recv_str: next_level = True sys.stdout.write(\"Dungeon goes deeper..\\n\") sys.stdout.flush() break else: sys.stdout.write(\"I am gonna ask again!\\n\") sys.stdout.flush() if next_level: len_enc_mod_flag = len(enc_mod_flag) inp_size_limit = int(len_enc_mod_flag*4/3) + 50 for i in xrange(500): enc_recv_str = raw_input() if len(enc_recv_str) \u003e inp_size_limit: continue dec_recv_str = aescipher.decrypt_wrapper(enc_strrecv_str) sys.stdout.write(b64encode(md5(dec_recv_str).digest())) sys.stdout.write(\"\\n\") sys.stdout.flush() The Vulnerability There are two levels in the challenge, each level involving the following attacks:\nCBC Bit Flipping Attack Byte by Byte decryption due to vulnerable unpadding Let us have a look at the first level: The program encrypts mod_flag = flag[:insertion_position] + “send_modflag_enc” + flag[insertion_position:] using AES in CBC mode. insertion_position is generated using a pseudo-random number generator, with its limits being from 0 to flag_size*16. Small enough to be brute-forced. To pass level-1, our motive as an attacker, is to flip “send_modflag_enc” to “get_modflag_md5\\x01”, given the ciphertext of mod_flag. The server allows decryption of ciphertext. We can do this using CBC Bit Flipping attack, about which you can read here: https://masterpessimistaa.wordpress.com/2017/05/03/cbc-bit-flipping-attack/\nThis is what decryption looks like in CBC mode: To pass level-1 we brute-force the program until insertion_position becomes zero, so that “send_modflag_enc” comes in the first block of ciphertext and we can then flip it easily as we are in control of the Initialisation Vector. We know can do this by changing IV to:\nIV = IV xor “send_modflag_enc” xor “get_modflag_md5\\x01” Code snippet implementing the brute force first and then Bit Flipping Attack on CBC mode:\nwhile fl == 0: r = remote(\"chal1.swampctf.com\",\"1460\") ct = r.recvline() ct = ct.replace(\"\\n\",\"\") ct = ct.decode(\"base64\") r.recvline() init_vector = ct[:16] ciphertext = ct[16:] res = xor(\"get_modflag_md5\\x00\",\"send_modflag_enc\") assert xor(res, \"send_modflag_enc\") == \"get_modflag_md5\\x00\" # CBC Bit Flipping Attack iv = xor(xor(\"get_modflag_md5\\x00\",\"send_modflag_enc\"), init_vector) send_string = (iv + ciphertext).encode(\"base64\").replace(\"\\n\",\"\") print \"Sending string: \", send_string r.sendline(send_string) recvline1 = r.recvline() print recvline1.strip(\"\\n\") if recvline1[:21] == \"Dungeon goes deeper..\": fl = 1 break r.close() Now that we have bypassed the first level of the challenge, we can look at the code for the second level: The server allows the user to decrypt the ciphertext, but only returns the md5 of the plaintext. Oops!\nLooks secure in the first place since a hash is a one-way function and it becomes such a long task to find a preimage. But when we look at the function for removing the padding after decryption:\nunpad = lambda inp: inp[:-ord(inp[-1])] Strange, isn’t it? No validation, no checks if the last character is really less than or equal to 16 or if it really satisfies PKCS#7 padding criteria? Totally vulnerable to Byte-at-a-time decryption!\nWe can flip last byte of second last block of ciphertext to make last byte of the plaintext equal to chr(len(plaintext)-1), so when the server decrypts it, it straight away removes all the characters in the plaintext other than the first character and returns the md5 hash of this character. We can now brute force the value returned by checking if it matches with the md5 hash of a printable character, if yes then that character is first character of the flag.\nFor the next character, flip last byte of second last block of ciphertext to make last byte of the plaintext equal to chr(len(plaintext)-2), so the server will now return the md5 hash of the first two characters of the plaintext, we have the first byte of plaintext from above, we just have to brute the second byte like we did above.\nDo the same to get all characters of the plaintext.\nLet’s see how we can implement this exploit:\nGiven the ciphertext containing the flag and “send_modflag_enc” prepended in the beginning (Since we have bypassed level-1, remember we had to brute force until insertion_position became 0? ), we have to add two more blocks of ciphertext ie. 32 bytes: 15*”a” + x + 16*”a”, x is the value we are going to brute force. We are adding two more random blocks to the ciphertext to be decrypted so that our Bit Flipping does not affect the original plaintext string (Remember CBC mode?)\nWe need to know the last byte of the plaintext who ciphertext is the payload that we will send, only then we will be able to flip it to the desired value. Note that we will have to do it only once for a session. I wrote the following script to implement this:\nfor i in range(len(flag)+1, 16): last_ptchar = '' if i == 1: for j in range(256): _ciphertext = init_vector + ciphertext _payload = _ciphertext + \"a\"*15 + chr(ord(\"a\") ^ (len(ct)+32-i) ^ j) + \"a\"*16 _payload = _payload.encode(\"base64\").replace(\"\\n\",\"\") print \"Sending payload: \", _payload assert len(_payload.decode(\"base64\")) % 16 == 0 assert len(_payload) \u003c= inp_size_limit r.sendline(_payload) hash1 = r.recvline() hash1 = hash1.replace(\"\\n\",\"\") print \"Hash: \", hash1 print \"Hash of s: \", hashlib.md5(\"s\").digest().encode(\"base64\").replace(\"\\n\",\"\") print \"\\n \\n\" if hash1 == hashlib.md5(\"s\").digest().encode(\"base64\").replace(\"\\n\",\"\"): last_ptchar += chr(j) print \"Last character of plaintext: \", chr(j).encode(\"hex\") break counter += 1 Now that we have our last character, we flip the last byte of second last block of our payload (‘x’) such that x = x xor (len(ct)+32-1) xor last_ptchar. Get the hash output from the server, check md5 hash of which character matches with the hash output. Repeat the same thing to get all the bytes of the plaintext.\nHere is the entire exploit script. Note that I had to run this script multiple times, updating the value of flag in each run with the value I got in the previous run. This is because the server allows only 500 requests per session.\nfrom pwn import * import IPython import string import hashlib printables = string.uppercase + string.lowercase + string.digits def xor(s1,s2): return \"\".join(chr(ord(a)^ord(b)) for a,b in zip(s1,s2)) fl = 0 while fl == 0: r = remote(\"chal1.swampctf.com\",\"1460\") ct = r.recvline() ct = ct.replace(\"\\n\",\"\") ct = ct.decode(\"base64\") r.recvline() init_vector = ct[:16] ciphertext = ct[16:] res = xor(\"get_modflag_md5\\x00\",\"send_modflag_enc\") assert xor(res, \"send_modflag_enc\") == \"get_modflag_md5\\x00\" # CBC Bit Flipping Attack iv = xor(xor(\"get_modflag_md5\\x00\",\"send_modflag_enc\"), init_vector) send_string = (iv + ciphertext).encode(\"base64\").replace(\"\\n\",\"\") print \"Sending string: \", send_string r.sendline(send_string) recvline1 = r.recvline() print recvline1.strip(\"\\n\") if recvline1[:21] == \"Dungeon goes deeper..\": fl = 1 break r.close() # Script stops as soon as the counter reaches 500 # 500 is the server request limit counter = 0 inp_size_limit = int(len(ct.encode(\"base64\"))*4/3) + 50 print \"[*] Brute Force Worked, now onto the exploit\" print \"Input string limit: \", inp_size_limit flag = \"\" # Original Ciphertext: ciphertext # Original IV: init_vector last_ptchar = '' for i in range(len(flag)+1, 16): if i == 1: for j in range(256): _ciphertext = init_vector + ciphertext _payload = _ciphertext + \"a\"*15 + chr(ord(\"a\") ^ (len(ct)+32-i) ^ j) + \"a\"*16 _payload = _payload.encode(\"base64\").replace(\"\\n\",\"\") print \"Sending payload: \", _payload assert len(_payload.decode(\"base64\")) % 16 == 0 assert len(_payload) \u003c= inp_size_limit r.sendline(_payload) hash1 = r.recvline() hash1 = hash1.replace(\"\\n\",\"\") print \"Hash: \", hash1 print \"Hash of s: \", hashlib.md5(\"s\").digest().encode(\"base64\").replace(\"\\n\",\"\") print \"\\n \\n\" if hash1 == hashlib.md5(\"s\").digest().encode(\"base64\").replace(\"\\n\",\"\"): print \"Gotit!\" last_ptchar = chr(j) print \"Last character of plaintext: \", chr(j).encode(\"hex\") # We already know that the first 16 characters of the plaintext is \"send_modflag_enc\" flag += \"s\" break counter += 1 else: print \"Counter: \", counter _ciphertext = init_vector + ciphertext _payload = _ciphertext + \"a\"*15 + chr(ord(\"a\") ^ (len(ct)+32-i) ^ last_ptchar) + \"a\"*16 _payload = _payload.encode(\"base64\").replace(\"\\n\",\"\") print \"Sending payload: \", _payload assert len(_payload.decode(\"base64\")) % 16 == 0 assert len(_payload) \u003c= inp_size_limit r.sendline(_payload) hash1 = r.recvline() hash1 = hash1.replace(\"\\n\",\"\") for j in printables: if hash1 == hashlib.md5(flag + j).digest().encode(\"base64\").replace(\"\\n\",\"\"): flag += j break Note that we took advantage of the fact that the first 16 characters of the plaintext are “send_modflag_enc”.\nThis will give us the flag: flag{Ev3n_dunge0ns_are_un5af3_wIth_vu1n_padding}\n",
+  "wordCount" : "1479",
+  "inLanguage": "en",
+  "datePublished": "2018-04-03T00:00:00Z",
+  "dateModified": "2018-04-03T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Ashutosh Ahelleya"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://ashutosh1206.github.io/ctf/swamp-locked-dungeons-2/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Ash's blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://ashutosh1206.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://ashutosh1206.github.io/" accesskey="h" title="Home (Alt + H)">Home</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://ashutosh1206.github.io/blog/" title="Blog">
+                    <span>Blog</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ashutosh1206.github.io/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ashutosh1206.github.io/archive/" title="Archive">
+                    <span>Archive</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ashutosh1206.github.io/ctf/" title="CTF">
+                    <span>CTF</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title">
+      Locked Dungeons 2 - Swamp CTF
+    </h1>
+    <div class="post-meta"><span title='2018-04-03 00:00:00 +0000 UTC'>April 3, 2018</span>&nbsp;·&nbsp;Ashutosh Ahelleya
+
+</div>
+  </header> 
+  <div class="post-content"><p><strong>Challenge Points</strong>: 498<br>
+<strong>Challenge Description</strong>:</p>
+<blockquote>
+<p>The Dungeon Keeper learned from its mistake. This next lock is protected by even stronger encryption. We’re so close to the final level…there has to be a way in.</p>
+</blockquote>
+<p>The Dark Dungeon series of crypto challenges were the only ones I enjoyed solving in the CTF. Rest of the crypto challenges were pathetic, involved a lot of guessing and were not really crypto challenges and can be called as puzzles.</p>
+<p>However, I did not get time to solve Dark-Dungeons-2 during the CTF, since I was stuck in Pagoda challenges that ate up almost all of my time during the CTF (I solved them during the CTF, but did not enjoy at all)</p>
+<p>Similar challenge: <strong>HITCON CTF Quals 2017</strong> - Secret Server</p>
+<p>Locked Dungeons-2 is an improved version of Locked-Dungeon-1 challenge from the same CTF. I will post a write-up of Locked Dungeons-1 soon.</p>
+<p>In this challenge, we are given an encryption code that is running on the server: <code>nc chal1.swampctf.com 1460</code></p>
+<p>Looking at the source code:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;__main__&#34;</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#34;flag.txt&#34;</span>) <span style="color:#66d9ef">as</span> fd:
+</span></span><span style="display:flex;"><span>        flag <span style="color:#f92672">=</span> fd<span style="color:#f92672">.</span>read()
+</span></span><span style="display:flex;"><span>    flag_size <span style="color:#f92672">=</span> len(flag)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    key<span style="color:#f92672">=</span>KEY
+</span></span><span style="display:flex;"><span>    insertion_range <span style="color:#f92672">=</span> flag_size<span style="color:#f92672">//</span>BLOCK_SIZE
+</span></span><span style="display:flex;"><span>    insertion_position <span style="color:#f92672">=</span> random<span style="color:#f92672">.</span>randrange(insertion_range)<span style="color:#f92672">*</span>BLOCK_SIZE
+</span></span><span style="display:flex;"><span>    mod_flag <span style="color:#f92672">=</span> flag[:insertion_position] <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;send_modflag_enc&#34;</span> <span style="color:#f92672">+</span> flag[insertion_position:]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    aescipher <span style="color:#f92672">=</span> AESCipher(key)
+</span></span><span style="display:flex;"><span>    enc_mod_flag <span style="color:#f92672">=</span> aescipher<span style="color:#f92672">.</span>encrypt_wrapper(mod_flag, IV)
+</span></span><span style="display:flex;"><span>    sys<span style="color:#f92672">.</span>stdout<span style="color:#f92672">.</span>write(enc_mod_flag)
+</span></span><span style="display:flex;"><span>    sys<span style="color:#f92672">.</span>stdout<span style="color:#f92672">.</span>write(<span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>)
+</span></span><span style="display:flex;"><span>    sys<span style="color:#f92672">.</span>stdout<span style="color:#f92672">.</span>flush()
+</span></span><span style="display:flex;"><span>    next_level <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(insertion_range):
+</span></span><span style="display:flex;"><span>        sys<span style="color:#f92672">.</span>stdout<span style="color:#f92672">.</span>write(<span style="color:#e6db74">&#34;What do you want me to do?</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>        sys<span style="color:#f92672">.</span>stdout<span style="color:#f92672">.</span>flush()
+</span></span><span style="display:flex;"><span>        enc_recv_str <span style="color:#f92672">=</span> raw_input()
+</span></span><span style="display:flex;"><span>        dec_recv_str <span style="color:#f92672">=</span> aescipher<span style="color:#f92672">.</span>decrypt_wrapper(enc_recv_str)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#34;get_modflag_md5&#34;</span> <span style="color:#f92672">in</span> dec_recv_str:
+</span></span><span style="display:flex;"><span>            next_level <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>            sys<span style="color:#f92672">.</span>stdout<span style="color:#f92672">.</span>write(<span style="color:#e6db74">&#34;Dungeon goes deeper..</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>            sys<span style="color:#f92672">.</span>stdout<span style="color:#f92672">.</span>flush()
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>            sys<span style="color:#f92672">.</span>stdout<span style="color:#f92672">.</span>write(<span style="color:#e6db74">&#34;I am gonna ask again!</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>            sys<span style="color:#f92672">.</span>stdout<span style="color:#f92672">.</span>flush()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> next_level:
+</span></span><span style="display:flex;"><span>        len_enc_mod_flag <span style="color:#f92672">=</span> len(enc_mod_flag)
+</span></span><span style="display:flex;"><span>        inp_size_limit <span style="color:#f92672">=</span> int(len_enc_mod_flag<span style="color:#f92672">*</span><span style="color:#ae81ff">4</span><span style="color:#f92672">/</span><span style="color:#ae81ff">3</span>) <span style="color:#f92672">+</span> <span style="color:#ae81ff">50</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> xrange(<span style="color:#ae81ff">500</span>):
+</span></span><span style="display:flex;"><span>            enc_recv_str <span style="color:#f92672">=</span> raw_input()
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> len(enc_recv_str) <span style="color:#f92672">&gt;</span> inp_size_limit:
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">continue</span>
+</span></span><span style="display:flex;"><span>            dec_recv_str <span style="color:#f92672">=</span> aescipher<span style="color:#f92672">.</span>decrypt_wrapper(enc_strrecv_str)
+</span></span><span style="display:flex;"><span>            sys<span style="color:#f92672">.</span>stdout<span style="color:#f92672">.</span>write(b64encode(md5(dec_recv_str)<span style="color:#f92672">.</span>digest()))
+</span></span><span style="display:flex;"><span>            sys<span style="color:#f92672">.</span>stdout<span style="color:#f92672">.</span>write(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>            sys<span style="color:#f92672">.</span>stdout<span style="color:#f92672">.</span>flush()
+</span></span></code></pre></div><h2 id="the-vulnerability">The Vulnerability<a hidden class="anchor" aria-hidden="true" href="#the-vulnerability">#</a></h2>
+<p>There are two levels in the challenge, each level involving the following attacks:</p>
+<ol>
+<li>CBC Bit Flipping Attack</li>
+<li>Byte by Byte decryption due to vulnerable unpadding</li>
+</ol>
+<p>Let us have a look at the first level:
+<img loading="lazy" src="/swamp18-lockeddungeons-1.png" alt="picture"  />
+</p>
+<ol>
+<li>The program encrypts <strong>mod_flag</strong> = flag[:insertion_position] +  “send_modflag_enc” + flag[insertion_position:] using AES in CBC mode.</li>
+<li><em>insertion_position</em> is generated using a pseudo-random number generator, with its limits being from 0 to flag_size*16. <!-- raw HTML omitted -->Small enough to be brute-forced<!-- raw HTML omitted -->.</li>
+</ol>
+<p>To pass level-1, our motive as an attacker, is to flip “send_modflag_enc” to “get_modflag_md5\x01”, given the ciphertext of <strong>mod_flag</strong>. The server allows decryption of ciphertext. We can do this using CBC Bit Flipping attack, about which you can read here: <a href="https://masterpessimistaa.wordpress.com/2017/05/03/cbc-bit-flipping-attack/">https://masterpessimistaa.wordpress.com/2017/05/03/cbc-bit-flipping-attack/</a></p>
+<p>This is what decryption looks like in CBC mode:
+<img loading="lazy" src="/ctfzone18-ussh-11.png" alt="picture"  />
+</p>
+<p>To pass level-1 we brute-force the program until <em>insertion_position</em> becomes zero, so that “send_modflag_enc” comes in the first block of ciphertext and we can then flip it easily as we are in control of the <strong>Initialisation Vector</strong>. We know can do this by changing IV to:</p>
+<pre><code>IV = IV xor “send_modflag_enc” xor “get_modflag_md5\x01”
+</code></pre>
+<p>Code snippet implementing the brute force first and then Bit Flipping Attack on CBC mode:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">while</span> fl <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>    r <span style="color:#f92672">=</span> remote(<span style="color:#e6db74">&#34;chal1.swampctf.com&#34;</span>,<span style="color:#e6db74">&#34;1460&#34;</span>)
+</span></span><span style="display:flex;"><span>    ct <span style="color:#f92672">=</span> r<span style="color:#f92672">.</span>recvline()
+</span></span><span style="display:flex;"><span>    ct <span style="color:#f92672">=</span> ct<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,<span style="color:#e6db74">&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>    ct <span style="color:#f92672">=</span> ct<span style="color:#f92672">.</span>decode(<span style="color:#e6db74">&#34;base64&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    r<span style="color:#f92672">.</span>recvline()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    init_vector <span style="color:#f92672">=</span> ct[:<span style="color:#ae81ff">16</span>]
+</span></span><span style="display:flex;"><span>    ciphertext <span style="color:#f92672">=</span> ct[<span style="color:#ae81ff">16</span>:]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    res <span style="color:#f92672">=</span> xor(<span style="color:#e6db74">&#34;get_modflag_md5</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#34;</span>,<span style="color:#e6db74">&#34;send_modflag_enc&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">assert</span> xor(res, <span style="color:#e6db74">&#34;send_modflag_enc&#34;</span>) <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;get_modflag_md5</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># CBC Bit Flipping Attack</span>
+</span></span><span style="display:flex;"><span>    iv <span style="color:#f92672">=</span> xor(xor(<span style="color:#e6db74">&#34;get_modflag_md5</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#34;</span>,<span style="color:#e6db74">&#34;send_modflag_enc&#34;</span>), init_vector)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    send_string <span style="color:#f92672">=</span> (iv <span style="color:#f92672">+</span> ciphertext)<span style="color:#f92672">.</span>encode(<span style="color:#e6db74">&#34;base64&#34;</span>)<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,<span style="color:#e6db74">&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>    print <span style="color:#e6db74">&#34;Sending string: &#34;</span>, send_string
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    r<span style="color:#f92672">.</span>sendline(send_string)
+</span></span><span style="display:flex;"><span>    recvline1 <span style="color:#f92672">=</span> r<span style="color:#f92672">.</span>recvline()
+</span></span><span style="display:flex;"><span>    print recvline1<span style="color:#f92672">.</span>strip(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> recvline1[:<span style="color:#ae81ff">21</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;Dungeon goes deeper..&#34;</span>:
+</span></span><span style="display:flex;"><span>        fl <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>    r<span style="color:#f92672">.</span>close()
 </span></span></code></pre></div><p>Now that we have bypassed the first level of the challenge, we can look at the code for the <strong>second level</strong>:
-<img loading=lazy src=/swamp18-lockeddungeons-2.png alt=picture></p><p>The server allows the user to decrypt the ciphertext, but only returns the md5 of the plaintext. Oops!</p><p>Looks secure in the first place since a hash is a one-way function and it becomes such a long task to find a preimage. But when we look at the function for removing the padding after decryption:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>unpad <span style=color:#f92672>=</span> <span style=color:#66d9ef>lambda</span> inp: inp[:<span style=color:#f92672>-</span>ord(inp[<span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>])]
-</span></span></code></pre></div><p>Strange, isn’t it? No validation, no checks if the last character is really less than or equal to 16 or if it really satisfies PKCS#7 padding criteria? Totally vulnerable to Byte-at-a-time decryption!</p><p>We can flip last byte of second last block of ciphertext to make last byte of the plaintext equal to chr(len(<code>plaintext</code>)-1), so when the server decrypts it, it straight away removes all the characters in the plaintext other than the first character and returns the md5 hash of this character. We can now brute force the value returned by checking if it matches with the md5 hash of a printable character, if yes then that character is first character of the flag.</p><p>For the next character, flip last byte of second last block of ciphertext to make last byte of the plaintext equal to chr(len(plaintext)-2), so the server will now return the md5 hash of the first two characters of the plaintext, we have the first byte of plaintext from above, we just have to brute the second byte like we did above.</p><p>Do the same to get all characters of the plaintext.</p><p>Let’s see how we can implement this exploit:</p><ol><li><p>Given the ciphertext containing the flag and “send_modflag_enc” prepended in the beginning (Since we have bypassed level-1, remember we had to brute force until insertion_position became 0? ), we have to add two more blocks of ciphertext ie. 32 bytes: 15*”a” + x + 16*”a”, x is the value we are going to brute force. We are adding two more random blocks to the ciphertext to be decrypted so that our Bit Flipping does not affect the original plaintext string (Remember CBC mode?)</p></li><li><p>We need to know the last byte of the plaintext who ciphertext is the payload that we will send, only then we will be able to flip it to the desired value. Note that we will have to do it only once for a session. I wrote the following script to implement this:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#66d9ef>for</span> i <span style=color:#f92672>in</span> range(len(flag)<span style=color:#f92672>+</span><span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>16</span>):
-</span></span><span style=display:flex><span>last_ptchar <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;&#39;</span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> i <span style=color:#f92672>==</span> <span style=color:#ae81ff>1</span>:
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> j <span style=color:#f92672>in</span> range(<span style=color:#ae81ff>256</span>):
-</span></span><span style=display:flex><span>        _ciphertext <span style=color:#f92672>=</span> init_vector <span style=color:#f92672>+</span> ciphertext
-</span></span><span style=display:flex><span>        _payload <span style=color:#f92672>=</span> _ciphertext <span style=color:#f92672>+</span> <span style=color:#e6db74>&#34;a&#34;</span><span style=color:#f92672>*</span><span style=color:#ae81ff>15</span> <span style=color:#f92672>+</span> chr(ord(<span style=color:#e6db74>&#34;a&#34;</span>) <span style=color:#f92672>^</span> (len(ct)<span style=color:#f92672>+</span><span style=color:#ae81ff>32</span><span style=color:#f92672>-</span>i) <span style=color:#f92672>^</span> j) <span style=color:#f92672>+</span> <span style=color:#e6db74>&#34;a&#34;</span><span style=color:#f92672>*</span><span style=color:#ae81ff>16</span>
-</span></span><span style=display:flex><span>        _payload <span style=color:#f92672>=</span> _payload<span style=color:#f92672>.</span>encode(<span style=color:#e6db74>&#34;base64&#34;</span>)<span style=color:#f92672>.</span>replace(<span style=color:#e6db74>&#34;</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>,<span style=color:#e6db74>&#34;&#34;</span>)
-</span></span><span style=display:flex><span>        print <span style=color:#e6db74>&#34;Sending payload: &#34;</span>, _payload
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>assert</span> len(_payload<span style=color:#f92672>.</span>decode(<span style=color:#e6db74>&#34;base64&#34;</span>)) <span style=color:#f92672>%</span> <span style=color:#ae81ff>16</span> <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span>
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>assert</span> len(_payload) <span style=color:#f92672>&lt;=</span> inp_size_limit
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>        r<span style=color:#f92672>.</span>sendline(_payload)
-</span></span><span style=display:flex><span>        hash1 <span style=color:#f92672>=</span> r<span style=color:#f92672>.</span>recvline()
-</span></span><span style=display:flex><span>        hash1 <span style=color:#f92672>=</span> hash1<span style=color:#f92672>.</span>replace(<span style=color:#e6db74>&#34;</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>,<span style=color:#e6db74>&#34;&#34;</span>)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>        print <span style=color:#e6db74>&#34;Hash: &#34;</span>, hash1
-</span></span><span style=display:flex><span>        print <span style=color:#e6db74>&#34;Hash of s: &#34;</span>, hashlib<span style=color:#f92672>.</span>md5(<span style=color:#e6db74>&#34;s&#34;</span>)<span style=color:#f92672>.</span>digest()<span style=color:#f92672>.</span>encode(<span style=color:#e6db74>&#34;base64&#34;</span>)<span style=color:#f92672>.</span>replace(<span style=color:#e6db74>&#34;</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>,<span style=color:#e6db74>&#34;&#34;</span>)
-</span></span><span style=display:flex><span>        print <span style=color:#e6db74>&#34;</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74> </span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> hash1 <span style=color:#f92672>==</span> hashlib<span style=color:#f92672>.</span>md5(<span style=color:#e6db74>&#34;s&#34;</span>)<span style=color:#f92672>.</span>digest()<span style=color:#f92672>.</span>encode(<span style=color:#e6db74>&#34;base64&#34;</span>)<span style=color:#f92672>.</span>replace(<span style=color:#e6db74>&#34;</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>,<span style=color:#e6db74>&#34;&#34;</span>):
-</span></span><span style=display:flex><span>            last_ptchar <span style=color:#f92672>+=</span> chr(j)
-</span></span><span style=display:flex><span>            print <span style=color:#e6db74>&#34;Last character of plaintext: &#34;</span>, chr(j)<span style=color:#f92672>.</span>encode(<span style=color:#e6db74>&#34;hex&#34;</span>)
-</span></span><span style=display:flex><span>            <span style=color:#66d9ef>break</span>
-</span></span><span style=display:flex><span>        counter <span style=color:#f92672>+=</span> <span style=color:#ae81ff>1</span>
-</span></span></code></pre></div></li><li><p>Now that we have our last character, we flip the last byte of second last block of our payload (&lsquo;x&rsquo;) such that x = x xor (len(ct)+32-1) xor last_ptchar. Get the hash output from the server, check md5 hash of which character matches with the hash output. Repeat the same thing to get all the bytes of the plaintext.</p></li></ol><p>Here is the entire exploit script. Note that I had to run this script multiple times, updating the value of flag in each run with the value I got in the previous run. This is because the server allows only 500 requests per session.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>from</span> pwn <span style=color:#f92672>import</span> <span style=color:#f92672>*</span>
-</span></span><span style=display:flex><span><span style=color:#f92672>import</span> IPython
-</span></span><span style=display:flex><span><span style=color:#f92672>import</span> string
-</span></span><span style=display:flex><span><span style=color:#f92672>import</span> hashlib
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>printables <span style=color:#f92672>=</span> string<span style=color:#f92672>.</span>uppercase <span style=color:#f92672>+</span> string<span style=color:#f92672>.</span>lowercase <span style=color:#f92672>+</span> string<span style=color:#f92672>.</span>digits
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>xor</span>(s1,s2):
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#e6db74>&#34;&#34;</span><span style=color:#f92672>.</span>join(chr(ord(a)<span style=color:#f92672>^</span>ord(b)) <span style=color:#66d9ef>for</span> a,b <span style=color:#f92672>in</span> zip(s1,s2))
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>fl <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>while</span> fl <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span>:
-</span></span><span style=display:flex><span>    r <span style=color:#f92672>=</span> remote(<span style=color:#e6db74>&#34;chal1.swampctf.com&#34;</span>,<span style=color:#e6db74>&#34;1460&#34;</span>)
-</span></span><span style=display:flex><span>    ct <span style=color:#f92672>=</span> r<span style=color:#f92672>.</span>recvline()
-</span></span><span style=display:flex><span>    ct <span style=color:#f92672>=</span> ct<span style=color:#f92672>.</span>replace(<span style=color:#e6db74>&#34;</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>,<span style=color:#e6db74>&#34;&#34;</span>)
-</span></span><span style=display:flex><span>    ct <span style=color:#f92672>=</span> ct<span style=color:#f92672>.</span>decode(<span style=color:#e6db74>&#34;base64&#34;</span>)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    r<span style=color:#f92672>.</span>recvline()
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    init_vector <span style=color:#f92672>=</span> ct[:<span style=color:#ae81ff>16</span>]
-</span></span><span style=display:flex><span>    ciphertext <span style=color:#f92672>=</span> ct[<span style=color:#ae81ff>16</span>:]
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    res <span style=color:#f92672>=</span> xor(<span style=color:#e6db74>&#34;get_modflag_md5</span><span style=color:#ae81ff>\x00</span><span style=color:#e6db74>&#34;</span>,<span style=color:#e6db74>&#34;send_modflag_enc&#34;</span>)
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>assert</span> xor(res, <span style=color:#e6db74>&#34;send_modflag_enc&#34;</span>) <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;get_modflag_md5</span><span style=color:#ae81ff>\x00</span><span style=color:#e6db74>&#34;</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    <span style=color:#75715e># CBC Bit Flipping Attack</span>
-</span></span><span style=display:flex><span>    iv <span style=color:#f92672>=</span> xor(xor(<span style=color:#e6db74>&#34;get_modflag_md5</span><span style=color:#ae81ff>\x00</span><span style=color:#e6db74>&#34;</span>,<span style=color:#e6db74>&#34;send_modflag_enc&#34;</span>), init_vector)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    send_string <span style=color:#f92672>=</span> (iv <span style=color:#f92672>+</span> ciphertext)<span style=color:#f92672>.</span>encode(<span style=color:#e6db74>&#34;base64&#34;</span>)<span style=color:#f92672>.</span>replace(<span style=color:#e6db74>&#34;</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>,<span style=color:#e6db74>&#34;&#34;</span>)
-</span></span><span style=display:flex><span>    print <span style=color:#e6db74>&#34;Sending string: &#34;</span>, send_string
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    r<span style=color:#f92672>.</span>sendline(send_string)
-</span></span><span style=display:flex><span>    recvline1 <span style=color:#f92672>=</span> r<span style=color:#f92672>.</span>recvline()
-</span></span><span style=display:flex><span>    print recvline1<span style=color:#f92672>.</span>strip(<span style=color:#e6db74>&#34;</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>)
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> recvline1[:<span style=color:#ae81ff>21</span>] <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;Dungeon goes deeper..&#34;</span>:
-</span></span><span style=display:flex><span>        fl <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span>
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>break</span>
-</span></span><span style=display:flex><span>    r<span style=color:#f92672>.</span>close()
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Script stops as soon as the counter reaches 500</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 500 is the server request limit</span>
-</span></span><span style=display:flex><span>counter <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>
-</span></span><span style=display:flex><span>inp_size_limit <span style=color:#f92672>=</span> int(len(ct<span style=color:#f92672>.</span>encode(<span style=color:#e6db74>&#34;base64&#34;</span>))<span style=color:#f92672>*</span><span style=color:#ae81ff>4</span><span style=color:#f92672>/</span><span style=color:#ae81ff>3</span>) <span style=color:#f92672>+</span> <span style=color:#ae81ff>50</span>
-</span></span><span style=display:flex><span>print <span style=color:#e6db74>&#34;[*] Brute Force Worked, now onto the exploit&#34;</span>
-</span></span><span style=display:flex><span>print <span style=color:#e6db74>&#34;Input string limit: &#34;</span>, inp_size_limit
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>flag <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;&#34;</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Original Ciphertext: ciphertext</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Original IV: init_vector</span>
-</span></span><span style=display:flex><span>last_ptchar <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;&#39;</span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>for</span> i <span style=color:#f92672>in</span> range(len(flag)<span style=color:#f92672>+</span><span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>16</span>):
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> i <span style=color:#f92672>==</span> <span style=color:#ae81ff>1</span>:
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>for</span> j <span style=color:#f92672>in</span> range(<span style=color:#ae81ff>256</span>):
-</span></span><span style=display:flex><span>            _ciphertext <span style=color:#f92672>=</span> init_vector <span style=color:#f92672>+</span> ciphertext
-</span></span><span style=display:flex><span>            _payload <span style=color:#f92672>=</span> _ciphertext <span style=color:#f92672>+</span> <span style=color:#e6db74>&#34;a&#34;</span><span style=color:#f92672>*</span><span style=color:#ae81ff>15</span> <span style=color:#f92672>+</span> chr(ord(<span style=color:#e6db74>&#34;a&#34;</span>) <span style=color:#f92672>^</span> (len(ct)<span style=color:#f92672>+</span><span style=color:#ae81ff>32</span><span style=color:#f92672>-</span>i) <span style=color:#f92672>^</span> j) <span style=color:#f92672>+</span> <span style=color:#e6db74>&#34;a&#34;</span><span style=color:#f92672>*</span><span style=color:#ae81ff>16</span>
-</span></span><span style=display:flex><span>            _payload <span style=color:#f92672>=</span> _payload<span style=color:#f92672>.</span>encode(<span style=color:#e6db74>&#34;base64&#34;</span>)<span style=color:#f92672>.</span>replace(<span style=color:#e6db74>&#34;</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>,<span style=color:#e6db74>&#34;&#34;</span>)
-</span></span><span style=display:flex><span>            print <span style=color:#e6db74>&#34;Sending payload: &#34;</span>, _payload
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>            <span style=color:#66d9ef>assert</span> len(_payload<span style=color:#f92672>.</span>decode(<span style=color:#e6db74>&#34;base64&#34;</span>)) <span style=color:#f92672>%</span> <span style=color:#ae81ff>16</span> <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span>
-</span></span><span style=display:flex><span>            <span style=color:#66d9ef>assert</span> len(_payload) <span style=color:#f92672>&lt;=</span> inp_size_limit
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>            r<span style=color:#f92672>.</span>sendline(_payload)
-</span></span><span style=display:flex><span>            hash1 <span style=color:#f92672>=</span> r<span style=color:#f92672>.</span>recvline()
-</span></span><span style=display:flex><span>            hash1 <span style=color:#f92672>=</span> hash1<span style=color:#f92672>.</span>replace(<span style=color:#e6db74>&#34;</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>,<span style=color:#e6db74>&#34;&#34;</span>)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>            print <span style=color:#e6db74>&#34;Hash: &#34;</span>, hash1
-</span></span><span style=display:flex><span>            print <span style=color:#e6db74>&#34;Hash of s: &#34;</span>, hashlib<span style=color:#f92672>.</span>md5(<span style=color:#e6db74>&#34;s&#34;</span>)<span style=color:#f92672>.</span>digest()<span style=color:#f92672>.</span>encode(<span style=color:#e6db74>&#34;base64&#34;</span>)<span style=color:#f92672>.</span>replace(<span style=color:#e6db74>&#34;</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>,<span style=color:#e6db74>&#34;&#34;</span>)
-</span></span><span style=display:flex><span>            print <span style=color:#e6db74>&#34;</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74> </span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> hash1 <span style=color:#f92672>==</span> hashlib<span style=color:#f92672>.</span>md5(<span style=color:#e6db74>&#34;s&#34;</span>)<span style=color:#f92672>.</span>digest()<span style=color:#f92672>.</span>encode(<span style=color:#e6db74>&#34;base64&#34;</span>)<span style=color:#f92672>.</span>replace(<span style=color:#e6db74>&#34;</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>,<span style=color:#e6db74>&#34;&#34;</span>):
-</span></span><span style=display:flex><span>                print <span style=color:#e6db74>&#34;Gotit!&#34;</span>
-</span></span><span style=display:flex><span>                last_ptchar <span style=color:#f92672>=</span> chr(j)
-</span></span><span style=display:flex><span>                print <span style=color:#e6db74>&#34;Last character of plaintext: &#34;</span>, chr(j)<span style=color:#f92672>.</span>encode(<span style=color:#e6db74>&#34;hex&#34;</span>)
-</span></span><span style=display:flex><span>                <span style=color:#75715e># We already know that the first 16 characters of the plaintext is &#34;send_modflag_enc&#34;</span>
-</span></span><span style=display:flex><span>                flag <span style=color:#f92672>+=</span> <span style=color:#e6db74>&#34;s&#34;</span>
-</span></span><span style=display:flex><span>                <span style=color:#66d9ef>break</span>
-</span></span><span style=display:flex><span>            counter <span style=color:#f92672>+=</span> <span style=color:#ae81ff>1</span>
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>else</span>:
-</span></span><span style=display:flex><span>        print <span style=color:#e6db74>&#34;Counter: &#34;</span>, counter
-</span></span><span style=display:flex><span>        _ciphertext <span style=color:#f92672>=</span> init_vector <span style=color:#f92672>+</span> ciphertext
-</span></span><span style=display:flex><span>        _payload <span style=color:#f92672>=</span> _ciphertext <span style=color:#f92672>+</span> <span style=color:#e6db74>&#34;a&#34;</span><span style=color:#f92672>*</span><span style=color:#ae81ff>15</span> <span style=color:#f92672>+</span> chr(ord(<span style=color:#e6db74>&#34;a&#34;</span>) <span style=color:#f92672>^</span> (len(ct)<span style=color:#f92672>+</span><span style=color:#ae81ff>32</span><span style=color:#f92672>-</span>i) <span style=color:#f92672>^</span> last_ptchar) <span style=color:#f92672>+</span> <span style=color:#e6db74>&#34;a&#34;</span><span style=color:#f92672>*</span><span style=color:#ae81ff>16</span>
-</span></span><span style=display:flex><span>        _payload <span style=color:#f92672>=</span> _payload<span style=color:#f92672>.</span>encode(<span style=color:#e6db74>&#34;base64&#34;</span>)<span style=color:#f92672>.</span>replace(<span style=color:#e6db74>&#34;</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>,<span style=color:#e6db74>&#34;&#34;</span>)
-</span></span><span style=display:flex><span>        print <span style=color:#e6db74>&#34;Sending payload: &#34;</span>, _payload
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>assert</span> len(_payload<span style=color:#f92672>.</span>decode(<span style=color:#e6db74>&#34;base64&#34;</span>)) <span style=color:#f92672>%</span> <span style=color:#ae81ff>16</span> <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span>
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>assert</span> len(_payload) <span style=color:#f92672>&lt;=</span> inp_size_limit
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>        r<span style=color:#f92672>.</span>sendline(_payload)
-</span></span><span style=display:flex><span>        hash1 <span style=color:#f92672>=</span> r<span style=color:#f92672>.</span>recvline()
-</span></span><span style=display:flex><span>        hash1 <span style=color:#f92672>=</span> hash1<span style=color:#f92672>.</span>replace(<span style=color:#e6db74>&#34;</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>,<span style=color:#e6db74>&#34;&#34;</span>)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>for</span> j <span style=color:#f92672>in</span> printables:
-</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> hash1 <span style=color:#f92672>==</span> hashlib<span style=color:#f92672>.</span>md5(flag <span style=color:#f92672>+</span> j)<span style=color:#f92672>.</span>digest()<span style=color:#f92672>.</span>encode(<span style=color:#e6db74>&#34;base64&#34;</span>)<span style=color:#f92672>.</span>replace(<span style=color:#e6db74>&#34;</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>,<span style=color:#e6db74>&#34;&#34;</span>):
-</span></span><span style=display:flex><span>                flag <span style=color:#f92672>+=</span> j
-</span></span><span style=display:flex><span>                <span style=color:#66d9ef>break</span>
-</span></span></code></pre></div><p>Note that we took advantage of the fact that the first 16 characters of the plaintext are &ldquo;send_modflag_enc&rdquo;.</p><p>This will give us the flag: <strong>flag{Ev3n_dunge0ns_are_un5af3_wIth_vu1n_padding}</strong></p></div><footer class=post-footer><ul class=post-tags><li><a href=https://ashutosh1206.github.io/tags/cbc-bit-flipping/>CBC-Bit-Flipping</a></li></ul></footer></article></main><footer class=footer><span>&copy; 2023 <a href=https://ashutosh1206.github.io/>Ashutosh Ahelleya</a></span>
-<span>Powered by
-<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
-        <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg></a><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script></body></html>
+<img loading="lazy" src="/swamp18-lockeddungeons-2.png" alt="picture"  />
+</p>
+<p>The server allows the user to decrypt the ciphertext, but only returns the md5 of the plaintext. Oops!</p>
+<p>Looks secure in the first place since a hash is a one-way function and it becomes such a long task to find a preimage. But when we look at the function for removing the padding after decryption:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>unpad <span style="color:#f92672">=</span> <span style="color:#66d9ef">lambda</span> inp: inp[:<span style="color:#f92672">-</span>ord(inp[<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>])]
+</span></span></code></pre></div><p>Strange, isn’t it? No validation, no checks if the last character is really less than or equal to 16 or if it really satisfies PKCS#7 padding criteria? Totally vulnerable to Byte-at-a-time decryption!</p>
+<p>We can flip last byte of second last block of ciphertext to make last byte of the plaintext equal to chr(len(<code>plaintext</code>)-1), so when the server decrypts it, it straight away removes all the characters in the plaintext other than the first character and returns the md5 hash of this character. We can now brute force the value returned by checking if it matches with the md5 hash of a printable character, if yes then that character is first character of the flag.</p>
+<p>For the next character, flip last byte of second last block of ciphertext to make last byte of the plaintext equal to chr(len(plaintext)-2), so the server will now return the md5 hash of the first two characters of the plaintext, we have the first byte of plaintext from above, we just have to brute the second byte like we did above.</p>
+<p>Do the same to get all characters of the plaintext.</p>
+<p>Let’s see how we can implement this exploit:</p>
+<ol>
+<li>
+<p>Given the ciphertext containing the flag and “send_modflag_enc” prepended in the beginning (Since we have bypassed level-1, remember we had to brute force until insertion_position became 0? ), we have to add two more blocks of ciphertext ie. 32 bytes: 15*”a” + x + 16*”a”, x is the value we are going to brute force. We are adding two more random blocks to the ciphertext to be decrypted so that our Bit Flipping does not affect the original plaintext string (Remember CBC mode?)</p>
+</li>
+<li>
+<p>We need to know the last byte of the plaintext who ciphertext is the payload that we will send, only then we will be able to flip it to the desired value. Note that we will have to do it only once for a session. I wrote the following script to implement this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(flag)<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">16</span>):
+</span></span><span style="display:flex;"><span>last_ptchar <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> i <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">256</span>):
+</span></span><span style="display:flex;"><span>        _ciphertext <span style="color:#f92672">=</span> init_vector <span style="color:#f92672">+</span> ciphertext
+</span></span><span style="display:flex;"><span>        _payload <span style="color:#f92672">=</span> _ciphertext <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;a&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">15</span> <span style="color:#f92672">+</span> chr(ord(<span style="color:#e6db74">&#34;a&#34;</span>) <span style="color:#f92672">^</span> (len(ct)<span style="color:#f92672">+</span><span style="color:#ae81ff">32</span><span style="color:#f92672">-</span>i) <span style="color:#f92672">^</span> j) <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;a&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">16</span>
+</span></span><span style="display:flex;"><span>        _payload <span style="color:#f92672">=</span> _payload<span style="color:#f92672">.</span>encode(<span style="color:#e6db74">&#34;base64&#34;</span>)<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,<span style="color:#e6db74">&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>        print <span style="color:#e6db74">&#34;Sending payload: &#34;</span>, _payload
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">assert</span> len(_payload<span style="color:#f92672">.</span>decode(<span style="color:#e6db74">&#34;base64&#34;</span>)) <span style="color:#f92672">%</span> <span style="color:#ae81ff">16</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">assert</span> len(_payload) <span style="color:#f92672">&lt;=</span> inp_size_limit
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        r<span style="color:#f92672">.</span>sendline(_payload)
+</span></span><span style="display:flex;"><span>        hash1 <span style="color:#f92672">=</span> r<span style="color:#f92672">.</span>recvline()
+</span></span><span style="display:flex;"><span>        hash1 <span style="color:#f92672">=</span> hash1<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,<span style="color:#e6db74">&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        print <span style="color:#e6db74">&#34;Hash: &#34;</span>, hash1
+</span></span><span style="display:flex;"><span>        print <span style="color:#e6db74">&#34;Hash of s: &#34;</span>, hashlib<span style="color:#f92672">.</span>md5(<span style="color:#e6db74">&#34;s&#34;</span>)<span style="color:#f92672">.</span>digest()<span style="color:#f92672">.</span>encode(<span style="color:#e6db74">&#34;base64&#34;</span>)<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,<span style="color:#e6db74">&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>        print <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74"> </span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> hash1 <span style="color:#f92672">==</span> hashlib<span style="color:#f92672">.</span>md5(<span style="color:#e6db74">&#34;s&#34;</span>)<span style="color:#f92672">.</span>digest()<span style="color:#f92672">.</span>encode(<span style="color:#e6db74">&#34;base64&#34;</span>)<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,<span style="color:#e6db74">&#34;&#34;</span>):
+</span></span><span style="display:flex;"><span>            last_ptchar <span style="color:#f92672">+=</span> chr(j)
+</span></span><span style="display:flex;"><span>            print <span style="color:#e6db74">&#34;Last character of plaintext: &#34;</span>, chr(j)<span style="color:#f92672">.</span>encode(<span style="color:#e6db74">&#34;hex&#34;</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>        counter <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span></code></pre></div></li>
+<li>
+<p>Now that we have our last character, we flip the last byte of second last block of our payload (&lsquo;x&rsquo;) such that x = x xor (len(ct)+32-1) xor last_ptchar. Get the hash output from the server, check md5 hash of which character matches with the hash output. Repeat the same thing to get all the bytes of the plaintext.</p>
+</li>
+</ol>
+<p>Here is the entire exploit script. Note that I had to run this script multiple times, updating the value of flag in each run with the value I got in the previous run. This is because the server allows only 500 requests per session.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> IPython
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> string
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> hashlib
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>printables <span style="color:#f92672">=</span> string<span style="color:#f92672">.</span>uppercase <span style="color:#f92672">+</span> string<span style="color:#f92672">.</span>lowercase <span style="color:#f92672">+</span> string<span style="color:#f92672">.</span>digits
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">xor</span>(s1,s2):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">.</span>join(chr(ord(a)<span style="color:#f92672">^</span>ord(b)) <span style="color:#66d9ef">for</span> a,b <span style="color:#f92672">in</span> zip(s1,s2))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>fl <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> fl <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>    r <span style="color:#f92672">=</span> remote(<span style="color:#e6db74">&#34;chal1.swampctf.com&#34;</span>,<span style="color:#e6db74">&#34;1460&#34;</span>)
+</span></span><span style="display:flex;"><span>    ct <span style="color:#f92672">=</span> r<span style="color:#f92672">.</span>recvline()
+</span></span><span style="display:flex;"><span>    ct <span style="color:#f92672">=</span> ct<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,<span style="color:#e6db74">&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>    ct <span style="color:#f92672">=</span> ct<span style="color:#f92672">.</span>decode(<span style="color:#e6db74">&#34;base64&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    r<span style="color:#f92672">.</span>recvline()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    init_vector <span style="color:#f92672">=</span> ct[:<span style="color:#ae81ff">16</span>]
+</span></span><span style="display:flex;"><span>    ciphertext <span style="color:#f92672">=</span> ct[<span style="color:#ae81ff">16</span>:]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    res <span style="color:#f92672">=</span> xor(<span style="color:#e6db74">&#34;get_modflag_md5</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#34;</span>,<span style="color:#e6db74">&#34;send_modflag_enc&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">assert</span> xor(res, <span style="color:#e6db74">&#34;send_modflag_enc&#34;</span>) <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;get_modflag_md5</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># CBC Bit Flipping Attack</span>
+</span></span><span style="display:flex;"><span>    iv <span style="color:#f92672">=</span> xor(xor(<span style="color:#e6db74">&#34;get_modflag_md5</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#34;</span>,<span style="color:#e6db74">&#34;send_modflag_enc&#34;</span>), init_vector)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    send_string <span style="color:#f92672">=</span> (iv <span style="color:#f92672">+</span> ciphertext)<span style="color:#f92672">.</span>encode(<span style="color:#e6db74">&#34;base64&#34;</span>)<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,<span style="color:#e6db74">&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>    print <span style="color:#e6db74">&#34;Sending string: &#34;</span>, send_string
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    r<span style="color:#f92672">.</span>sendline(send_string)
+</span></span><span style="display:flex;"><span>    recvline1 <span style="color:#f92672">=</span> r<span style="color:#f92672">.</span>recvline()
+</span></span><span style="display:flex;"><span>    print recvline1<span style="color:#f92672">.</span>strip(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> recvline1[:<span style="color:#ae81ff">21</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;Dungeon goes deeper..&#34;</span>:
+</span></span><span style="display:flex;"><span>        fl <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>    r<span style="color:#f92672">.</span>close()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Script stops as soon as the counter reaches 500</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 500 is the server request limit</span>
+</span></span><span style="display:flex;"><span>counter <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>inp_size_limit <span style="color:#f92672">=</span> int(len(ct<span style="color:#f92672">.</span>encode(<span style="color:#e6db74">&#34;base64&#34;</span>))<span style="color:#f92672">*</span><span style="color:#ae81ff">4</span><span style="color:#f92672">/</span><span style="color:#ae81ff">3</span>) <span style="color:#f92672">+</span> <span style="color:#ae81ff">50</span>
+</span></span><span style="display:flex;"><span>print <span style="color:#e6db74">&#34;[*] Brute Force Worked, now onto the exploit&#34;</span>
+</span></span><span style="display:flex;"><span>print <span style="color:#e6db74">&#34;Input string limit: &#34;</span>, inp_size_limit
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>flag <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Original Ciphertext: ciphertext</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Original IV: init_vector</span>
+</span></span><span style="display:flex;"><span>last_ptchar <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(flag)<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">16</span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> i <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">256</span>):
+</span></span><span style="display:flex;"><span>            _ciphertext <span style="color:#f92672">=</span> init_vector <span style="color:#f92672">+</span> ciphertext
+</span></span><span style="display:flex;"><span>            _payload <span style="color:#f92672">=</span> _ciphertext <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;a&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">15</span> <span style="color:#f92672">+</span> chr(ord(<span style="color:#e6db74">&#34;a&#34;</span>) <span style="color:#f92672">^</span> (len(ct)<span style="color:#f92672">+</span><span style="color:#ae81ff">32</span><span style="color:#f92672">-</span>i) <span style="color:#f92672">^</span> j) <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;a&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">16</span>
+</span></span><span style="display:flex;"><span>            _payload <span style="color:#f92672">=</span> _payload<span style="color:#f92672">.</span>encode(<span style="color:#e6db74">&#34;base64&#34;</span>)<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,<span style="color:#e6db74">&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>            print <span style="color:#e6db74">&#34;Sending payload: &#34;</span>, _payload
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">assert</span> len(_payload<span style="color:#f92672">.</span>decode(<span style="color:#e6db74">&#34;base64&#34;</span>)) <span style="color:#f92672">%</span> <span style="color:#ae81ff">16</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">assert</span> len(_payload) <span style="color:#f92672">&lt;=</span> inp_size_limit
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            r<span style="color:#f92672">.</span>sendline(_payload)
+</span></span><span style="display:flex;"><span>            hash1 <span style="color:#f92672">=</span> r<span style="color:#f92672">.</span>recvline()
+</span></span><span style="display:flex;"><span>            hash1 <span style="color:#f92672">=</span> hash1<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,<span style="color:#e6db74">&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            print <span style="color:#e6db74">&#34;Hash: &#34;</span>, hash1
+</span></span><span style="display:flex;"><span>            print <span style="color:#e6db74">&#34;Hash of s: &#34;</span>, hashlib<span style="color:#f92672">.</span>md5(<span style="color:#e6db74">&#34;s&#34;</span>)<span style="color:#f92672">.</span>digest()<span style="color:#f92672">.</span>encode(<span style="color:#e6db74">&#34;base64&#34;</span>)<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,<span style="color:#e6db74">&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>            print <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74"> </span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> hash1 <span style="color:#f92672">==</span> hashlib<span style="color:#f92672">.</span>md5(<span style="color:#e6db74">&#34;s&#34;</span>)<span style="color:#f92672">.</span>digest()<span style="color:#f92672">.</span>encode(<span style="color:#e6db74">&#34;base64&#34;</span>)<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,<span style="color:#e6db74">&#34;&#34;</span>):
+</span></span><span style="display:flex;"><span>                print <span style="color:#e6db74">&#34;Gotit!&#34;</span>
+</span></span><span style="display:flex;"><span>                last_ptchar <span style="color:#f92672">=</span> chr(j)
+</span></span><span style="display:flex;"><span>                print <span style="color:#e6db74">&#34;Last character of plaintext: &#34;</span>, chr(j)<span style="color:#f92672">.</span>encode(<span style="color:#e6db74">&#34;hex&#34;</span>)
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e"># We already know that the first 16 characters of the plaintext is &#34;send_modflag_enc&#34;</span>
+</span></span><span style="display:flex;"><span>                flag <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#34;s&#34;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>            counter <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>        print <span style="color:#e6db74">&#34;Counter: &#34;</span>, counter
+</span></span><span style="display:flex;"><span>        _ciphertext <span style="color:#f92672">=</span> init_vector <span style="color:#f92672">+</span> ciphertext
+</span></span><span style="display:flex;"><span>        _payload <span style="color:#f92672">=</span> _ciphertext <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;a&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">15</span> <span style="color:#f92672">+</span> chr(ord(<span style="color:#e6db74">&#34;a&#34;</span>) <span style="color:#f92672">^</span> (len(ct)<span style="color:#f92672">+</span><span style="color:#ae81ff">32</span><span style="color:#f92672">-</span>i) <span style="color:#f92672">^</span> last_ptchar) <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;a&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">16</span>
+</span></span><span style="display:flex;"><span>        _payload <span style="color:#f92672">=</span> _payload<span style="color:#f92672">.</span>encode(<span style="color:#e6db74">&#34;base64&#34;</span>)<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,<span style="color:#e6db74">&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>        print <span style="color:#e6db74">&#34;Sending payload: &#34;</span>, _payload
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">assert</span> len(_payload<span style="color:#f92672">.</span>decode(<span style="color:#e6db74">&#34;base64&#34;</span>)) <span style="color:#f92672">%</span> <span style="color:#ae81ff">16</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">assert</span> len(_payload) <span style="color:#f92672">&lt;=</span> inp_size_limit
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        r<span style="color:#f92672">.</span>sendline(_payload)
+</span></span><span style="display:flex;"><span>        hash1 <span style="color:#f92672">=</span> r<span style="color:#f92672">.</span>recvline()
+</span></span><span style="display:flex;"><span>        hash1 <span style="color:#f92672">=</span> hash1<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,<span style="color:#e6db74">&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> printables:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> hash1 <span style="color:#f92672">==</span> hashlib<span style="color:#f92672">.</span>md5(flag <span style="color:#f92672">+</span> j)<span style="color:#f92672">.</span>digest()<span style="color:#f92672">.</span>encode(<span style="color:#e6db74">&#34;base64&#34;</span>)<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,<span style="color:#e6db74">&#34;&#34;</span>):
+</span></span><span style="display:flex;"><span>                flag <span style="color:#f92672">+=</span> j
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">break</span>
+</span></span></code></pre></div><p>Note that we took advantage of the fact that the first 16 characters of the plaintext are &ldquo;send_modflag_enc&rdquo;.</p>
+<p>This will give us the flag: <strong>flag{Ev3n_dunge0ns_are_un5af3_wIth_vu1n_padding}</strong></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://ashutosh1206.github.io/tags/cbc-bit-flipping/">CBC-Bit-Flipping</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://ashutosh1206.github.io/">Ash&#39;s blog</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

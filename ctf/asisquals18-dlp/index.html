@@ -1,30 +1,330 @@
-<!doctype html><html lang=en dir=auto><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>DLP - ASIS CTF Quals | Ashutosh Ahelleya</title><meta name=keywords content="NumberTheory,DLP"><meta name=description content="Challenge Points: 158
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>DLP - ASIS CTF Quals | Ash&#39;s blog</title>
+<meta name="keywords" content="NumberTheory, DLP">
+<meta name="description" content="Challenge Points: 158
 Ciphertext is generated as following:
-def encrypt(nbit, msg): msg = bytes_to_long(msg) p = getPrime(nbit) q = getPrime(nbit) n = p*q s = getPrime(4) enc = pow(n+1, msg, n**(s+1)) return n, enc We have: \((n+1)^{msg}\mod n^{s+1}\)
+def encrypt(nbit, msg): msg = bytes_to_long(msg) p = getPrime(nbit) q = getPrime(nbit) n = p*q s = getPrime(4) enc = pow(n&#43;1, msg, n**(s&#43;1)) return n, enc We have: \((n&#43;1)^{msg}\mod n^{s&#43;1}\)
 Expanding the above equation Binomially, we get:
-$$\binom{msg}{0}n^{msg} + \binom{msg}{1}n^{msg-1} + \binom{msg}{2}n^{msg-2} + &mldr; + \binom{msg}{msg-1}n + \binom{msg}{msg}n^0$$ $$(\binom{msg}{0}n^{msg-2} + \binom{msg}{1}n^{msg-3} + &mldr; + \binom{msg}{2})n^2 + \binom{msg}{msg-1}n + \binom{msg}{msg}n^0$$ This can be written as: \((x)n^2 + mn + 1\), where"><meta name=author content="Ashutosh Ahelleya"><link rel=canonical href=https://ashutosh1206.github.io/ctf/asisquals18-dlp/><link crossorigin=anonymous href=/assets/css/stylesheet.bccfefac377bc340f06c260aed1bddf49a4354816d7c570d6aac75a997986c95.css integrity="sha256-vM/vrDd7w0DwbCYK7Rvd9JpDVIFtfFcNaqx1qZeYbJU=" rel="preload stylesheet" as=style><script defer crossorigin=anonymous src=/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG+9vmJ0cTS+ovo0FeA=" onload=hljs.initHighlightingOnLoad()></script>
-<link rel=icon href=https://ashutosh1206.github.io/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://ashutosh1206.github.io/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://ashutosh1206.github.io/favicon-32x32.png><link rel=apple-touch-icon href=https://ashutosh1206.github.io/apple-touch-icon.png><link rel=mask-icon href=https://ashutosh1206.github.io/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--hljs-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css integrity=sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0 crossorigin=anonymous><script defer src=https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js integrity=sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4 crossorigin=anonymous></script>
-<script defer src=https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js integrity=sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05 crossorigin=anonymous onload=renderMathInElement(document.body)></script><meta property="og:title" content="DLP - ASIS CTF Quals"><meta property="og:description" content="Challenge Points: 158
+$$\binom{msg}{0}n^{msg} &#43; \binom{msg}{1}n^{msg-1} &#43; \binom{msg}{2}n^{msg-2} &#43; &hellip; &#43; \binom{msg}{msg-1}n &#43; \binom{msg}{msg}n^0$$ $$(\binom{msg}{0}n^{msg-2} &#43; \binom{msg}{1}n^{msg-3} &#43; &hellip; &#43; \binom{msg}{2})n^2 &#43; \binom{msg}{msg-1}n &#43; \binom{msg}{msg}n^0$$ This can be written as: \((x)n^2 &#43; mn &#43; 1\), where">
+<meta name="author" content="Ashutosh Ahelleya">
+<link rel="canonical" href="https://ashutosh1206.github.io/ctf/asisquals18-dlp/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.bccfefac377bc340f06c260aed1bddf49a4354816d7c570d6aac75a997986c95.css" integrity="sha256-vM/vrDd7w0DwbCYK7Rvd9JpDVIFtfFcNaqx1qZeYbJU=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://ashutosh1206.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://ashutosh1206.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://ashutosh1206.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://ashutosh1206.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://ashutosh1206.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+<meta property="og:title" content="DLP - ASIS CTF Quals" />
+<meta property="og:description" content="Challenge Points: 158
 Ciphertext is generated as following:
-def encrypt(nbit, msg): msg = bytes_to_long(msg) p = getPrime(nbit) q = getPrime(nbit) n = p*q s = getPrime(4) enc = pow(n+1, msg, n**(s+1)) return n, enc We have: \((n+1)^{msg}\mod n^{s+1}\)
+def encrypt(nbit, msg): msg = bytes_to_long(msg) p = getPrime(nbit) q = getPrime(nbit) n = p*q s = getPrime(4) enc = pow(n&#43;1, msg, n**(s&#43;1)) return n, enc We have: \((n&#43;1)^{msg}\mod n^{s&#43;1}\)
 Expanding the above equation Binomially, we get:
-$$\binom{msg}{0}n^{msg} + \binom{msg}{1}n^{msg-1} + \binom{msg}{2}n^{msg-2} + &mldr; + \binom{msg}{msg-1}n + \binom{msg}{msg}n^0$$ $$(\binom{msg}{0}n^{msg-2} + \binom{msg}{1}n^{msg-3} + &mldr; + \binom{msg}{2})n^2 + \binom{msg}{msg-1}n + \binom{msg}{msg}n^0$$ This can be written as: \((x)n^2 + mn + 1\), where"><meta property="og:type" content="article"><meta property="og:url" content="https://ashutosh1206.github.io/ctf/asisquals18-dlp/"><meta property="article:section" content="ctf"><meta property="article:published_time" content="2018-01-16T00:00:00+00:00"><meta property="article:modified_time" content="2018-01-16T00:00:00+00:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="DLP - ASIS CTF Quals"><meta name=twitter:description content="Challenge Points: 158
+$$\binom{msg}{0}n^{msg} &#43; \binom{msg}{1}n^{msg-1} &#43; \binom{msg}{2}n^{msg-2} &#43; &hellip; &#43; \binom{msg}{msg-1}n &#43; \binom{msg}{msg}n^0$$ $$(\binom{msg}{0}n^{msg-2} &#43; \binom{msg}{1}n^{msg-3} &#43; &hellip; &#43; \binom{msg}{2})n^2 &#43; \binom{msg}{msg-1}n &#43; \binom{msg}{msg}n^0$$ This can be written as: \((x)n^2 &#43; mn &#43; 1\), where" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://ashutosh1206.github.io/ctf/asisquals18-dlp/" /><meta property="article:section" content="ctf" />
+<meta property="article:published_time" content="2018-01-16T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-01-16T00:00:00+00:00" /><meta property="og:site_name" content="Ash&#39;s blog" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="DLP - ASIS CTF Quals"/>
+<meta name="twitter:description" content="Challenge Points: 158
 Ciphertext is generated as following:
-def encrypt(nbit, msg): msg = bytes_to_long(msg) p = getPrime(nbit) q = getPrime(nbit) n = p*q s = getPrime(4) enc = pow(n+1, msg, n**(s+1)) return n, enc We have: \((n+1)^{msg}\mod n^{s+1}\)
+def encrypt(nbit, msg): msg = bytes_to_long(msg) p = getPrime(nbit) q = getPrime(nbit) n = p*q s = getPrime(4) enc = pow(n&#43;1, msg, n**(s&#43;1)) return n, enc We have: \((n&#43;1)^{msg}\mod n^{s&#43;1}\)
 Expanding the above equation Binomially, we get:
-$$\binom{msg}{0}n^{msg} + \binom{msg}{1}n^{msg-1} + \binom{msg}{2}n^{msg-2} + &mldr; + \binom{msg}{msg-1}n + \binom{msg}{msg}n^0$$ $$(\binom{msg}{0}n^{msg-2} + \binom{msg}{1}n^{msg-3} + &mldr; + \binom{msg}{2})n^2 + \binom{msg}{msg-1}n + \binom{msg}{msg}n^0$$ This can be written as: \((x)n^2 + mn + 1\), where"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Ctfs","item":"https://ashutosh1206.github.io/ctf/"},{"@type":"ListItem","position":2,"name":"DLP - ASIS CTF Quals","item":"https://ashutosh1206.github.io/ctf/asisquals18-dlp/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"DLP - ASIS CTF Quals","name":"DLP - ASIS CTF Quals","description":"Challenge Points: 158\nCiphertext is generated as following:\ndef encrypt(nbit, msg): msg = bytes_to_long(msg) p = getPrime(nbit) q = getPrime(nbit) n = p*q s = getPrime(4) enc = pow(n+1, msg, n**(s+1)) return n, enc We have: \\((n+1)^{msg}\\mod n^{s+1}\\)\nExpanding the above equation Binomially, we get:\n$$\\binom{msg}{0}n^{msg} + \\binom{msg}{1}n^{msg-1} + \\binom{msg}{2}n^{msg-2} + \u0026hellip; + \\binom{msg}{msg-1}n + \\binom{msg}{msg}n^0$$ $$(\\binom{msg}{0}n^{msg-2} + \\binom{msg}{1}n^{msg-3} + \u0026hellip; + \\binom{msg}{2})n^2 + \\binom{msg}{msg-1}n + \\binom{msg}{msg}n^0$$ This can be written as: \\((x)n^2 + mn + 1\\), where","keywords":["NumberTheory","DLP"],"articleBody":"Challenge Points: 158\nCiphertext is generated as following:\ndef encrypt(nbit, msg): msg = bytes_to_long(msg) p = getPrime(nbit) q = getPrime(nbit) n = p*q s = getPrime(4) enc = pow(n+1, msg, n**(s+1)) return n, enc We have: \\((n+1)^{msg}\\mod n^{s+1}\\)\nExpanding the above equation Binomially, we get:\n$$\\binom{msg}{0}n^{msg} + \\binom{msg}{1}n^{msg-1} + \\binom{msg}{2}n^{msg-2} + … + \\binom{msg}{msg-1}n + \\binom{msg}{msg}n^0$$ $$(\\binom{msg}{0}n^{msg-2} + \\binom{msg}{1}n^{msg-3} + … + \\binom{msg}{2})n^2 + \\binom{msg}{msg-1}n + \\binom{msg}{msg}n^0$$ This can be written as: \\((x)n^2 + mn + 1\\), where\n$$x = \\binom{msg}{0}n^{msg-2} + \\binom{msg}{1}n^{msg-3} + … + \\binom{msg}{2}$$\nIf we take the above result and divide it with \\(n^2\\), the following can be written:\n\\(xn^2 + mn + 1\\equiv mn + 1\\mod n^2\\) –\u003e (1)\nWe know that \\(n^{s+1}\\) \u003e \\(n^2\\) and \\(n^{s+1};%;n^2 = 0\\)\nThus,\n\\(enc\\equiv (n+1)^{msg}\\mod n^{s+1}\\)\n\\(\\implies enc\\equiv (n+1)^{msg}\\mod n^2\\)\nFrom (1), we can write:\n\\(enc\\equiv msg*n + 1\\mod n^2\\)\n\\(\\implies msg = \\frac{(enc \\mod n^2) - 1}{n}\\)\nhex(int(((enc%(n^2))-1)/n))[2:].replace(\"L\",\"\").decode(\"hex\") ","wordCount":"151","inLanguage":"en","datePublished":"2018-01-16T00:00:00Z","dateModified":"2018-01-16T00:00:00Z","author":{"@type":"Person","name":"Ashutosh Ahelleya"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://ashutosh1206.github.io/ctf/asisquals18-dlp/"},"publisher":{"@type":"Organization","name":"Ashutosh Ahelleya","logo":{"@type":"ImageObject","url":"https://ashutosh1206.github.io/favicon.ico"}}}</script></head><body id=top><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://ashutosh1206.github.io/ accesskey=h title="Home (Alt + H)">Home</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)"><svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg><svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://ashutosh1206.github.io/blog/ title=Blog><span>Blog</span></a></li><li><a href=https://ashutosh1206.github.io/archive/ title=Archive><span>Archive</span></a></li><li><a href=https://ashutosh1206.github.io/ctf/ title=CTF><span>CTF</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class=post-title>DLP - ASIS CTF Quals</h1><div class=post-meta><span title='2018-01-16 00:00:00 +0000 UTC'>January 16, 2018</span>&nbsp;·&nbsp;Ashutosh Ahelleya</div></header><div class=post-content><p><strong>Challenge Points</strong>: 158</p><p>Ciphertext is generated as following:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>encrypt</span>(nbit, msg):
-</span></span><span style=display:flex><span>    msg <span style=color:#f92672>=</span> bytes_to_long(msg)
-</span></span><span style=display:flex><span>    p <span style=color:#f92672>=</span> getPrime(nbit)
-</span></span><span style=display:flex><span>    q <span style=color:#f92672>=</span> getPrime(nbit)
-</span></span><span style=display:flex><span>    n <span style=color:#f92672>=</span> p<span style=color:#f92672>*</span>q
-</span></span><span style=display:flex><span>    s <span style=color:#f92672>=</span> getPrime(<span style=color:#ae81ff>4</span>)
-</span></span><span style=display:flex><span>    enc <span style=color:#f92672>=</span> pow(n<span style=color:#f92672>+</span><span style=color:#ae81ff>1</span>, msg, n<span style=color:#f92672>**</span>(s<span style=color:#f92672>+</span><span style=color:#ae81ff>1</span>))
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> n, enc
-</span></span></code></pre></div><p>We have: \((n+1)^{msg}\mod n^{s+1}\)</p><p>Expanding the above equation Binomially, we get:<br>$$\binom{msg}{0}n^{msg} + \binom{msg}{1}n^{msg-1} + \binom{msg}{2}n^{msg-2} + &mldr; + \binom{msg}{msg-1}n + \binom{msg}{msg}n^0$$
-$$(\binom{msg}{0}n^{msg-2} + \binom{msg}{1}n^{msg-3} + &mldr; + \binom{msg}{2})n^2 + \binom{msg}{msg-1}n + \binom{msg}{msg}n^0$$
+$$\binom{msg}{0}n^{msg} &#43; \binom{msg}{1}n^{msg-1} &#43; \binom{msg}{2}n^{msg-2} &#43; &hellip; &#43; \binom{msg}{msg-1}n &#43; \binom{msg}{msg}n^0$$ $$(\binom{msg}{0}n^{msg-2} &#43; \binom{msg}{1}n^{msg-3} &#43; &hellip; &#43; \binom{msg}{2})n^2 &#43; \binom{msg}{msg-1}n &#43; \binom{msg}{msg}n^0$$ This can be written as: \((x)n^2 &#43; mn &#43; 1\), where"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Ctfs",
+      "item": "https://ashutosh1206.github.io/ctf/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "DLP - ASIS CTF Quals",
+      "item": "https://ashutosh1206.github.io/ctf/asisquals18-dlp/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "DLP - ASIS CTF Quals",
+  "name": "DLP - ASIS CTF Quals",
+  "description": "Challenge Points: 158\nCiphertext is generated as following:\ndef encrypt(nbit, msg): msg = bytes_to_long(msg) p = getPrime(nbit) q = getPrime(nbit) n = p*q s = getPrime(4) enc = pow(n+1, msg, n**(s+1)) return n, enc We have: \\((n+1)^{msg}\\mod n^{s+1}\\)\nExpanding the above equation Binomially, we get:\n$$\\binom{msg}{0}n^{msg} + \\binom{msg}{1}n^{msg-1} + \\binom{msg}{2}n^{msg-2} + \u0026hellip; + \\binom{msg}{msg-1}n + \\binom{msg}{msg}n^0$$ $$(\\binom{msg}{0}n^{msg-2} + \\binom{msg}{1}n^{msg-3} + \u0026hellip; + \\binom{msg}{2})n^2 + \\binom{msg}{msg-1}n + \\binom{msg}{msg}n^0$$ This can be written as: \\((x)n^2 + mn + 1\\), where",
+  "keywords": [
+    "NumberTheory", "DLP"
+  ],
+  "articleBody": "Challenge Points: 158\nCiphertext is generated as following:\ndef encrypt(nbit, msg): msg = bytes_to_long(msg) p = getPrime(nbit) q = getPrime(nbit) n = p*q s = getPrime(4) enc = pow(n+1, msg, n**(s+1)) return n, enc We have: \\((n+1)^{msg}\\mod n^{s+1}\\)\nExpanding the above equation Binomially, we get:\n$$\\binom{msg}{0}n^{msg} + \\binom{msg}{1}n^{msg-1} + \\binom{msg}{2}n^{msg-2} + … + \\binom{msg}{msg-1}n + \\binom{msg}{msg}n^0$$ $$(\\binom{msg}{0}n^{msg-2} + \\binom{msg}{1}n^{msg-3} + … + \\binom{msg}{2})n^2 + \\binom{msg}{msg-1}n + \\binom{msg}{msg}n^0$$ This can be written as: \\((x)n^2 + mn + 1\\), where\n$$x = \\binom{msg}{0}n^{msg-2} + \\binom{msg}{1}n^{msg-3} + … + \\binom{msg}{2}$$\nIf we take the above result and divide it with \\(n^2\\), the following can be written:\n\\(xn^2 + mn + 1\\equiv mn + 1\\mod n^2\\) –\u003e (1)\nWe know that \\(n^{s+1}\\) \u003e \\(n^2\\) and \\(n^{s+1};%;n^2 = 0\\)\nThus,\n\\(enc\\equiv (n+1)^{msg}\\mod n^{s+1}\\)\n\\(\\implies enc\\equiv (n+1)^{msg}\\mod n^2\\)\nFrom (1), we can write:\n\\(enc\\equiv msg*n + 1\\mod n^2\\)\n\\(\\implies msg = \\frac{(enc \\mod n^2) - 1}{n}\\)\nhex(int(((enc%(n^2))-1)/n))[2:].replace(\"L\",\"\").decode(\"hex\") ",
+  "wordCount" : "151",
+  "inLanguage": "en",
+  "datePublished": "2018-01-16T00:00:00Z",
+  "dateModified": "2018-01-16T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Ashutosh Ahelleya"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://ashutosh1206.github.io/ctf/asisquals18-dlp/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Ash's blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://ashutosh1206.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://ashutosh1206.github.io/" accesskey="h" title="Home (Alt + H)">Home</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://ashutosh1206.github.io/blog/" title="Blog">
+                    <span>Blog</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ashutosh1206.github.io/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ashutosh1206.github.io/archive/" title="Archive">
+                    <span>Archive</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ashutosh1206.github.io/ctf/" title="CTF">
+                    <span>CTF</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title">
+      DLP - ASIS CTF Quals
+    </h1>
+    <div class="post-meta"><span title='2018-01-16 00:00:00 +0000 UTC'>January 16, 2018</span>&nbsp;·&nbsp;Ashutosh Ahelleya
+
+</div>
+  </header> 
+  <div class="post-content"><p><strong>Challenge Points</strong>: 158</p>
+<p>Ciphertext is generated as following:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">encrypt</span>(nbit, msg):
+</span></span><span style="display:flex;"><span>    msg <span style="color:#f92672">=</span> bytes_to_long(msg)
+</span></span><span style="display:flex;"><span>    p <span style="color:#f92672">=</span> getPrime(nbit)
+</span></span><span style="display:flex;"><span>    q <span style="color:#f92672">=</span> getPrime(nbit)
+</span></span><span style="display:flex;"><span>    n <span style="color:#f92672">=</span> p<span style="color:#f92672">*</span>q
+</span></span><span style="display:flex;"><span>    s <span style="color:#f92672">=</span> getPrime(<span style="color:#ae81ff">4</span>)
+</span></span><span style="display:flex;"><span>    enc <span style="color:#f92672">=</span> pow(n<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>, msg, n<span style="color:#f92672">**</span>(s<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>))
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> n, enc
+</span></span></code></pre></div><p>We have: \((n+1)^{msg}\mod n^{s+1}\)</p>
+<p>Expanding the above equation Binomially, we get:<br>
+$$\binom{msg}{0}n^{msg} + \binom{msg}{1}n^{msg-1} + \binom{msg}{2}n^{msg-2} + &hellip; + \binom{msg}{msg-1}n + \binom{msg}{msg}n^0$$
+$$(\binom{msg}{0}n^{msg-2} + \binom{msg}{1}n^{msg-3} + &hellip; + \binom{msg}{2})n^2 + \binom{msg}{msg-1}n + \binom{msg}{msg}n^0$$
 This can be written as:
-\((x)n^2 + mn + 1\), where<br>$$x = \binom{msg}{0}n^{msg-2} + \binom{msg}{1}n^{msg-3} + &mldr; + \binom{msg}{2}$$</p><p>If we take the above result and divide it with \(n^2\), the following can be written:<br>\(xn^2 + mn + 1\equiv mn + 1\mod n^2\) &ndash;> <strong>(1)</strong></p><p>We know that \(n^{s+1}\) > \(n^2\) and \(n^{s+1};%;n^2 = 0\)</p><p>Thus,<br>\(enc\equiv (n+1)^{msg}\mod n^{s+1}\)<br>\(\implies enc\equiv (n+1)^{msg}\mod n^2\)</p><p>From (1), we can write:<br>\(enc\equiv msg*n + 1\mod n^2\)<br>\(\implies msg = \frac{(enc \mod n^2) - 1}{n}\)</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>hex(int(((enc<span style=color:#f92672>%</span>(n<span style=color:#f92672>^</span><span style=color:#ae81ff>2</span>))<span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>)<span style=color:#f92672>/</span>n))[<span style=color:#ae81ff>2</span>:]<span style=color:#f92672>.</span>replace(<span style=color:#e6db74>&#34;L&#34;</span>,<span style=color:#e6db74>&#34;&#34;</span>)<span style=color:#f92672>.</span>decode(<span style=color:#e6db74>&#34;hex&#34;</span>)
-</span></span></code></pre></div></div><footer class=post-footer><ul class=post-tags><li><a href=https://ashutosh1206.github.io/tags/numbertheory/>NumberTheory</a></li><li><a href=https://ashutosh1206.github.io/tags/dlp/>DLP</a></li></ul></footer></article></main><footer class=footer><span>&copy; 2023 <a href=https://ashutosh1206.github.io/>Ashutosh Ahelleya</a></span>
-<span>Powered by
-<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
-        <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg></a><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script></body></html>
+\((x)n^2 + mn + 1\), where<br>
+$$x = \binom{msg}{0}n^{msg-2} + \binom{msg}{1}n^{msg-3} + &hellip; + \binom{msg}{2}$$</p>
+<p>If we take the above result and divide it with \(n^2\), the following can be written:<br>
+\(xn^2 + mn + 1\equiv mn + 1\mod n^2\) &ndash;&gt; <strong>(1)</strong></p>
+<p>We know that \(n^{s+1}\) &gt; \(n^2\) and \(n^{s+1};%;n^2 = 0\)</p>
+<p>Thus,<br>
+\(enc\equiv (n+1)^{msg}\mod n^{s+1}\)<br>
+\(\implies enc\equiv (n+1)^{msg}\mod n^2\)</p>
+<p>From (1), we can write:<br>
+\(enc\equiv msg*n + 1\mod n^2\)<br>
+\(\implies msg = \frac{(enc \mod n^2) - 1}{n}\)</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>hex(int(((enc<span style="color:#f92672">%</span>(n<span style="color:#f92672">^</span><span style="color:#ae81ff">2</span>))<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)<span style="color:#f92672">/</span>n))[<span style="color:#ae81ff">2</span>:]<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">&#34;L&#34;</span>,<span style="color:#e6db74">&#34;&#34;</span>)<span style="color:#f92672">.</span>decode(<span style="color:#e6db74">&#34;hex&#34;</span>)
+</span></span></code></pre></div>
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://ashutosh1206.github.io/tags/numbertheory/">NumberTheory</a></li>
+      <li><a href="https://ashutosh1206.github.io/tags/dlp/">DLP</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://ashutosh1206.github.io/">Ash&#39;s blog</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

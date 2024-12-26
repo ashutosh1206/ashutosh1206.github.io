@@ -1,6 +1,25 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>CTR-Bit-Flippping on Ashutosh Ahelleya</title><link>https://ashutosh1206.github.io/tags/ctr-bit-flippping/</link><description>Recent content in CTR-Bit-Flippping on Ashutosh Ahelleya</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 05 Feb 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://ashutosh1206.github.io/tags/ctr-bit-flippping/index.xml" rel="self" type="application/rss+xml"/><item><title>GCM - Nullcon HackIM CTF</title><link>https://ashutosh1206.github.io/ctf/hackim19-gcm/</link><pubDate>Tue, 05 Feb 2019 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/hackim19-gcm/</guid><description>Challenge Points: 300
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>CTR-Bit-Flippping on Ash&#39;s blog</title>
+    <link>https://ashutosh1206.github.io/tags/ctr-bit-flippping/</link>
+    <description>Recent content in CTR-Bit-Flippping on Ash&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 05 Feb 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://ashutosh1206.github.io/tags/ctr-bit-flippping/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>GCM - Nullcon HackIM CTF</title>
+      <link>https://ashutosh1206.github.io/ctf/hackim19-gcm/</link>
+      <pubDate>Tue, 05 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://ashutosh1206.github.io/ctf/hackim19-gcm/</guid>
+      <description>Challenge Points: 300
 Challenge Description: [None]
 tl;dr
 CTR Bit Flipping Break GHASH to get authentication key H (unintended approach) Bypass authentication The way we solved it (unintended approach) was pretty interesting!
 Challenge Internals We are given a service that allows us to encrypt/decrypt data using AES-CTR mode. Code for this is as follows:
-def main(): global sessionid username = input(&amp;#39;Enter username: &amp;#39;) sessionid = sha256(username.encode()).digest()[:10] while True: print(&amp;#34;Menu&amp;#34;) print(&amp;#34;[1] Encrypt&amp;#34;) print(&amp;#34;[2] Decrypt&amp;#34;) print(&amp;#34;[3] Exit&amp;#34;) choice = input(&amp;#34;&amp;gt; &amp;#34;) if choice == &amp;#39;1&amp;#39;: msg = input(&amp;#39;Enter message to be encrypted: &amp;#39;) if &amp;#39;flag&amp;#39; in msg: print(&amp;#34;You cant encrypt flag :(&amp;#34;) continue c = encrypt(msg.</description></item></channel></rss>
+def main(): global sessionid username = input(&amp;#39;Enter username: &amp;#39;) sessionid = sha256(username.encode()).digest()[:10] while True: print(&amp;#34;Menu&amp;#34;) print(&amp;#34;[1] Encrypt&amp;#34;) print(&amp;#34;[2] Decrypt&amp;#34;) print(&amp;#34;[3] Exit&amp;#34;) choice = input(&amp;#34;&amp;gt; &amp;#34;) if choice == &amp;#39;1&amp;#39;: msg = input(&amp;#39;Enter message to be encrypted: &amp;#39;) if &amp;#39;flag&amp;#39; in msg: print(&amp;#34;You cant encrypt flag :(&amp;#34;) continue c = encrypt(msg.</description>
+    </item>
+    
+  </channel>
+</rss>

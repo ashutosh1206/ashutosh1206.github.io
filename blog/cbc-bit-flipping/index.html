@@ -1,45 +1,386 @@
-<!doctype html><html lang=en dir=auto><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>CBC Bit Flipping Attack | Ashutosh Ahelleya</title><meta name=keywords content="CBC-Bit-Flipping,BlockCipher"><meta name=description content="In this blog post, the attack on CBC mode of block cipher encryption will be discussed and in the end, detailed writeup for the 16th challenge of Matasano-Crypto-Challenge i.e. about the Bit Flipping Attack in AES-CBC will be provided with explanation!
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>CBC Bit Flipping Attack | Ash&#39;s blog</title>
+<meta name="keywords" content="CBC-Bit-Flipping, BlockCipher">
+<meta name="description" content="In this blog post, the attack on CBC mode of block cipher encryption will be discussed and in the end, detailed writeup for the 16th challenge of Matasano-Crypto-Challenge i.e. about the Bit Flipping Attack in AES-CBC will be provided with explanation!
 I want the reader to go through these concepts discussed in the following blog posts, before actually understanding how the CBC Bit-Flipping Attack works:
-Mode Detection Oracle Blocksize Detection Oracle We will list down all the information one must have access to, in order to initiate this attack:"><meta name=author content="Ashutosh Ahelleya"><link rel=canonical href=https://ashutosh1206.github.io/blog/cbc-bit-flipping/><link crossorigin=anonymous href=/assets/css/stylesheet.bccfefac377bc340f06c260aed1bddf49a4354816d7c570d6aac75a997986c95.css integrity="sha256-vM/vrDd7w0DwbCYK7Rvd9JpDVIFtfFcNaqx1qZeYbJU=" rel="preload stylesheet" as=style><script defer crossorigin=anonymous src=/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG+9vmJ0cTS+ovo0FeA=" onload=hljs.initHighlightingOnLoad()></script>
-<link rel=icon href=https://ashutosh1206.github.io/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://ashutosh1206.github.io/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://ashutosh1206.github.io/favicon-32x32.png><link rel=apple-touch-icon href=https://ashutosh1206.github.io/apple-touch-icon.png><link rel=mask-icon href=https://ashutosh1206.github.io/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--hljs-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><meta property="og:title" content="CBC Bit Flipping Attack"><meta property="og:description" content="In this blog post, the attack on CBC mode of block cipher encryption will be discussed and in the end, detailed writeup for the 16th challenge of Matasano-Crypto-Challenge i.e. about the Bit Flipping Attack in AES-CBC will be provided with explanation!
+Mode Detection Oracle Blocksize Detection Oracle We will list down all the information one must have access to, in order to initiate this attack:">
+<meta name="author" content="Ashutosh Ahelleya">
+<link rel="canonical" href="https://ashutosh1206.github.io/blog/cbc-bit-flipping/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.bccfefac377bc340f06c260aed1bddf49a4354816d7c570d6aac75a997986c95.css" integrity="sha256-vM/vrDd7w0DwbCYK7Rvd9JpDVIFtfFcNaqx1qZeYbJU=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://ashutosh1206.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://ashutosh1206.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://ashutosh1206.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://ashutosh1206.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://ashutosh1206.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript><meta property="og:title" content="CBC Bit Flipping Attack" />
+<meta property="og:description" content="In this blog post, the attack on CBC mode of block cipher encryption will be discussed and in the end, detailed writeup for the 16th challenge of Matasano-Crypto-Challenge i.e. about the Bit Flipping Attack in AES-CBC will be provided with explanation!
 I want the reader to go through these concepts discussed in the following blog posts, before actually understanding how the CBC Bit-Flipping Attack works:
-Mode Detection Oracle Blocksize Detection Oracle We will list down all the information one must have access to, in order to initiate this attack:"><meta property="og:type" content="article"><meta property="og:url" content="https://ashutosh1206.github.io/blog/cbc-bit-flipping/"><meta property="article:section" content="blog"><meta property="article:published_time" content="2017-05-03T00:00:00+00:00"><meta property="article:modified_time" content="2017-05-03T00:00:00+00:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="CBC Bit Flipping Attack"><meta name=twitter:description content="In this blog post, the attack on CBC mode of block cipher encryption will be discussed and in the end, detailed writeup for the 16th challenge of Matasano-Crypto-Challenge i.e. about the Bit Flipping Attack in AES-CBC will be provided with explanation!
+Mode Detection Oracle Blocksize Detection Oracle We will list down all the information one must have access to, in order to initiate this attack:" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://ashutosh1206.github.io/blog/cbc-bit-flipping/" /><meta property="article:section" content="blog" />
+<meta property="article:published_time" content="2017-05-03T00:00:00+00:00" />
+<meta property="article:modified_time" content="2017-05-03T00:00:00+00:00" /><meta property="og:site_name" content="Ash&#39;s blog" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="CBC Bit Flipping Attack"/>
+<meta name="twitter:description" content="In this blog post, the attack on CBC mode of block cipher encryption will be discussed and in the end, detailed writeup for the 16th challenge of Matasano-Crypto-Challenge i.e. about the Bit Flipping Attack in AES-CBC will be provided with explanation!
 I want the reader to go through these concepts discussed in the following blog posts, before actually understanding how the CBC Bit-Flipping Attack works:
-Mode Detection Oracle Blocksize Detection Oracle We will list down all the information one must have access to, in order to initiate this attack:"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Blogs","item":"https://ashutosh1206.github.io/blog/"},{"@type":"ListItem","position":2,"name":"CBC Bit Flipping Attack","item":"https://ashutosh1206.github.io/blog/cbc-bit-flipping/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"CBC Bit Flipping Attack","name":"CBC Bit Flipping Attack","description":"In this blog post, the attack on CBC mode of block cipher encryption will be discussed and in the end, detailed writeup for the 16th challenge of Matasano-Crypto-Challenge i.e. about the Bit Flipping Attack in AES-CBC will be provided with explanation!\nI want the reader to go through these concepts discussed in the following blog posts, before actually understanding how the CBC Bit-Flipping Attack works:\nMode Detection Oracle Blocksize Detection Oracle We will list down all the information one must have access to, in order to initiate this attack:","keywords":["CBC-Bit-Flipping","BlockCipher"],"articleBody":"In this blog post, the attack on CBC mode of block cipher encryption will be discussed and in the end, detailed writeup for the 16th challenge of Matasano-Crypto-Challenge i.e. about the Bit Flipping Attack in AES-CBC will be provided with explanation!\nI want the reader to go through these concepts discussed in the following blog posts, before actually understanding how the CBC Bit-Flipping Attack works:\nMode Detection Oracle Blocksize Detection Oracle We will list down all the information one must have access to, in order to initiate this attack:\nCipher text Encryption Oracle as E(“random string” || payload || “another random string”) Here, in this function, the attacker is allowed to supply input to the encryption function as payload. This function is literally the heart of the attack. All the arguments for the attack will be supplied here. Decryption Oracle What is Bit Flipping Attack? Bit Flipping Attack requires the mode of encryption used for encryption to be CBC(Cipher Block Chaining) about which you can read here.\nThis attack is usually in scenarios where the encryption function takes in some input as a payload, prepends a random string, appends another string to it before encrypting it. There are cases where the encryption function escapes some characters or character sequences from the payload supplied, before encrypting it. For example let us consider this function:\ndef encrypt(payload): obj = AES.new(key, AES.MODE_CBC, iv) for i in xrange(len(payload)): if payload[i] == \";\" or payload[i] == \"=\": payload = payload.replace(payload[i], \"?\") str1 = \"comment1=cooking%20MCs;userdata=\" + payload + \";comment2=%20like%20a%20pound%20of%20bacon\" str1 = padding(str1) ciphertext = obj.encrypt(str1) return ciphertext The function escapes “;” and “=” characters from the payload and then prepends and appends strings. It then encrypts the resultant string(concatenation of prepend string, payload and appended string).\nThe decryption function:\ndef decrypt(ciphertext): obj1 = AES.new(key,AES.MODE_CBC,iv) plaintext = obj1.decrypt(ciphertext) if \";admin=true;\" in plaintext: print \"Yes, you did it\" else: print \"Nope, you didn't\" The given decryption function checks if “;admin=true;” is still present in the decrypted string. If yes, then the payload leads to successful login as the admin. But the problem here is: during the encryption since the “;” and “=” characters are escaped from the payload, one cannot directly give “;admin=true;” as payload since the encryption function will change it to “?admin?true?” before encryption.\nBrief summary:\nThe encryption function takes in payload and escapes some characters from it It then appends and prepends random string to the payload –\u003e resultant string. Encrypts the resultant string and returns the cipher text. Decryption function decrypts the cipher text returned by the encryption function and checks if “;admin=true;” is present in the decrypted text. Since “;” and “=” are no longer present beside “admin”(due to escaping of characters), the decryption function does not allow login as the admin! To understand the attack, we need to closely look how decryption takes place in this mode:\nThe decryption in CBC mode takes place as:\nLet us suppose our “?admin?true?” is in the second block of plain text. This plain text block, is a result of XORing of cipher text of the same block and cipher text of the previous block, as we can see from the figure given above. Pay attention closely now.\nWhat we am in control of, are the cipher text blocks. The attacker can manipulate them, before sending them as a parameter to the decryption function. A rule says that whenever one changes one byte(call this “flips”) at an offset in a cipher text block, the same offset is changed in the next plain text block (See the figure below!). Of course, when one flips one byte in a cipher text block, plain text of the corresponding block also changes; but we are not worried about the flip in the plain text block where the “random bytes” of the prepend string are present. What we are focusing now is the second plain text block, which essentially contains our “?admin?true?”.\nLet us consider:\nThe plain text block containing “?admin?true?” to be ‘P’. The cipher text block next to which we have the plain text block containing “?admin?true?” to be ‘A’. The cipher text block of the corresponding plain text block containing “?admin?true?” to be ‘B’. Then we can write, (refer to the figure above)\nA = P xor BlockCipherDecryption(B)\n“BlockCipherDecryption” is the large block present in the figure as “Block Cipher Decryption” which decrypts a cipher text block based upon the standard encryption used. BlockCipherDecryption(B) is a constant since we are not flipping bits in “B” (Remember this!). For the nth byte of each block we can thus write,\nA[n] = P[n] xor BlockCipherDecryption(B[n]) ——–\u003e 1.\nBlockCipherDecryption(B[n]) can be written as:\nBlockCipherDecryption(B[n]) = A[n] xor P[n] ——–\u003e 2.\nValue at 2. is fixed. We know that we want P[n] in 1. to be of our desired value(Let this be ‘PD’) whereas P[n] in 2. is the actual value of the plain text (Let this be ‘PA’) after the decryption of cipher text without flipping any of them. So, A[n] then becomes:\nA[n] = PD xor A[n] xor PA\nor A[n] = A[n] xor (PD xor PA)\nPD xor PA —\u003e XOR of the desired plain text byte with the actual byte present in the plain text block.\nSo, we simply XOR the result (PD xor PA) with the actual value of the A[n]. The result is the value we should give at that byte in the cipher text block previous to the plain text containing “?admin?true?”.\nRepeat this for all other blocks.\nCryptopals Challenge 16 In this challenge, “;” and “=” are replaced by “?”. Here in this case, the desired value is “;” or “=”.\nXORing each with the actual value of plain text “?”, we get 4 and 2 respectively. Now we XOR this result with the offset in the actual cipher text block (A[n]). Repeat this for each byte to be manipulated. This gives the value to be supplied in the same offset so that the resultant plain text contains “;admin=true;” instead of “?admin?true?”.\nHere is the exploit:\ncipher_list = [] payload = \";admin=true;\" ciphertext = encrypt(payload) i = 0 while i*16 \u003c= len(ciphertext): cipher_list.append(ciphertext[i*16: 16 + (i*16)]) i += 1 cipher_list.remove(cipher_list[6]) attack_on_block = cipher_list[1] list1 = list(attack_on_block) list1[0] = chr(ord(list1[0]) ^ ord(\"?\") ^ ord(\";\")) list1[6] = chr(ord(list1[6]) ^ ord(\"?\") ^ ord(\"=\")) list1[11] = chr(ord(list1[11]) ^ ord(\"?\") ^ ord(\";\")) cipher_list[1] = ''.join(list1) ciphertext = ''.join(cipher_list) decrypt(ciphertext) The entire solver script for this challenge can be found here: https://github.com/ashutosh1206/Matasano-Crypto-Challenges/blob/master/set2/p16/exploit.py\nReferences Block cipher mode of operation\n","wordCount":"1078","inLanguage":"en","datePublished":"2017-05-03T00:00:00Z","dateModified":"2017-05-03T00:00:00Z","author":{"@type":"Person","name":"Ashutosh Ahelleya"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://ashutosh1206.github.io/blog/cbc-bit-flipping/"},"publisher":{"@type":"Organization","name":"Ashutosh Ahelleya","logo":{"@type":"ImageObject","url":"https://ashutosh1206.github.io/favicon.ico"}}}</script></head><body id=top><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://ashutosh1206.github.io/ accesskey=h title="Home (Alt + H)">Home</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)"><svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg><svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://ashutosh1206.github.io/blog/ title=Blog><span>Blog</span></a></li><li><a href=https://ashutosh1206.github.io/archive/ title=Archive><span>Archive</span></a></li><li><a href=https://ashutosh1206.github.io/ctf/ title=CTF><span>CTF</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class=post-title>CBC Bit Flipping Attack</h1><div class=post-meta><span title='2017-05-03 00:00:00 +0000 UTC'>May 3, 2017</span>&nbsp;·&nbsp;Ashutosh Ahelleya</div></header><div class=post-content><p>In this blog post, the attack on CBC mode of block cipher encryption will be discussed and in the end, detailed writeup for the <a href=https://cryptopals.com/sets/2/challenges/16>16th challenge of Matasano-Crypto-Challenge</a> i.e. about the Bit Flipping Attack in AES-CBC will be provided with explanation!</p><p>I want the reader to go through these concepts discussed in the following blog posts, before actually understanding how the CBC Bit-Flipping Attack works:</p><ol><li><a href=https://github.com/ashutosh1206/Crypton/tree/master/Block-Cipher#mode-detection>Mode Detection Oracle</a></li><li><a href=https://github.com/ashutosh1206/Crypton/tree/master/Block-Cipher#block-size-detection>Blocksize Detection Oracle</a></li></ol><p>We will list down all the information one must have access to, in order to initiate this attack:</p><ol><li>Cipher text</li><li>Encryption Oracle as E(“random string” || payload || “another random string”)<ul><li>Here, in this function, the attacker is allowed to supply input to the encryption function as payload. This function is literally the heart of the attack. All the arguments for the attack will be supplied here.</li></ul></li><li>Decryption Oracle</li></ol><h2 id=what-is-bit-flipping-attack>What is Bit Flipping Attack?<a hidden class=anchor aria-hidden=true href=#what-is-bit-flipping-attack>#</a></h2><p>Bit Flipping Attack requires the mode of encryption used for encryption to be CBC(Cipher Block Chaining) about which you can read <a href=https://github.com/ashutosh1206/Crypton/tree/master/Block-Cipher>here</a>.</p><p>This attack is usually in scenarios where the encryption function takes in some input as a payload, prepends a random string, appends another string to it before encrypting it. There are cases where the encryption function escapes some characters or character sequences from the payload supplied, before encrypting it. For example let us consider this function:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>encrypt</span>(payload):
-</span></span><span style=display:flex><span>    obj <span style=color:#f92672>=</span> AES<span style=color:#f92672>.</span>new(key, AES<span style=color:#f92672>.</span>MODE_CBC, iv)
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> i <span style=color:#f92672>in</span> xrange(len(payload)):
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> payload[i] <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;;&#34;</span> <span style=color:#f92672>or</span> payload[i] <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;=&#34;</span>:
-</span></span><span style=display:flex><span>            payload <span style=color:#f92672>=</span> payload<span style=color:#f92672>.</span>replace(payload[i], <span style=color:#e6db74>&#34;?&#34;</span>)
-</span></span><span style=display:flex><span>    str1 <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;comment1=cooking%20MCs;userdata=&#34;</span> <span style=color:#f92672>+</span> payload <span style=color:#f92672>+</span> <span style=color:#e6db74>&#34;;comment2=</span><span style=color:#e6db74>%20li</span><span style=color:#e6db74>ke</span><span style=color:#e6db74>%20a</span><span style=color:#e6db74>%20pound</span><span style=color:#e6db74>%20o</span><span style=color:#e6db74>f%20bacon&#34;</span>
-</span></span><span style=display:flex><span>    str1 <span style=color:#f92672>=</span> padding(str1)
-</span></span><span style=display:flex><span>    ciphertext <span style=color:#f92672>=</span> obj<span style=color:#f92672>.</span>encrypt(str1)
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> ciphertext
-</span></span></code></pre></div><p>The function escapes “;” and “=” characters from the payload and then prepends and appends strings. It then encrypts the resultant string(concatenation of prepend string, payload and appended string).</p><p>The decryption function:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>decrypt</span>(ciphertext):
-</span></span><span style=display:flex><span>    obj1 <span style=color:#f92672>=</span> AES<span style=color:#f92672>.</span>new(key,AES<span style=color:#f92672>.</span>MODE_CBC,iv)
-</span></span><span style=display:flex><span>    plaintext <span style=color:#f92672>=</span> obj1<span style=color:#f92672>.</span>decrypt(ciphertext)
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#e6db74>&#34;;admin=true;&#34;</span> <span style=color:#f92672>in</span> plaintext:
-</span></span><span style=display:flex><span>        print <span style=color:#e6db74>&#34;Yes, you did it&#34;</span>
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>else</span>:
-</span></span><span style=display:flex><span>        print <span style=color:#e6db74>&#34;Nope, you didn&#39;t&#34;</span>
-</span></span></code></pre></div><p>The given decryption function checks if “;admin=true;” is still present in the decrypted string. If yes, then the payload leads to successful login as the admin. But the problem here is: during the encryption since the “;” and “=” characters are escaped from the payload, one cannot directly give “;admin=true;” as payload since the encryption function will change it to “?admin?true?” before encryption.</p><p><strong>Brief summary</strong>:</p><ol><li>The encryption function takes in payload and escapes some characters from it</li><li>It then appends and prepends random string to the payload &ndash;> resultant string.</li><li>Encrypts the resultant string and returns the cipher text.</li><li>Decryption function decrypts the cipher text returned by the encryption function and checks if “;admin=true;” is present in the decrypted text. Since “;” and “=” are no longer present beside “admin”(due to escaping of characters), the decryption function does not allow login as the admin!</li></ol><p>To understand the attack, we need to closely look how decryption takes place in this mode:</p><p>The decryption in CBC mode takes place as:<br><img loading=lazy src=/ctfzone18-ussh-11.png alt=picture></p><p>Let us suppose our “?admin?true?” is in the second block of plain text. This plain text block, is a result of XORing of cipher text of the same block and cipher text of the previous block, as we can see from the figure given above. Pay attention closely now.</p><p>What we am in control of, are the cipher text blocks. The attacker can manipulate them, before sending them as a parameter to the decryption function. A rule says that whenever one changes one byte(call this “flips”) at an offset in a cipher text block, the same offset is changed in the next plain text block (See the figure below!). Of course, when one flips one byte in a cipher text block, plain text of the corresponding block also changes; but we are not worried about the flip in the plain text block where the “random bytes” of the prepend string are present. What we are focusing now is the second plain text block, which essentially contains our “?admin?true?”.</p><p><img loading=lazy src=/cbc-bit-flip-1.jpg alt=picture></p><p>Let us consider:</p><ol><li>The plain text block containing “?admin?true?” to be ‘P’.</li><li>The cipher text block next to which we have the plain text block containing “?admin?true?” to be ‘A’.</li><li>The cipher text block of the corresponding plain text block containing “?admin?true?” to be ‘B’.</li></ol><p>Then we can write, (refer to the figure above)</p><p><strong>A = P xor BlockCipherDecryption(B)</strong></p><p>“BlockCipherDecryption” is the large block present in the figure as “Block Cipher Decryption” which decrypts a cipher text block based upon the standard encryption used. BlockCipherDecryption(B) is a constant since we are not flipping bits in “B” (Remember this!). For the nth byte of each block we can thus write,</p><p><strong>A[n] = P[n] xor BlockCipherDecryption(B[n])</strong> ——–> <strong>1.</strong></p><p>BlockCipherDecryption(B[n]) can be written as:</p><p><strong>BlockCipherDecryption(B[n]) = A[n] xor P[n]</strong> ——–> <strong>2.</strong></p><p>Value at <strong>2.</strong> is fixed. We know that we want P[n] in <strong>1.</strong> to be of our desired value(Let this be ‘PD’) whereas P[n] in <strong>2.</strong> is the actual value of the plain text (Let this be ‘PA’) after the decryption of cipher text without flipping any of them. So, A[n] then becomes:</p><p><strong>A[n] = PD xor A[n] xor PA</strong></p><p>or <strong>A[n] = A[n] xor (PD xor PA)</strong></p><p>PD xor PA —> XOR of the desired plain text byte with the actual byte present in the plain text block.</p><p>So, we simply XOR the result (PD xor PA) with the actual value of the A[n]. The result is the value we should give at that byte in the cipher text block previous to the plain text containing “?admin?true?”.<br>Repeat this for all other blocks.</p><h2 id=cryptopals-challenge-16>Cryptopals Challenge 16<a hidden class=anchor aria-hidden=true href=#cryptopals-challenge-16>#</a></h2><p>In this challenge, “;” and “=” are replaced by “?”. Here in this case, the desired value is “;” or “=”.</p><p>XORing each with the actual value of plain text “?”, we get 4 and 2 respectively. Now we XOR this result with the offset in the actual cipher text block (A[n]). Repeat this for each byte to be manipulated. This gives the value to be supplied in the same offset so that the resultant plain text contains “;admin=true;” instead of “?admin?true?”.</p><p>Here is the exploit:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>cipher_list <span style=color:#f92672>=</span> []
-</span></span><span style=display:flex><span>payload <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;;admin=true;&#34;</span>
-</span></span><span style=display:flex><span>ciphertext <span style=color:#f92672>=</span> encrypt(payload)
-</span></span><span style=display:flex><span>i <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>while</span> i<span style=color:#f92672>*</span><span style=color:#ae81ff>16</span> <span style=color:#f92672>&lt;=</span> len(ciphertext):
-</span></span><span style=display:flex><span>    cipher_list<span style=color:#f92672>.</span>append(ciphertext[i<span style=color:#f92672>*</span><span style=color:#ae81ff>16</span>: <span style=color:#ae81ff>16</span> <span style=color:#f92672>+</span> (i<span style=color:#f92672>*</span><span style=color:#ae81ff>16</span>)])
-</span></span><span style=display:flex><span>    i <span style=color:#f92672>+=</span> <span style=color:#ae81ff>1</span>
-</span></span><span style=display:flex><span>cipher_list<span style=color:#f92672>.</span>remove(cipher_list[<span style=color:#ae81ff>6</span>])
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>attack_on_block <span style=color:#f92672>=</span> cipher_list[<span style=color:#ae81ff>1</span>]
-</span></span><span style=display:flex><span>list1 <span style=color:#f92672>=</span> list(attack_on_block)
-</span></span><span style=display:flex><span>list1[<span style=color:#ae81ff>0</span>] <span style=color:#f92672>=</span> chr(ord(list1[<span style=color:#ae81ff>0</span>]) <span style=color:#f92672>^</span> ord(<span style=color:#e6db74>&#34;?&#34;</span>) <span style=color:#f92672>^</span> ord(<span style=color:#e6db74>&#34;;&#34;</span>))
-</span></span><span style=display:flex><span>list1[<span style=color:#ae81ff>6</span>] <span style=color:#f92672>=</span> chr(ord(list1[<span style=color:#ae81ff>6</span>]) <span style=color:#f92672>^</span> ord(<span style=color:#e6db74>&#34;?&#34;</span>) <span style=color:#f92672>^</span> ord(<span style=color:#e6db74>&#34;=&#34;</span>))
-</span></span><span style=display:flex><span>list1[<span style=color:#ae81ff>11</span>] <span style=color:#f92672>=</span> chr(ord(list1[<span style=color:#ae81ff>11</span>]) <span style=color:#f92672>^</span> ord(<span style=color:#e6db74>&#34;?&#34;</span>) <span style=color:#f92672>^</span> ord(<span style=color:#e6db74>&#34;;&#34;</span>))
-</span></span><span style=display:flex><span>cipher_list[<span style=color:#ae81ff>1</span>] <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;&#39;</span><span style=color:#f92672>.</span>join(list1)
-</span></span><span style=display:flex><span>ciphertext <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;&#39;</span><span style=color:#f92672>.</span>join(cipher_list)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>decrypt(ciphertext)
-</span></span></code></pre></div><p>The entire solver script for this challenge can be found here: <a href=https://github.com/ashutosh1206/Matasano-Crypto-Challenges/blob/master/set2/p16/exploit.py>https://github.com/ashutosh1206/Matasano-Crypto-Challenges/blob/master/set2/p16/exploit.py</a></p><h2 id=references>References<a hidden class=anchor aria-hidden=true href=#references>#</a></h2><p><a href=https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation>Block cipher mode of operation</a></p></div><footer class=post-footer><ul class=post-tags><li><a href=https://ashutosh1206.github.io/tags/cbc-bit-flipping/>CBC-Bit-Flipping</a></li><li><a href=https://ashutosh1206.github.io/tags/blockcipher/>BlockCipher</a></li></ul></footer></article></main><footer class=footer><span>&copy; 2023 <a href=https://ashutosh1206.github.io/>Ashutosh Ahelleya</a></span>
-<span>Powered by
-<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
-        <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg></a><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script></body></html>
+Mode Detection Oracle Blocksize Detection Oracle We will list down all the information one must have access to, in order to initiate this attack:"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Blogs",
+      "item": "https://ashutosh1206.github.io/blog/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "CBC Bit Flipping Attack",
+      "item": "https://ashutosh1206.github.io/blog/cbc-bit-flipping/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "CBC Bit Flipping Attack",
+  "name": "CBC Bit Flipping Attack",
+  "description": "In this blog post, the attack on CBC mode of block cipher encryption will be discussed and in the end, detailed writeup for the 16th challenge of Matasano-Crypto-Challenge i.e. about the Bit Flipping Attack in AES-CBC will be provided with explanation!\nI want the reader to go through these concepts discussed in the following blog posts, before actually understanding how the CBC Bit-Flipping Attack works:\nMode Detection Oracle Blocksize Detection Oracle We will list down all the information one must have access to, in order to initiate this attack:",
+  "keywords": [
+    "CBC-Bit-Flipping", "BlockCipher"
+  ],
+  "articleBody": "In this blog post, the attack on CBC mode of block cipher encryption will be discussed and in the end, detailed writeup for the 16th challenge of Matasano-Crypto-Challenge i.e. about the Bit Flipping Attack in AES-CBC will be provided with explanation!\nI want the reader to go through these concepts discussed in the following blog posts, before actually understanding how the CBC Bit-Flipping Attack works:\nMode Detection Oracle Blocksize Detection Oracle We will list down all the information one must have access to, in order to initiate this attack:\nCipher text Encryption Oracle as E(“random string” || payload || “another random string”) Here, in this function, the attacker is allowed to supply input to the encryption function as payload. This function is literally the heart of the attack. All the arguments for the attack will be supplied here. Decryption Oracle What is Bit Flipping Attack? Bit Flipping Attack requires the mode of encryption used for encryption to be CBC(Cipher Block Chaining) about which you can read here.\nThis attack is usually in scenarios where the encryption function takes in some input as a payload, prepends a random string, appends another string to it before encrypting it. There are cases where the encryption function escapes some characters or character sequences from the payload supplied, before encrypting it. For example let us consider this function:\ndef encrypt(payload): obj = AES.new(key, AES.MODE_CBC, iv) for i in xrange(len(payload)): if payload[i] == \";\" or payload[i] == \"=\": payload = payload.replace(payload[i], \"?\") str1 = \"comment1=cooking%20MCs;userdata=\" + payload + \";comment2=%20like%20a%20pound%20of%20bacon\" str1 = padding(str1) ciphertext = obj.encrypt(str1) return ciphertext The function escapes “;” and “=” characters from the payload and then prepends and appends strings. It then encrypts the resultant string(concatenation of prepend string, payload and appended string).\nThe decryption function:\ndef decrypt(ciphertext): obj1 = AES.new(key,AES.MODE_CBC,iv) plaintext = obj1.decrypt(ciphertext) if \";admin=true;\" in plaintext: print \"Yes, you did it\" else: print \"Nope, you didn't\" The given decryption function checks if “;admin=true;” is still present in the decrypted string. If yes, then the payload leads to successful login as the admin. But the problem here is: during the encryption since the “;” and “=” characters are escaped from the payload, one cannot directly give “;admin=true;” as payload since the encryption function will change it to “?admin?true?” before encryption.\nBrief summary:\nThe encryption function takes in payload and escapes some characters from it It then appends and prepends random string to the payload –\u003e resultant string. Encrypts the resultant string and returns the cipher text. Decryption function decrypts the cipher text returned by the encryption function and checks if “;admin=true;” is present in the decrypted text. Since “;” and “=” are no longer present beside “admin”(due to escaping of characters), the decryption function does not allow login as the admin! To understand the attack, we need to closely look how decryption takes place in this mode:\nThe decryption in CBC mode takes place as:\nLet us suppose our “?admin?true?” is in the second block of plain text. This plain text block, is a result of XORing of cipher text of the same block and cipher text of the previous block, as we can see from the figure given above. Pay attention closely now.\nWhat we am in control of, are the cipher text blocks. The attacker can manipulate them, before sending them as a parameter to the decryption function. A rule says that whenever one changes one byte(call this “flips”) at an offset in a cipher text block, the same offset is changed in the next plain text block (See the figure below!). Of course, when one flips one byte in a cipher text block, plain text of the corresponding block also changes; but we are not worried about the flip in the plain text block where the “random bytes” of the prepend string are present. What we are focusing now is the second plain text block, which essentially contains our “?admin?true?”.\nLet us consider:\nThe plain text block containing “?admin?true?” to be ‘P’. The cipher text block next to which we have the plain text block containing “?admin?true?” to be ‘A’. The cipher text block of the corresponding plain text block containing “?admin?true?” to be ‘B’. Then we can write, (refer to the figure above)\nA = P xor BlockCipherDecryption(B)\n“BlockCipherDecryption” is the large block present in the figure as “Block Cipher Decryption” which decrypts a cipher text block based upon the standard encryption used. BlockCipherDecryption(B) is a constant since we are not flipping bits in “B” (Remember this!). For the nth byte of each block we can thus write,\nA[n] = P[n] xor BlockCipherDecryption(B[n]) ——–\u003e 1.\nBlockCipherDecryption(B[n]) can be written as:\nBlockCipherDecryption(B[n]) = A[n] xor P[n] ——–\u003e 2.\nValue at 2. is fixed. We know that we want P[n] in 1. to be of our desired value(Let this be ‘PD’) whereas P[n] in 2. is the actual value of the plain text (Let this be ‘PA’) after the decryption of cipher text without flipping any of them. So, A[n] then becomes:\nA[n] = PD xor A[n] xor PA\nor A[n] = A[n] xor (PD xor PA)\nPD xor PA —\u003e XOR of the desired plain text byte with the actual byte present in the plain text block.\nSo, we simply XOR the result (PD xor PA) with the actual value of the A[n]. The result is the value we should give at that byte in the cipher text block previous to the plain text containing “?admin?true?”.\nRepeat this for all other blocks.\nCryptopals Challenge 16 In this challenge, “;” and “=” are replaced by “?”. Here in this case, the desired value is “;” or “=”.\nXORing each with the actual value of plain text “?”, we get 4 and 2 respectively. Now we XOR this result with the offset in the actual cipher text block (A[n]). Repeat this for each byte to be manipulated. This gives the value to be supplied in the same offset so that the resultant plain text contains “;admin=true;” instead of “?admin?true?”.\nHere is the exploit:\ncipher_list = [] payload = \";admin=true;\" ciphertext = encrypt(payload) i = 0 while i*16 \u003c= len(ciphertext): cipher_list.append(ciphertext[i*16: 16 + (i*16)]) i += 1 cipher_list.remove(cipher_list[6]) attack_on_block = cipher_list[1] list1 = list(attack_on_block) list1[0] = chr(ord(list1[0]) ^ ord(\"?\") ^ ord(\";\")) list1[6] = chr(ord(list1[6]) ^ ord(\"?\") ^ ord(\"=\")) list1[11] = chr(ord(list1[11]) ^ ord(\"?\") ^ ord(\";\")) cipher_list[1] = ''.join(list1) ciphertext = ''.join(cipher_list) decrypt(ciphertext) The entire solver script for this challenge can be found here: https://github.com/ashutosh1206/Matasano-Crypto-Challenges/blob/master/set2/p16/exploit.py\nReferences Block cipher mode of operation\n",
+  "wordCount" : "1078",
+  "inLanguage": "en",
+  "datePublished": "2017-05-03T00:00:00Z",
+  "dateModified": "2017-05-03T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Ashutosh Ahelleya"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://ashutosh1206.github.io/blog/cbc-bit-flipping/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Ash's blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://ashutosh1206.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://ashutosh1206.github.io/" accesskey="h" title="Home (Alt + H)">Home</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://ashutosh1206.github.io/blog/" title="Blog">
+                    <span>Blog</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ashutosh1206.github.io/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ashutosh1206.github.io/archive/" title="Archive">
+                    <span>Archive</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ashutosh1206.github.io/ctf/" title="CTF">
+                    <span>CTF</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title">
+      CBC Bit Flipping Attack
+    </h1>
+    <div class="post-meta"><span title='2017-05-03 00:00:00 +0000 UTC'>May 3, 2017</span>&nbsp;·&nbsp;Ashutosh Ahelleya
+
+</div>
+  </header> 
+  <div class="post-content"><p>In this blog post, the attack on CBC mode of block cipher encryption will be discussed and in the end, detailed writeup for the <a href="https://cryptopals.com/sets/2/challenges/16">16th challenge of Matasano-Crypto-Challenge</a> i.e. about the Bit Flipping Attack in AES-CBC will be provided with explanation!</p>
+<p>I want the reader to go through these concepts discussed in the following blog posts, before actually understanding how the CBC Bit-Flipping Attack works:</p>
+<ol>
+<li><a href="https://github.com/ashutosh1206/Crypton/tree/master/Block-Cipher#mode-detection">Mode Detection Oracle</a></li>
+<li><a href="https://github.com/ashutosh1206/Crypton/tree/master/Block-Cipher#block-size-detection">Blocksize Detection Oracle</a></li>
+</ol>
+<p>We will list down all the information one must have access to, in order to initiate this attack:</p>
+<ol>
+<li>Cipher text</li>
+<li>Encryption Oracle as E(“random string” || payload || “another random string”)
+<ul>
+<li>Here, in this function, the attacker is allowed to supply input to the encryption function as payload. This function is literally the heart of the attack. All the arguments for the attack will be supplied here.</li>
+</ul>
+</li>
+<li>Decryption Oracle</li>
+</ol>
+<h2 id="what-is-bit-flipping-attack">What is Bit Flipping Attack?<a hidden class="anchor" aria-hidden="true" href="#what-is-bit-flipping-attack">#</a></h2>
+<p>Bit Flipping Attack requires the mode of encryption used for encryption to be CBC(Cipher Block Chaining) about which you can read <a href="https://github.com/ashutosh1206/Crypton/tree/master/Block-Cipher">here</a>.</p>
+<p>This attack is usually in scenarios where the encryption function takes in some input as a payload, prepends a random string, appends another string to it before encrypting it. There are cases where the encryption function escapes some characters or character sequences from the payload supplied, before encrypting it. For example let us consider this function:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">encrypt</span>(payload):
+</span></span><span style="display:flex;"><span>    obj <span style="color:#f92672">=</span> AES<span style="color:#f92672">.</span>new(key, AES<span style="color:#f92672">.</span>MODE_CBC, iv)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> xrange(len(payload)):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> payload[i] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;;&#34;</span> <span style="color:#f92672">or</span> payload[i] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;=&#34;</span>:
+</span></span><span style="display:flex;"><span>            payload <span style="color:#f92672">=</span> payload<span style="color:#f92672">.</span>replace(payload[i], <span style="color:#e6db74">&#34;?&#34;</span>)
+</span></span><span style="display:flex;"><span>    str1 <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;comment1=cooking%20MCs;userdata=&#34;</span> <span style="color:#f92672">+</span> payload <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;;comment2=</span><span style="color:#e6db74">%20li</span><span style="color:#e6db74">ke</span><span style="color:#e6db74">%20a</span><span style="color:#e6db74">%20pound</span><span style="color:#e6db74">%20o</span><span style="color:#e6db74">f%20bacon&#34;</span>
+</span></span><span style="display:flex;"><span>    str1 <span style="color:#f92672">=</span> padding(str1)
+</span></span><span style="display:flex;"><span>    ciphertext <span style="color:#f92672">=</span> obj<span style="color:#f92672">.</span>encrypt(str1)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> ciphertext
+</span></span></code></pre></div><p>The function escapes “;” and “=” characters from the payload and then prepends and appends strings. It then encrypts the resultant string(concatenation of prepend string, payload and appended string).</p>
+<p>The decryption function:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">decrypt</span>(ciphertext):
+</span></span><span style="display:flex;"><span>    obj1 <span style="color:#f92672">=</span> AES<span style="color:#f92672">.</span>new(key,AES<span style="color:#f92672">.</span>MODE_CBC,iv)
+</span></span><span style="display:flex;"><span>    plaintext <span style="color:#f92672">=</span> obj1<span style="color:#f92672">.</span>decrypt(ciphertext)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#34;;admin=true;&#34;</span> <span style="color:#f92672">in</span> plaintext:
+</span></span><span style="display:flex;"><span>        print <span style="color:#e6db74">&#34;Yes, you did it&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>        print <span style="color:#e6db74">&#34;Nope, you didn&#39;t&#34;</span>
+</span></span></code></pre></div><p>The given decryption function checks if “;admin=true;” is still present in the decrypted string. If yes, then the payload leads to successful login as the admin. But the problem here is: during the encryption since the “;” and “=” characters are escaped from the payload, one cannot directly give “;admin=true;” as payload since the encryption function will change it to “?admin?true?” before encryption.</p>
+<p><strong>Brief summary</strong>:</p>
+<ol>
+<li>The encryption function takes in payload and escapes some characters from it</li>
+<li>It then appends and prepends random string to the payload &ndash;&gt; resultant string.</li>
+<li>Encrypts the resultant string and returns the cipher text.</li>
+<li>Decryption function decrypts the cipher text returned by the encryption function and checks if “;admin=true;” is present in the decrypted text. Since “;” and “=” are no longer present beside “admin”(due to escaping of characters), the decryption function does not allow login as the admin!</li>
+</ol>
+<p>To understand the attack, we need to closely look how decryption takes place in this mode:</p>
+<p>The decryption in CBC mode takes place as:<br>
+<img loading="lazy" src="/ctfzone18-ussh-11.png" alt="picture"  />
+</p>
+<p>Let us suppose our “?admin?true?” is in the second block of plain text. This plain text block, is a result of XORing of cipher text of the same block and cipher text of the previous block, as we can see from the figure given above. Pay attention closely now.</p>
+<p>What we am in control of, are the cipher text blocks. The attacker can manipulate them, before sending them as a parameter to the decryption function. A rule says that whenever one changes one byte(call this “flips”) at an offset in a cipher text block, the same offset is changed in the next plain text block (See the figure below!). Of course, when one flips one byte in a cipher text block, plain text of the corresponding block also changes; but we are not worried about the flip in the plain text block where the “random bytes” of the prepend string are present. What we are focusing now is the second plain text block, which essentially contains our “?admin?true?”.</p>
+<p><img loading="lazy" src="/cbc-bit-flip-1.jpg" alt="picture"  />
+</p>
+<p>Let us consider:</p>
+<ol>
+<li>The plain text block containing “?admin?true?” to be ‘P’.</li>
+<li>The cipher text block next to which we have the plain text block containing “?admin?true?” to be ‘A’.</li>
+<li>The cipher text block of the corresponding plain text block containing “?admin?true?” to be ‘B’.</li>
+</ol>
+<p>Then we can write, (refer to the figure above)</p>
+<p><strong>A = P xor BlockCipherDecryption(B)</strong></p>
+<p>“BlockCipherDecryption” is the large block present in the figure as “Block Cipher Decryption” which decrypts a cipher text block based upon the standard encryption used. BlockCipherDecryption(B) is a constant since we are not flipping bits in “B” (Remember this!). For the nth byte of each block we can thus write,</p>
+<p><strong>A[n] = P[n] xor BlockCipherDecryption(B[n])</strong>    ——–&gt; <strong>1.</strong></p>
+<p>BlockCipherDecryption(B[n]) can be written as:</p>
+<p><strong>BlockCipherDecryption(B[n]) = A[n] xor P[n]</strong>     ——–&gt; <strong>2.</strong></p>
+<p>Value at <strong>2.</strong> is fixed. We know that we want P[n] in <strong>1.</strong> to be of our desired value(Let this be ‘PD’) whereas P[n] in <strong>2.</strong> is the actual value of the plain text (Let this be ‘PA’) after the decryption of cipher text without flipping any of them. So, A[n] then becomes:</p>
+<p><strong>A[n] = PD xor A[n] xor PA</strong></p>
+<p>or <strong>A[n] = A[n] xor (PD xor PA)</strong></p>
+<p>PD xor PA —&gt; XOR of the desired plain text byte with the actual byte present in the plain text block.</p>
+<p>So, we simply XOR the result (PD xor PA) with the actual value of the A[n]. The result is the value we should give at that byte in the cipher text block previous to the plain text containing “?admin?true?”.<br>
+Repeat this for all other blocks.</p>
+<h2 id="cryptopals-challenge-16">Cryptopals Challenge 16<a hidden class="anchor" aria-hidden="true" href="#cryptopals-challenge-16">#</a></h2>
+<p>In this challenge, “;” and “=” are replaced by “?”. Here in this case, the desired value is “;” or “=”.</p>
+<p>XORing each with the actual value of plain text “?”, we get 4 and 2 respectively. Now we XOR this result with the offset in the actual cipher text block (A[n]). Repeat this for each byte to be manipulated. This gives the value to be supplied in the same offset so that the resultant plain text contains “;admin=true;” instead of “?admin?true?”.</p>
+<p>Here is the exploit:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>cipher_list <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;;admin=true;&#34;</span>
+</span></span><span style="display:flex;"><span>ciphertext <span style="color:#f92672">=</span> encrypt(payload)
+</span></span><span style="display:flex;"><span>i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> i<span style="color:#f92672">*</span><span style="color:#ae81ff">16</span> <span style="color:#f92672">&lt;=</span> len(ciphertext):
+</span></span><span style="display:flex;"><span>    cipher_list<span style="color:#f92672">.</span>append(ciphertext[i<span style="color:#f92672">*</span><span style="color:#ae81ff">16</span>: <span style="color:#ae81ff">16</span> <span style="color:#f92672">+</span> (i<span style="color:#f92672">*</span><span style="color:#ae81ff">16</span>)])
+</span></span><span style="display:flex;"><span>    i <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>cipher_list<span style="color:#f92672">.</span>remove(cipher_list[<span style="color:#ae81ff">6</span>])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>attack_on_block <span style="color:#f92672">=</span> cipher_list[<span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>list1 <span style="color:#f92672">=</span> list(attack_on_block)
+</span></span><span style="display:flex;"><span>list1[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">=</span> chr(ord(list1[<span style="color:#ae81ff">0</span>]) <span style="color:#f92672">^</span> ord(<span style="color:#e6db74">&#34;?&#34;</span>) <span style="color:#f92672">^</span> ord(<span style="color:#e6db74">&#34;;&#34;</span>))
+</span></span><span style="display:flex;"><span>list1[<span style="color:#ae81ff">6</span>] <span style="color:#f92672">=</span> chr(ord(list1[<span style="color:#ae81ff">6</span>]) <span style="color:#f92672">^</span> ord(<span style="color:#e6db74">&#34;?&#34;</span>) <span style="color:#f92672">^</span> ord(<span style="color:#e6db74">&#34;=&#34;</span>))
+</span></span><span style="display:flex;"><span>list1[<span style="color:#ae81ff">11</span>] <span style="color:#f92672">=</span> chr(ord(list1[<span style="color:#ae81ff">11</span>]) <span style="color:#f92672">^</span> ord(<span style="color:#e6db74">&#34;?&#34;</span>) <span style="color:#f92672">^</span> ord(<span style="color:#e6db74">&#34;;&#34;</span>))
+</span></span><span style="display:flex;"><span>cipher_list[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span><span style="color:#f92672">.</span>join(list1)
+</span></span><span style="display:flex;"><span>ciphertext <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span><span style="color:#f92672">.</span>join(cipher_list)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>decrypt(ciphertext)
+</span></span></code></pre></div><p>The entire solver script for this challenge can be found here: <a href="https://github.com/ashutosh1206/Matasano-Crypto-Challenges/blob/master/set2/p16/exploit.py">https://github.com/ashutosh1206/Matasano-Crypto-Challenges/blob/master/set2/p16/exploit.py</a></p>
+<h2 id="references">References<a hidden class="anchor" aria-hidden="true" href="#references">#</a></h2>
+<p><a href="https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation">Block cipher mode of operation</a></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://ashutosh1206.github.io/tags/cbc-bit-flipping/">CBC-Bit-Flipping</a></li>
+      <li><a href="https://ashutosh1206.github.io/tags/blockcipher/">BlockCipher</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://ashutosh1206.github.io/">Ash&#39;s blog</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

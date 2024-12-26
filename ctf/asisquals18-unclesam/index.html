@@ -1,37 +1,350 @@
-<!doctype html><html lang=en dir=auto><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>UncleSam - ASIS CTF Quals | Ashutosh Ahelleya</title><meta name=keywords content="NumberTheory"><meta name=description content="Challenge Points: 123
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>UncleSam - ASIS CTF Quals | Ash&#39;s blog</title>
+<meta name="keywords" content="NumberTheory">
+<meta name="description" content="Challenge Points: 123
 Challenge Description:
 Uncle Sam needs your help!
 The given challenge is a Schmidt-Samoa cryptosystem. Let us look at how encryption/decryption takes place in this public key cryptosystem and then move to solving the challenge.
-Schmidt-Samoa Cryptosystem 101 Two large primes p and q are chosen randomly, and the modulus is calculated: \(N = p*p*q\). The private key is calculated as \(d \equiv e^{-1} \mod lcm(p-1, q-1)\). The modulus is the public key too."><meta name=author content="Ashutosh Ahelleya"><link rel=canonical href=https://ashutosh1206.github.io/ctf/asisquals18-unclesam/><link crossorigin=anonymous href=/assets/css/stylesheet.bccfefac377bc340f06c260aed1bddf49a4354816d7c570d6aac75a997986c95.css integrity="sha256-vM/vrDd7w0DwbCYK7Rvd9JpDVIFtfFcNaqx1qZeYbJU=" rel="preload stylesheet" as=style><script defer crossorigin=anonymous src=/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG+9vmJ0cTS+ovo0FeA=" onload=hljs.initHighlightingOnLoad()></script>
-<link rel=icon href=https://ashutosh1206.github.io/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://ashutosh1206.github.io/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://ashutosh1206.github.io/favicon-32x32.png><link rel=apple-touch-icon href=https://ashutosh1206.github.io/apple-touch-icon.png><link rel=mask-icon href=https://ashutosh1206.github.io/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--hljs-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css integrity=sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0 crossorigin=anonymous><script defer src=https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js integrity=sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4 crossorigin=anonymous></script>
-<script defer src=https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js integrity=sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05 crossorigin=anonymous onload=renderMathInElement(document.body)></script><meta property="og:title" content="UncleSam - ASIS CTF Quals"><meta property="og:description" content="Challenge Points: 123
+Schmidt-Samoa Cryptosystem 101 Two large primes p and q are chosen randomly, and the modulus is calculated: \(N = p*p*q\). The private key is calculated as \(d \equiv e^{-1} \mod lcm(p-1, q-1)\). The modulus is the public key too.">
+<meta name="author" content="Ashutosh Ahelleya">
+<link rel="canonical" href="https://ashutosh1206.github.io/ctf/asisquals18-unclesam/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.bccfefac377bc340f06c260aed1bddf49a4354816d7c570d6aac75a997986c95.css" integrity="sha256-vM/vrDd7w0DwbCYK7Rvd9JpDVIFtfFcNaqx1qZeYbJU=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://ashutosh1206.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://ashutosh1206.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://ashutosh1206.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://ashutosh1206.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://ashutosh1206.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+<meta property="og:title" content="UncleSam - ASIS CTF Quals" />
+<meta property="og:description" content="Challenge Points: 123
 Challenge Description:
 Uncle Sam needs your help!
 The given challenge is a Schmidt-Samoa cryptosystem. Let us look at how encryption/decryption takes place in this public key cryptosystem and then move to solving the challenge.
-Schmidt-Samoa Cryptosystem 101 Two large primes p and q are chosen randomly, and the modulus is calculated: \(N = p*p*q\). The private key is calculated as \(d \equiv e^{-1} \mod lcm(p-1, q-1)\). The modulus is the public key too."><meta property="og:type" content="article"><meta property="og:url" content="https://ashutosh1206.github.io/ctf/asisquals18-unclesam/"><meta property="article:section" content="ctf"><meta property="article:published_time" content="2018-05-01T00:00:00+00:00"><meta property="article:modified_time" content="2018-05-01T00:00:00+00:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="UncleSam - ASIS CTF Quals"><meta name=twitter:description content="Challenge Points: 123
+Schmidt-Samoa Cryptosystem 101 Two large primes p and q are chosen randomly, and the modulus is calculated: \(N = p*p*q\). The private key is calculated as \(d \equiv e^{-1} \mod lcm(p-1, q-1)\). The modulus is the public key too." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://ashutosh1206.github.io/ctf/asisquals18-unclesam/" /><meta property="article:section" content="ctf" />
+<meta property="article:published_time" content="2018-05-01T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-05-01T00:00:00+00:00" /><meta property="og:site_name" content="Ash&#39;s blog" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="UncleSam - ASIS CTF Quals"/>
+<meta name="twitter:description" content="Challenge Points: 123
 Challenge Description:
 Uncle Sam needs your help!
 The given challenge is a Schmidt-Samoa cryptosystem. Let us look at how encryption/decryption takes place in this public key cryptosystem and then move to solving the challenge.
-Schmidt-Samoa Cryptosystem 101 Two large primes p and q are chosen randomly, and the modulus is calculated: \(N = p*p*q\). The private key is calculated as \(d \equiv e^{-1} \mod lcm(p-1, q-1)\). The modulus is the public key too."><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Ctfs","item":"https://ashutosh1206.github.io/ctf/"},{"@type":"ListItem","position":2,"name":"UncleSam - ASIS CTF Quals","item":"https://ashutosh1206.github.io/ctf/asisquals18-unclesam/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"UncleSam - ASIS CTF Quals","name":"UncleSam - ASIS CTF Quals","description":"Challenge Points: 123\nChallenge Description:\nUncle Sam needs your help!\nThe given challenge is a Schmidt-Samoa cryptosystem. Let us look at how encryption/decryption takes place in this public key cryptosystem and then move to solving the challenge.\nSchmidt-Samoa Cryptosystem 101 Two large primes p and q are chosen randomly, and the modulus is calculated: \\(N = p*p*q\\). The private key is calculated as \\(d \\equiv e^{-1} \\mod lcm(p-1, q-1)\\). The modulus is the public key too.","keywords":["NumberTheory"],"articleBody":"Challenge Points: 123\nChallenge Description:\nUncle Sam needs your help!\nThe given challenge is a Schmidt-Samoa cryptosystem. Let us look at how encryption/decryption takes place in this public key cryptosystem and then move to solving the challenge.\nSchmidt-Samoa Cryptosystem 101 Two large primes p and q are chosen randomly, and the modulus is calculated: \\(N = p*p*q\\). The private key is calculated as \\(d \\equiv e^{-1} \\mod lcm(p-1, q-1)\\). The modulus is the public key too. Encryption: Message m \u003c N is encrypted as \\(enc = m^N \\mod N\\). Note that, unlike RSA, the encryption exponent and modulus is the same. Decryption: Message m is decrypted as \\(m = enc^d \\mod (pq)\\) The security of this cryptosystem depends on the difficulty of factorisation of N.\nThe challenge For this challenge, we are given \\(N\\) and \\(d\\). We can then write:\n$$pubkey = p^2q$$ $$privkey \\equiv pubkey^{-1}\\mod lcm(p-1, q-1)$$ $$enc\\equiv m^{pubkey}\\mod pubkey$$ $$enc\\equiv m^{p^2q}\\mod p^2q$$\nTo get \\(m\\) we can compute \\(m\\equiv enc^{privkey}\\mod pq\\). This is valid because \\(pq\\) is a factor of \\(p^2q\\) and hence\n\\((x\\mod p^2q) \\mod pq = x\\mod pq\\).\nBut of course, we don’t have \\(pq\\), we only have \\(pubkey = p^2q\\). Let us find \\(pq\\) then; we can write: $$2^{pubkey*privkey}\\equiv 2\\mod pq$$ $$\\implies 2^{pubkey*privkey} = 2 + k(pq)$$ for some \\(k\\) such that \\(k\\in \\mathbb{I^+}\\)\nThus, we can write: $$2^{pubkey*privkey} - 2 = k(pq)$$ $$GCD(2^{pubkey*privkey} - 2, pubkey) = GCD(k(pq), p^2q) = pq$$\nWe have pq now, we can calculate the message as: $$m\\equiv enc^{privkey}\\mod pq$$\nExploit script I wrote the following script to implement the above attack:\nfrom Crypto.Util.number import * privkey = 105717877672224295784291675385546750129601472163379527375367128238003471793097341763391999503913659542087520808364287167645349555897774428176288829031477703594776341268160433668976237198330124904372546897953955241778475322074160469767162566234358907740412805211247598698481640207956827199048419949848619731050860757808082106844953602176503247786535423423104239566910713528691298692332149783689032722772009974404716783312200885555343877611094998117307970399241640213553820043460140493803404190774171912962651075100983834071259021038322886114660028788229094872545516054757700068264628024524394995795135464746570071201L pubkey = 1043247381320041410146374847683905608886067988802815759655490071506964811427733496668055364700822779908166748193534341903285387332658081562041534228961538451830025041762537639985150344917584064827615356535763872539925989984117068207555498700585376330731428359489791600319636079777025344217248475485835298689437926003958578141784379857951264973109214803916445702964047899447002191548965239884095802091798787988745415178578597206815122915438351636672681355517982410123569961242563194480399347961753678159210217993526738306796503660563163029287419732210247579793266891085178817047536758465239950861266592524206390869822972469137566045176690277813352563392838847417674529251627419479815097868890993153215515488877097760272399483111013602618554846096893805108827211344467797072352072430591318485091677011261912992157762106672216780766138057271434398274272110062768324672899209610001835423246735718435995420720133657793744810610657L enc = 343369686707916921497078851452395954252074753628024855326592148594828266567853497784448902839960599855457261387659174943864861324798607407210198762531665500523668627672623380100283047707927966101715266190355476680204081288124100983003649559499979731342450364456322062273208742008750774795951290651360492364136674198126979777860541228166734597108964573061640243513571440689299166495541329990802602494896619995591485311779060353650700199981044058309406067935205196708178000370643018639282003328307492888263256672104905274453644042024751439967243049147724769464785043328741645419214885736940487139062463786022104540986811119563549305718088453842093257734689508882969016290658885961965896726616361694426487326338043950416067501288065942862535560013037283761552797410980713186506671844418096395304234050342551849999867017770968633512178545044838766793795733222455421862835695299142219006201321417882617773291364153890050471244104L pq = GCD(pow(2, pubkey*privkey, pubkey)-2, pubkey) print long_to_bytes(pow(enc, privkey, pq)) Run this script and we get the flag: ASIS{Y0u_c4N_m4n493_Schmidt_5am0A_CryP7o_SysT3M!!}\n","wordCount":"294","inLanguage":"en","datePublished":"2018-05-01T00:00:00Z","dateModified":"2018-05-01T00:00:00Z","author":{"@type":"Person","name":"Ashutosh Ahelleya"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://ashutosh1206.github.io/ctf/asisquals18-unclesam/"},"publisher":{"@type":"Organization","name":"Ashutosh Ahelleya","logo":{"@type":"ImageObject","url":"https://ashutosh1206.github.io/favicon.ico"}}}</script></head><body id=top><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://ashutosh1206.github.io/ accesskey=h title="Home (Alt + H)">Home</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)"><svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg><svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://ashutosh1206.github.io/blog/ title=Blog><span>Blog</span></a></li><li><a href=https://ashutosh1206.github.io/archive/ title=Archive><span>Archive</span></a></li><li><a href=https://ashutosh1206.github.io/ctf/ title=CTF><span>CTF</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class=post-title>UncleSam - ASIS CTF Quals</h1><div class=post-meta><span title='2018-05-01 00:00:00 +0000 UTC'>May 1, 2018</span>&nbsp;·&nbsp;Ashutosh Ahelleya</div></header><div class=post-content><p><strong>Challenge Points</strong>: 123<br><strong>Challenge Description</strong>:</p><blockquote><p>Uncle Sam needs your help!</p></blockquote><p>The given challenge is a <a href=https://en.wikipedia.org/wiki/Schmidt-Samoa_cryptosystem>Schmidt-Samoa cryptosystem</a>. Let us look at how encryption/decryption takes place in this public key cryptosystem and then move to solving the challenge.</p><h2 id=schmidt-samoa-cryptosystem-101>Schmidt-Samoa Cryptosystem 101<a hidden class=anchor aria-hidden=true href=#schmidt-samoa-cryptosystem-101>#</a></h2><ol><li>Two large primes p and q are chosen randomly, and the modulus is calculated: \(N = p*p*q\). The private key is calculated as \(d \equiv e^{-1} \mod lcm(p-1, q-1)\). The modulus is the public key too.</li><li><strong>Encryption</strong>: Message <code>m &lt; N</code> is encrypted as \(enc = m^N \mod N\).</li></ol><ul><li>Note that, unlike RSA, the encryption exponent and modulus is the same.</li></ul><ol start=3><li><strong>Decryption</strong>: Message <code>m</code> is decrypted as \(m = enc^d \mod (pq)\)</li></ol><p>The security of this cryptosystem depends on the difficulty of factorisation of <code>N</code>.</p><h2 id=the-challenge>The challenge<a hidden class=anchor aria-hidden=true href=#the-challenge>#</a></h2><p>For this challenge, we are given \(N\) and \(d\). We can then write:<br>$$pubkey = p^2q$$
+Schmidt-Samoa Cryptosystem 101 Two large primes p and q are chosen randomly, and the modulus is calculated: \(N = p*p*q\). The private key is calculated as \(d \equiv e^{-1} \mod lcm(p-1, q-1)\). The modulus is the public key too."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Ctfs",
+      "item": "https://ashutosh1206.github.io/ctf/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "UncleSam - ASIS CTF Quals",
+      "item": "https://ashutosh1206.github.io/ctf/asisquals18-unclesam/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "UncleSam - ASIS CTF Quals",
+  "name": "UncleSam - ASIS CTF Quals",
+  "description": "Challenge Points: 123\nChallenge Description:\nUncle Sam needs your help!\nThe given challenge is a Schmidt-Samoa cryptosystem. Let us look at how encryption/decryption takes place in this public key cryptosystem and then move to solving the challenge.\nSchmidt-Samoa Cryptosystem 101 Two large primes p and q are chosen randomly, and the modulus is calculated: \\(N = p*p*q\\). The private key is calculated as \\(d \\equiv e^{-1} \\mod lcm(p-1, q-1)\\). The modulus is the public key too.",
+  "keywords": [
+    "NumberTheory"
+  ],
+  "articleBody": "Challenge Points: 123\nChallenge Description:\nUncle Sam needs your help!\nThe given challenge is a Schmidt-Samoa cryptosystem. Let us look at how encryption/decryption takes place in this public key cryptosystem and then move to solving the challenge.\nSchmidt-Samoa Cryptosystem 101 Two large primes p and q are chosen randomly, and the modulus is calculated: \\(N = p*p*q\\). The private key is calculated as \\(d \\equiv e^{-1} \\mod lcm(p-1, q-1)\\). The modulus is the public key too. Encryption: Message m \u003c N is encrypted as \\(enc = m^N \\mod N\\). Note that, unlike RSA, the encryption exponent and modulus is the same. Decryption: Message m is decrypted as \\(m = enc^d \\mod (pq)\\) The security of this cryptosystem depends on the difficulty of factorisation of N.\nThe challenge For this challenge, we are given \\(N\\) and \\(d\\). We can then write:\n$$pubkey = p^2q$$ $$privkey \\equiv pubkey^{-1}\\mod lcm(p-1, q-1)$$ $$enc\\equiv m^{pubkey}\\mod pubkey$$ $$enc\\equiv m^{p^2q}\\mod p^2q$$\nTo get \\(m\\) we can compute \\(m\\equiv enc^{privkey}\\mod pq\\). This is valid because \\(pq\\) is a factor of \\(p^2q\\) and hence\n\\((x\\mod p^2q) \\mod pq = x\\mod pq\\).\nBut of course, we don’t have \\(pq\\), we only have \\(pubkey = p^2q\\). Let us find \\(pq\\) then; we can write: $$2^{pubkey*privkey}\\equiv 2\\mod pq$$ $$\\implies 2^{pubkey*privkey} = 2 + k(pq)$$ for some \\(k\\) such that \\(k\\in \\mathbb{I^+}\\)\nThus, we can write: $$2^{pubkey*privkey} - 2 = k(pq)$$ $$GCD(2^{pubkey*privkey} - 2, pubkey) = GCD(k(pq), p^2q) = pq$$\nWe have pq now, we can calculate the message as: $$m\\equiv enc^{privkey}\\mod pq$$\nExploit script I wrote the following script to implement the above attack:\nfrom Crypto.Util.number import * privkey = 105717877672224295784291675385546750129601472163379527375367128238003471793097341763391999503913659542087520808364287167645349555897774428176288829031477703594776341268160433668976237198330124904372546897953955241778475322074160469767162566234358907740412805211247598698481640207956827199048419949848619731050860757808082106844953602176503247786535423423104239566910713528691298692332149783689032722772009974404716783312200885555343877611094998117307970399241640213553820043460140493803404190774171912962651075100983834071259021038322886114660028788229094872545516054757700068264628024524394995795135464746570071201L pubkey = 1043247381320041410146374847683905608886067988802815759655490071506964811427733496668055364700822779908166748193534341903285387332658081562041534228961538451830025041762537639985150344917584064827615356535763872539925989984117068207555498700585376330731428359489791600319636079777025344217248475485835298689437926003958578141784379857951264973109214803916445702964047899447002191548965239884095802091798787988745415178578597206815122915438351636672681355517982410123569961242563194480399347961753678159210217993526738306796503660563163029287419732210247579793266891085178817047536758465239950861266592524206390869822972469137566045176690277813352563392838847417674529251627419479815097868890993153215515488877097760272399483111013602618554846096893805108827211344467797072352072430591318485091677011261912992157762106672216780766138057271434398274272110062768324672899209610001835423246735718435995420720133657793744810610657L enc = 343369686707916921497078851452395954252074753628024855326592148594828266567853497784448902839960599855457261387659174943864861324798607407210198762531665500523668627672623380100283047707927966101715266190355476680204081288124100983003649559499979731342450364456322062273208742008750774795951290651360492364136674198126979777860541228166734597108964573061640243513571440689299166495541329990802602494896619995591485311779060353650700199981044058309406067935205196708178000370643018639282003328307492888263256672104905274453644042024751439967243049147724769464785043328741645419214885736940487139062463786022104540986811119563549305718088453842093257734689508882969016290658885961965896726616361694426487326338043950416067501288065942862535560013037283761552797410980713186506671844418096395304234050342551849999867017770968633512178545044838766793795733222455421862835695299142219006201321417882617773291364153890050471244104L pq = GCD(pow(2, pubkey*privkey, pubkey)-2, pubkey) print long_to_bytes(pow(enc, privkey, pq)) Run this script and we get the flag: ASIS{Y0u_c4N_m4n493_Schmidt_5am0A_CryP7o_SysT3M!!}\n",
+  "wordCount" : "294",
+  "inLanguage": "en",
+  "datePublished": "2018-05-01T00:00:00Z",
+  "dateModified": "2018-05-01T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Ashutosh Ahelleya"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://ashutosh1206.github.io/ctf/asisquals18-unclesam/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Ash's blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://ashutosh1206.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://ashutosh1206.github.io/" accesskey="h" title="Home (Alt + H)">Home</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://ashutosh1206.github.io/blog/" title="Blog">
+                    <span>Blog</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ashutosh1206.github.io/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ashutosh1206.github.io/archive/" title="Archive">
+                    <span>Archive</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ashutosh1206.github.io/ctf/" title="CTF">
+                    <span>CTF</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title">
+      UncleSam - ASIS CTF Quals
+    </h1>
+    <div class="post-meta"><span title='2018-05-01 00:00:00 +0000 UTC'>May 1, 2018</span>&nbsp;·&nbsp;Ashutosh Ahelleya
+
+</div>
+  </header> 
+  <div class="post-content"><p><strong>Challenge Points</strong>: 123<br>
+<strong>Challenge Description</strong>:</p>
+<blockquote>
+<p>Uncle Sam needs your help!</p>
+</blockquote>
+<p>The given challenge is a <a href="https://en.wikipedia.org/wiki/Schmidt-Samoa_cryptosystem">Schmidt-Samoa cryptosystem</a>. Let us look at how encryption/decryption takes place in this public key cryptosystem and then move to solving the challenge.</p>
+<h2 id="schmidt-samoa-cryptosystem-101">Schmidt-Samoa Cryptosystem 101<a hidden class="anchor" aria-hidden="true" href="#schmidt-samoa-cryptosystem-101">#</a></h2>
+<ol>
+<li>Two large primes p and q are chosen randomly, and the modulus is calculated: \(N = p*p*q\). The private key is calculated as \(d \equiv e^{-1} \mod lcm(p-1, q-1)\). The modulus is the public key too.</li>
+<li><strong>Encryption</strong>: Message <code>m &lt; N</code> is encrypted as \(enc = m^N \mod N\).</li>
+</ol>
+<ul>
+<li>Note that, unlike RSA, the encryption exponent and modulus is the same.</li>
+</ul>
+<ol start="3">
+<li><strong>Decryption</strong>: Message <code>m</code> is decrypted as \(m = enc^d \mod (pq)\)</li>
+</ol>
+<p>The security of this cryptosystem depends on the difficulty of factorisation of <code>N</code>.</p>
+<h2 id="the-challenge">The challenge<a hidden class="anchor" aria-hidden="true" href="#the-challenge">#</a></h2>
+<p>For this challenge, we are given \(N\) and \(d\). We can then write:<br>
+$$pubkey = p^2q$$
 $$privkey \equiv pubkey^{-1}\mod lcm(p-1, q-1)$$
 $$enc\equiv m^{pubkey}\mod pubkey$$
-$$enc\equiv m^{p^2q}\mod p^2q$$</p><p>To get \(m\) we can compute \(m\equiv enc^{privkey}\mod pq\). This is valid because \(pq\) is a factor of \(p^2q\) and hence<br>\((x\mod p^2q) \mod pq = x\mod pq\).</p><p>But of course, we don’t have \(pq\), we only have \(pubkey = p^2q\). Let us find \(pq\) then; we can write:
+$$enc\equiv m^{p^2q}\mod p^2q$$</p>
+<p>To get \(m\) we can compute \(m\equiv enc^{privkey}\mod pq\). This is valid because \(pq\) is a factor of \(p^2q\) and hence<br>
+\((x\mod p^2q) \mod pq = x\mod pq\).</p>
+<p>But of course, we don’t have \(pq\), we only have \(pubkey = p^2q\). Let us find \(pq\) then; we can write:
 $$2^{pubkey*privkey}\equiv 2\mod pq$$
 $$\implies 2^{pubkey*privkey} = 2 + k(pq)$$
-for some \(k\) such that \(k\in \mathbb{I^+}\)</p><p>Thus, we can write:
+for some \(k\) such that \(k\in \mathbb{I^+}\)</p>
+<p>Thus, we can write:
 $$2^{pubkey*privkey} - 2 = k(pq)$$
-$$GCD(2^{pubkey*privkey} - 2, pubkey) = GCD(k(pq), p^2q) = pq$$</p><p>We have pq now, we can calculate the message as:
-$$m\equiv enc^{privkey}\mod pq$$</p><h2 id=exploit-script>Exploit script<a hidden class=anchor aria-hidden=true href=#exploit-script>#</a></h2><p>I wrote the following script to implement the above attack:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>from</span> Crypto.Util.number <span style=color:#f92672>import</span> <span style=color:#f92672>*</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>privkey <span style=color:#f92672>=</span> <span style=color:#ae81ff>105717877672224295784291675385546750129601472163379527375367128238003471793097341763391999503913659542087520808364287167645349555897774428176288829031477703594776341268160433668976237198330124904372546897953955241778475322074160469767162566234358907740412805211247598698481640207956827199048419949848619731050860757808082106844953602176503247786535423423104239566910713528691298692332149783689032722772009974404716783312200885555343877611094998117307970399241640213553820043460140493803404190774171912962651075100983834071259021038322886114660028788229094872545516054757700068264628024524394995795135464746570071201</span>L
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>pubkey <span style=color:#f92672>=</span> <span style=color:#ae81ff>1043247381320041410146374847683905608886067988802815759655490071506964811427733496668055364700822779908166748193534341903285387332658081562041534228961538451830025041762537639985150344917584064827615356535763872539925989984117068207555498700585376330731428359489791600319636079777025344217248475485835298689437926003958578141784379857951264973109214803916445702964047899447002191548965239884095802091798787988745415178578597206815122915438351636672681355517982410123569961242563194480399347961753678159210217993526738306796503660563163029287419732210247579793266891085178817047536758465239950861266592524206390869822972469137566045176690277813352563392838847417674529251627419479815097868890993153215515488877097760272399483111013602618554846096893805108827211344467797072352072430591318485091677011261912992157762106672216780766138057271434398274272110062768324672899209610001835423246735718435995420720133657793744810610657</span>L
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>enc <span style=color:#f92672>=</span> <span style=color:#ae81ff>343369686707916921497078851452395954252074753628024855326592148594828266567853497784448902839960599855457261387659174943864861324798607407210198762531665500523668627672623380100283047707927966101715266190355476680204081288124100983003649559499979731342450364456322062273208742008750774795951290651360492364136674198126979777860541228166734597108964573061640243513571440689299166495541329990802602494896619995591485311779060353650700199981044058309406067935205196708178000370643018639282003328307492888263256672104905274453644042024751439967243049147724769464785043328741645419214885736940487139062463786022104540986811119563549305718088453842093257734689508882969016290658885961965896726616361694426487326338043950416067501288065942862535560013037283761552797410980713186506671844418096395304234050342551849999867017770968633512178545044838766793795733222455421862835695299142219006201321417882617773291364153890050471244104</span>L
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>pq <span style=color:#f92672>=</span> GCD(pow(<span style=color:#ae81ff>2</span>, pubkey<span style=color:#f92672>*</span>privkey, pubkey)<span style=color:#f92672>-</span><span style=color:#ae81ff>2</span>, pubkey)
-</span></span><span style=display:flex><span>print long_to_bytes(pow(enc, privkey, pq))
-</span></span></code></pre></div><p>Run this script and we get the flag: <strong>ASIS{Y0u_c4N_m4n493_Schmidt_5am0A_CryP7o_SysT3M!!}</strong></p></div><footer class=post-footer><ul class=post-tags><li><a href=https://ashutosh1206.github.io/tags/numbertheory/>NumberTheory</a></li></ul></footer></article></main><footer class=footer><span>&copy; 2023 <a href=https://ashutosh1206.github.io/>Ashutosh Ahelleya</a></span>
-<span>Powered by
-<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
-        <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg></a><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script></body></html>
+$$GCD(2^{pubkey*privkey} - 2, pubkey) = GCD(k(pq), p^2q) = pq$$</p>
+<p>We have pq now, we can calculate the message as:
+$$m\equiv enc^{privkey}\mod pq$$</p>
+<h2 id="exploit-script">Exploit script<a hidden class="anchor" aria-hidden="true" href="#exploit-script">#</a></h2>
+<p>I wrote the following script to implement the above attack:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> Crypto.Util.number <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>privkey <span style="color:#f92672">=</span> <span style="color:#ae81ff">105717877672224295784291675385546750129601472163379527375367128238003471793097341763391999503913659542087520808364287167645349555897774428176288829031477703594776341268160433668976237198330124904372546897953955241778475322074160469767162566234358907740412805211247598698481640207956827199048419949848619731050860757808082106844953602176503247786535423423104239566910713528691298692332149783689032722772009974404716783312200885555343877611094998117307970399241640213553820043460140493803404190774171912962651075100983834071259021038322886114660028788229094872545516054757700068264628024524394995795135464746570071201</span>L
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pubkey <span style="color:#f92672">=</span> <span style="color:#ae81ff">1043247381320041410146374847683905608886067988802815759655490071506964811427733496668055364700822779908166748193534341903285387332658081562041534228961538451830025041762537639985150344917584064827615356535763872539925989984117068207555498700585376330731428359489791600319636079777025344217248475485835298689437926003958578141784379857951264973109214803916445702964047899447002191548965239884095802091798787988745415178578597206815122915438351636672681355517982410123569961242563194480399347961753678159210217993526738306796503660563163029287419732210247579793266891085178817047536758465239950861266592524206390869822972469137566045176690277813352563392838847417674529251627419479815097868890993153215515488877097760272399483111013602618554846096893805108827211344467797072352072430591318485091677011261912992157762106672216780766138057271434398274272110062768324672899209610001835423246735718435995420720133657793744810610657</span>L
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>enc <span style="color:#f92672">=</span> <span style="color:#ae81ff">343369686707916921497078851452395954252074753628024855326592148594828266567853497784448902839960599855457261387659174943864861324798607407210198762531665500523668627672623380100283047707927966101715266190355476680204081288124100983003649559499979731342450364456322062273208742008750774795951290651360492364136674198126979777860541228166734597108964573061640243513571440689299166495541329990802602494896619995591485311779060353650700199981044058309406067935205196708178000370643018639282003328307492888263256672104905274453644042024751439967243049147724769464785043328741645419214885736940487139062463786022104540986811119563549305718088453842093257734689508882969016290658885961965896726616361694426487326338043950416067501288065942862535560013037283761552797410980713186506671844418096395304234050342551849999867017770968633512178545044838766793795733222455421862835695299142219006201321417882617773291364153890050471244104</span>L
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pq <span style="color:#f92672">=</span> GCD(pow(<span style="color:#ae81ff">2</span>, pubkey<span style="color:#f92672">*</span>privkey, pubkey)<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>, pubkey)
+</span></span><span style="display:flex;"><span>print long_to_bytes(pow(enc, privkey, pq))
+</span></span></code></pre></div><p>Run this script and we get the flag: <strong>ASIS{Y0u_c4N_m4n493_Schmidt_5am0A_CryP7o_SysT3M!!}</strong></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://ashutosh1206.github.io/tags/numbertheory/">NumberTheory</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://ashutosh1206.github.io/">Ash&#39;s blog</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

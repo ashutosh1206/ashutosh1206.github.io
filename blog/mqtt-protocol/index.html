@@ -1,8 +1,404 @@
-<!doctype html><html lang=en dir=auto><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>Playing around with MQTT Protocol | Ashutosh Ahelleya</title><meta name=keywords content><meta name=description content="Recently, I happened to come across MQTT Protocol while doing background work for a project as a part of IoT course offered at the University. I liked it due to reasons which I will justify, hence this blog post!
-I spent some time yesterday looking at the working and specifications of MQTT v3.1.1 from the blog post by teserakt and through the documentation: http://docs.oasis-open.org/mqtt/mqtt/v3.1.1/mqtt-v3.1.1.html, since I enjoy reading about the protocols and their implementation."><meta name=author content="Ashutosh Ahelleya"><link rel=canonical href=https://ashutosh1206.github.io/blog/mqtt-protocol/><link crossorigin=anonymous href=/assets/css/stylesheet.bccfefac377bc340f06c260aed1bddf49a4354816d7c570d6aac75a997986c95.css integrity="sha256-vM/vrDd7w0DwbCYK7Rvd9JpDVIFtfFcNaqx1qZeYbJU=" rel="preload stylesheet" as=style><script defer crossorigin=anonymous src=/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG+9vmJ0cTS+ovo0FeA=" onload=hljs.initHighlightingOnLoad()></script>
-<link rel=icon href=https://ashutosh1206.github.io/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://ashutosh1206.github.io/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://ashutosh1206.github.io/favicon-32x32.png><link rel=apple-touch-icon href=https://ashutosh1206.github.io/apple-touch-icon.png><link rel=mask-icon href=https://ashutosh1206.github.io/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--hljs-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><meta property="og:title" content="Playing around with MQTT Protocol"><meta property="og:description" content="Recently, I happened to come across MQTT Protocol while doing background work for a project as a part of IoT course offered at the University. I liked it due to reasons which I will justify, hence this blog post!
-I spent some time yesterday looking at the working and specifications of MQTT v3.1.1 from the blog post by teserakt and through the documentation: http://docs.oasis-open.org/mqtt/mqtt/v3.1.1/mqtt-v3.1.1.html, since I enjoy reading about the protocols and their implementation."><meta property="og:type" content="article"><meta property="og:url" content="https://ashutosh1206.github.io/blog/mqtt-protocol/"><meta property="article:section" content="blog"><meta property="article:published_time" content="2018-11-04T00:00:00+00:00"><meta property="article:modified_time" content="2018-11-04T00:00:00+00:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="Playing around with MQTT Protocol"><meta name=twitter:description content="Recently, I happened to come across MQTT Protocol while doing background work for a project as a part of IoT course offered at the University. I liked it due to reasons which I will justify, hence this blog post!
-I spent some time yesterday looking at the working and specifications of MQTT v3.1.1 from the blog post by teserakt and through the documentation: http://docs.oasis-open.org/mqtt/mqtt/v3.1.1/mqtt-v3.1.1.html, since I enjoy reading about the protocols and their implementation."><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Blogs","item":"https://ashutosh1206.github.io/blog/"},{"@type":"ListItem","position":2,"name":"Playing around with MQTT Protocol","item":"https://ashutosh1206.github.io/blog/mqtt-protocol/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"Playing around with MQTT Protocol","name":"Playing around with MQTT Protocol","description":"Recently, I happened to come across MQTT Protocol while doing background work for a project as a part of IoT course offered at the University. I liked it due to reasons which I will justify, hence this blog post!\nI spent some time yesterday looking at the working and specifications of MQTT v3.1.1 from the blog post by teserakt and through the documentation: http://docs.oasis-open.org/mqtt/mqtt/v3.1.1/mqtt-v3.1.1.html, since I enjoy reading about the protocols and their implementation.","keywords":[],"articleBody":"Recently, I happened to come across MQTT Protocol while doing background work for a project as a part of IoT course offered at the University. I liked it due to reasons which I will justify, hence this blog post!\nI spent some time yesterday looking at the working and specifications of MQTT v3.1.1 from the blog post by teserakt and through the documentation: http://docs.oasis-open.org/mqtt/mqtt/v3.1.1/mqtt-v3.1.1.html, since I enjoy reading about the protocols and their implementation.\nThis blog post will mostly cover what I read and learned about MQTT, so let’s get into it!\nIntroduction What is MQTT? Fundamental entities Communication using MQTT Protocol Data analysis Using mosquitto and Wireshark Security aspects Need for encrypted IoT communications What is MQTT? MQTT stands for “Message Queuing Telemetry Transport” and is described as “a publish/subscribe, extremely simple and lightweight messaging protocol, designed for constrained devices and low-bandwidth, high-latency or unreliable networks” as per their site: http://mqtt.org/faq. Due to these reasons, this protocol finds it use in IoT and other machine-to-machine communications.\nTelemetry wut? It is a method to collect data/measurements at remote points and sent to another location for analysis (For example, imagine an IoT device connected to an animal, that gives the location coordinates of that animal and also it’s pulse rate, to a zoology organisation for analysis located at a remote location)\nFundamental Entities Publisher– creates messages, tags them with a topic and sends it to the broker server. Subscriber– has the capability to subscribe to multiple topics and will receive all messages tagged with these topics published by the publisher Broker Server– acts as an intermediate between publishers and subscribers and ensures integrity of the data that is being sent. Any device a.k.a. client can act as both publisher and subscriber, but only one role at a time.\nReference: https://wso2.com/library/articles/2016/06/article-the-basics-of-mqtt-and-how-wso2-products-support-mqtt-protocol/\nCommunication using MQTT protocol Subscription To subscribe, the subscriber connects to the broker server (using TCP) After a connection between the subscriber and broker is established, subscriber requests the broker to subscribe to a topic. Broker acknowledges this and sends a SUBACK message that confirms the subscription. Publishing messages To publish a message, the publisher first connects to the broker (using TCP) After a connection between the publisher and broker is established, the publisher sends the message to the broker tagged as a specific topic and disconnects After the publisher sends the message to the broker and disconnects, broker sends the message to all the clients that have subscribed to the topic of the message.\nRetain messages MQTT protocol has the functionality to retain the last published message for a given topic. This is useful in cases when the subscriber connects to the broker after the publisher has connected and published it’s message. (In the above example, the subscriber connected to the broker before the publisher)\nAll the functionalities discussed above can be implemented by installing an open source MQTT broker- mosquitto\nIn the next topic, we will see how to establish and send data over publish/subscribe communication using mosquitto and analyse the packets sent using Wireshark.\nData Analysis In this section, we will send and receive data packets locally using MQTT protocol and analyse it on Wireshark.\nFirst of all, you need to install Mosquitto and Wireshark on your machine:\nMosquitto Install mosquitto- https://mosquitto.org/download/ I executed the following commands to install it on my ubuntu-16.04 machine sudo apt-add-repository ppa:mosquitto-dev/mosquitto-ppa sudo apt-get update Make sure that mosquitto broker is running before moving on to the next step (Check the status using systemctl status mosquitto.service)\nThe above command starts a client that connects to the broker (iot.eclipse.org) and then subscription is given to the topic “mqttest1”\nAt the same time when the above command is running locally, open another terminal window and type:\nThe above command starts a client that connects to the broker, sends “hello” with topic “mqttest1”\nYou can see the below output on the subscriber’s side when the publisher publishes a message:\nThis is an abstract view of how the communication takes place in MQTT protocol.\nTo understand things better, we can analyse the packets sent during this communication using Wireshark, just start listening to wlo1 before the communication starts.\nWe will get lots of data in the captured file, because all the data that is sent via WiFi will be included in the pcap. We will just filter out packets sent using MQTT protocol and analyse them.\nSubscriber connection to Broker Subscriber IP, Port: 192.168.43.224, 56178 Broker IP, Port: 198.41.39.241, 1883 Subscription to a topic Publisher connection to Broker Publisher IP, Port: 192.168.43.224, 56180 Publication with a topic Subscribers receiving data Security aspects Notice that by default, packets sent by MQTT Protocol are unencrypted!\nSo, if anyone can intercept the communication channel he/she can access the data that is being sent. This is quite a serious issue that can exist in real world IoT device communication.\nmosquitto provides a feature to encrypt the data that is being sent using TLS-1.2, which makes things quite secure “if implemented correctly” (Stress upon ‘if’). However, IoT world needs a more light weight protocol for ensuring security, hence NIST is now demanding light weight crypto to secure IoT devices: https://csrc.nist.gov/Projects/Lightweight-Cryptography\nYou can also read about this research by Teserakt on their end-to-end encryption solution for MQTT, which is quite interesting: https://teserakt.io/#products and https://teserakt.io/doc/teserakt-e4.pdf\nFuture Work As soon as I get sometime, I will try to post a write-up of analysis of data sent through encrypted media in case of vulnerable keys (such as TLS tunnels etc.)\nHope you had fun reading about MQTT! If you have any doubts, feel free to comment on this post or ping me on twitter!\n","wordCount":"938","inLanguage":"en","datePublished":"2018-11-04T00:00:00Z","dateModified":"2018-11-04T00:00:00Z","author":{"@type":"Person","name":"Ashutosh Ahelleya"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://ashutosh1206.github.io/blog/mqtt-protocol/"},"publisher":{"@type":"Organization","name":"Ashutosh Ahelleya","logo":{"@type":"ImageObject","url":"https://ashutosh1206.github.io/favicon.ico"}}}</script></head><body id=top><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://ashutosh1206.github.io/ accesskey=h title="Home (Alt + H)">Home</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)"><svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg><svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://ashutosh1206.github.io/blog/ title=Blog><span>Blog</span></a></li><li><a href=https://ashutosh1206.github.io/archive/ title=Archive><span>Archive</span></a></li><li><a href=https://ashutosh1206.github.io/ctf/ title=CTF><span>CTF</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class=post-title>Playing around with MQTT Protocol</h1><div class=post-meta><span title='2018-11-04 00:00:00 +0000 UTC'>November 4, 2018</span>&nbsp;·&nbsp;Ashutosh Ahelleya</div></header><div class=post-content><p>Recently, I happened to come across MQTT Protocol while doing background work for a project as a part of IoT course offered at the University. I liked it due to reasons which I will justify, hence this blog post!</p><p>I spent some time yesterday looking at the working and specifications of MQTT v3.1.1 from the <a href=https://blog.teserakt.io/2018/11/01/introduction-to-mqtt/>blog post by teserakt</a> and through the documentation: <a href=http://docs.oasis-open.org/mqtt/mqtt/v3.1.1/mqtt-v3.1.1.html>http://docs.oasis-open.org/mqtt/mqtt/v3.1.1/mqtt-v3.1.1.html</a>, since I enjoy reading about the protocols and their implementation.</p><p>This blog post will mostly cover what I read and learned about MQTT, so let’s get into it!</p><ol><li>Introduction<ul><li>What is MQTT?</li><li>Fundamental entities</li></ul></li><li>Communication using MQTT Protocol</li><li>Data analysis<ul><li>Using mosquitto and Wireshark</li></ul></li><li>Security aspects<ul><li>Need for encrypted IoT communications</li></ul></li></ol><h3 id=what-is-mqtt>What is MQTT?<a hidden class=anchor aria-hidden=true href=#what-is-mqtt>#</a></h3><p>MQTT stands for “Message Queuing Telemetry Transport” and is described as “a publish/subscribe, extremely simple and lightweight messaging protocol, designed for constrained devices and low-bandwidth, high-latency or unreliable networks” as per their site: <a href=http://mqtt.org/faq>http://mqtt.org/faq</a>. Due to these reasons, this protocol finds it use in IoT and other machine-to-machine communications.</p><h3 id=telemetry-wut>Telemetry wut?<a hidden class=anchor aria-hidden=true href=#telemetry-wut>#</a></h3><p>It is a method to collect data/measurements at remote points and sent to another location for analysis (For example, imagine an IoT device connected to an animal, that gives the location coordinates of that animal and also it’s pulse rate, to a zoology organisation for analysis located at a remote location)</p><h3 id=fundamental-entities>Fundamental Entities<a hidden class=anchor aria-hidden=true href=#fundamental-entities>#</a></h3><ol><li>Publisher– creates messages, tags them with a topic and sends it to the broker server.</li><li>Subscriber– has the capability to subscribe to multiple topics and will receive all messages tagged with these topics published by the publisher</li><li>Broker Server– acts as an intermediate between publishers and subscribers and ensures integrity of the data that is being sent.</li></ol><p>Any device a.k.a. client can act as both publisher and subscriber, but only one role at a time.</p><p><img loading=lazy src=/mqtt-protocol-1.png alt=picture><br><em>Reference</em>: <a href=https://wso2.com/library/articles/2016/06/article-the-basics-of-mqtt-and-how-wso2-products-support-mqtt-protocol/>https://wso2.com/library/articles/2016/06/article-the-basics-of-mqtt-and-how-wso2-products-support-mqtt-protocol/</a></p><h2 id=communication-using-mqtt-protocol>Communication using MQTT protocol<a hidden class=anchor aria-hidden=true href=#communication-using-mqtt-protocol>#</a></h2><h3 id=subscription>Subscription<a hidden class=anchor aria-hidden=true href=#subscription>#</a></h3><ol><li>To subscribe, the subscriber connects to the broker server (using TCP)</li><li>After a connection between the subscriber and broker is established, subscriber requests the broker to subscribe to a topic.</li><li>Broker acknowledges this and sends a SUBACK message that confirms the subscription.</li></ol><h3 id=publishing-messages>Publishing messages<a hidden class=anchor aria-hidden=true href=#publishing-messages>#</a></h3><ol><li>To publish a message, the publisher first connects to the broker (using TCP)</li><li>After a connection between the publisher and broker is established, the publisher sends the message to the broker tagged as a specific topic and disconnects</li></ol><p>After the publisher sends the message to the broker and disconnects, broker sends the message to all the clients that have subscribed to the topic of the message.</p><h3 id=retain-messages>Retain messages<a hidden class=anchor aria-hidden=true href=#retain-messages>#</a></h3><p>MQTT protocol has the functionality to retain the last published message for a given topic. This is useful in cases when the subscriber connects to the broker after the publisher has connected and published it’s message. (In the above example, the subscriber connected to the broker before the publisher)</p><p>All the functionalities discussed above can be implemented by installing an open source MQTT broker- mosquitto</p><p>In the next topic, we will see how to establish and send data over publish/subscribe communication using mosquitto and analyse the packets sent using Wireshark.</p><h2 id=data-analysis>Data Analysis<a hidden class=anchor aria-hidden=true href=#data-analysis>#</a></h2><p>In this section, we will send and receive data packets locally using MQTT protocol and analyse it on Wireshark.</p><p>First of all, you need to install Mosquitto and Wireshark on your machine:</p><h3 id=mosquitto>Mosquitto<a hidden class=anchor aria-hidden=true href=#mosquitto>#</a></h3><ol><li>Install mosquitto- <a href=https://mosquitto.org/download/>https://mosquitto.org/download/</a><ul><li>I executed the following commands to install it on my ubuntu-16.04 machine<ul><li><code>sudo apt-add-repository ppa:mosquitto-dev/mosquitto-ppa</code></li><li><code>sudo apt-get update</code></li></ul></li></ul></li></ol><p>Make sure that <strong>mosquitto</strong> broker is running before moving on to the next step (Check the status using <code>systemctl status mosquitto.service</code>)</p><p><img loading=lazy src=/mqtt-protocol-2.png alt=picture></p><p><em>The above command starts a client that connects to the broker (iot.eclipse.org) and then subscription is given to the topic “mqttest1”</em></p><p>At the same time when the above command is running locally, open another terminal window and type:</p><p><img loading=lazy src=/mqtt-protocol-3.png alt=picture></p><p><em>The above command starts a client that connects to the broker, sends “hello” with topic “mqttest1”</em></p><p>You can see the below output on the subscriber’s side when the publisher publishes a message:</p><p><img loading=lazy src=/mqtt-protocol-4.png alt=picture></p><p>This is an abstract view of how the communication takes place in MQTT protocol.</p><p>To understand things better, we can analyse the packets sent during this communication using Wireshark, just start listening to <code>wlo1</code> before the communication starts.</p><p>We will get lots of data in the captured file, because all the data that is sent via WiFi will be included in the pcap. We will just filter out packets sent using MQTT protocol and analyse them.</p><h3 id=subscriber-connection-to-broker>Subscriber connection to Broker<a hidden class=anchor aria-hidden=true href=#subscriber-connection-to-broker>#</a></h3><ol><li><strong>Subscriber IP, Port</strong>: 192.168.43.224, 56178</li><li><strong>Broker IP, Port</strong>: 198.41.39.241, 1883</li></ol><h3 id=subscription-to-a-topic>Subscription to a topic<a hidden class=anchor aria-hidden=true href=#subscription-to-a-topic>#</a></h3><h3 id=publisher-connection-to-broker>Publisher connection to Broker<a hidden class=anchor aria-hidden=true href=#publisher-connection-to-broker>#</a></h3><ol><li><strong>Publisher IP, Port</strong>: 192.168.43.224, 56180</li></ol><h3 id=publication-with-a-topic>Publication with a topic<a hidden class=anchor aria-hidden=true href=#publication-with-a-topic>#</a></h3><h3 id=subscribers-receiving-data>Subscribers receiving data<a hidden class=anchor aria-hidden=true href=#subscribers-receiving-data>#</a></h3><h2 id=security-aspects>Security aspects<a hidden class=anchor aria-hidden=true href=#security-aspects>#</a></h2><p>Notice that by default, packets sent by MQTT Protocol are unencrypted!</p><p>So, if anyone can intercept the communication channel he/she can access the data that is being sent. This is quite a serious issue that can exist in real world IoT device communication.</p><p><code>mosquitto</code> provides a feature to encrypt the data that is being sent using TLS-1.2, which makes things quite secure “if implemented correctly” (Stress upon ‘if’). However, IoT world needs a more light weight protocol for ensuring security, hence NIST is now demanding light weight crypto to secure IoT devices: <a href=https://csrc.nist.gov/Projects/Lightweight-Cryptography>https://csrc.nist.gov/Projects/Lightweight-Cryptography</a></p><p>You can also read about this research by Teserakt on their end-to-end encryption solution for MQTT, which is quite interesting: <a href=https://teserakt.io/#products>https://teserakt.io/#products</a> and <a href=https://teserakt.io/doc/teserakt-e4.pdf>https://teserakt.io/doc/teserakt-e4.pdf</a></p><h2 id=future-work>Future Work<a hidden class=anchor aria-hidden=true href=#future-work>#</a></h2><p>As soon as I get sometime, I will try to post a write-up of analysis of data sent through encrypted media in case of vulnerable keys (such as TLS tunnels etc.)</p><p>Hope you had fun reading about MQTT! If you have any doubts, feel free to comment on this post or <a href=https://twitter.com/ashutosha_>ping me on twitter</a>!</p></div><footer class=post-footer><ul class=post-tags></ul></footer></article></main><footer class=footer><span>&copy; 2023 <a href=https://ashutosh1206.github.io/>Ashutosh Ahelleya</a></span>
-<span>Powered by
-<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
-        <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg></a><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script></body></html>
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Playing around with MQTT Protocol | Ash&#39;s blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="Recently, I happened to come across MQTT Protocol while doing background work for a project as a part of IoT course offered at the University. I liked it due to reasons which I will justify, hence this blog post!
+I spent some time yesterday looking at the working and specifications of MQTT v3.1.1 from the blog post by teserakt and through the documentation: http://docs.oasis-open.org/mqtt/mqtt/v3.1.1/mqtt-v3.1.1.html, since I enjoy reading about the protocols and their implementation.">
+<meta name="author" content="Ashutosh Ahelleya">
+<link rel="canonical" href="https://ashutosh1206.github.io/blog/mqtt-protocol/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.bccfefac377bc340f06c260aed1bddf49a4354816d7c570d6aac75a997986c95.css" integrity="sha256-vM/vrDd7w0DwbCYK7Rvd9JpDVIFtfFcNaqx1qZeYbJU=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://ashutosh1206.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://ashutosh1206.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://ashutosh1206.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://ashutosh1206.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://ashutosh1206.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript><meta property="og:title" content="Playing around with MQTT Protocol" />
+<meta property="og:description" content="Recently, I happened to come across MQTT Protocol while doing background work for a project as a part of IoT course offered at the University. I liked it due to reasons which I will justify, hence this blog post!
+I spent some time yesterday looking at the working and specifications of MQTT v3.1.1 from the blog post by teserakt and through the documentation: http://docs.oasis-open.org/mqtt/mqtt/v3.1.1/mqtt-v3.1.1.html, since I enjoy reading about the protocols and their implementation." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://ashutosh1206.github.io/blog/mqtt-protocol/" /><meta property="article:section" content="blog" />
+<meta property="article:published_time" content="2018-11-04T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-11-04T00:00:00+00:00" /><meta property="og:site_name" content="Ash&#39;s blog" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Playing around with MQTT Protocol"/>
+<meta name="twitter:description" content="Recently, I happened to come across MQTT Protocol while doing background work for a project as a part of IoT course offered at the University. I liked it due to reasons which I will justify, hence this blog post!
+I spent some time yesterday looking at the working and specifications of MQTT v3.1.1 from the blog post by teserakt and through the documentation: http://docs.oasis-open.org/mqtt/mqtt/v3.1.1/mqtt-v3.1.1.html, since I enjoy reading about the protocols and their implementation."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Blogs",
+      "item": "https://ashutosh1206.github.io/blog/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Playing around with MQTT Protocol",
+      "item": "https://ashutosh1206.github.io/blog/mqtt-protocol/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Playing around with MQTT Protocol",
+  "name": "Playing around with MQTT Protocol",
+  "description": "Recently, I happened to come across MQTT Protocol while doing background work for a project as a part of IoT course offered at the University. I liked it due to reasons which I will justify, hence this blog post!\nI spent some time yesterday looking at the working and specifications of MQTT v3.1.1 from the blog post by teserakt and through the documentation: http://docs.oasis-open.org/mqtt/mqtt/v3.1.1/mqtt-v3.1.1.html, since I enjoy reading about the protocols and their implementation.",
+  "keywords": [
+    
+  ],
+  "articleBody": "Recently, I happened to come across MQTT Protocol while doing background work for a project as a part of IoT course offered at the University. I liked it due to reasons which I will justify, hence this blog post!\nI spent some time yesterday looking at the working and specifications of MQTT v3.1.1 from the blog post by teserakt and through the documentation: http://docs.oasis-open.org/mqtt/mqtt/v3.1.1/mqtt-v3.1.1.html, since I enjoy reading about the protocols and their implementation.\nThis blog post will mostly cover what I read and learned about MQTT, so let’s get into it!\nIntroduction What is MQTT? Fundamental entities Communication using MQTT Protocol Data analysis Using mosquitto and Wireshark Security aspects Need for encrypted IoT communications What is MQTT? MQTT stands for “Message Queuing Telemetry Transport” and is described as “a publish/subscribe, extremely simple and lightweight messaging protocol, designed for constrained devices and low-bandwidth, high-latency or unreliable networks” as per their site: http://mqtt.org/faq. Due to these reasons, this protocol finds it use in IoT and other machine-to-machine communications.\nTelemetry wut? It is a method to collect data/measurements at remote points and sent to another location for analysis (For example, imagine an IoT device connected to an animal, that gives the location coordinates of that animal and also it’s pulse rate, to a zoology organisation for analysis located at a remote location)\nFundamental Entities Publisher– creates messages, tags them with a topic and sends it to the broker server. Subscriber– has the capability to subscribe to multiple topics and will receive all messages tagged with these topics published by the publisher Broker Server– acts as an intermediate between publishers and subscribers and ensures integrity of the data that is being sent. Any device a.k.a. client can act as both publisher and subscriber, but only one role at a time.\nReference: https://wso2.com/library/articles/2016/06/article-the-basics-of-mqtt-and-how-wso2-products-support-mqtt-protocol/\nCommunication using MQTT protocol Subscription To subscribe, the subscriber connects to the broker server (using TCP) After a connection between the subscriber and broker is established, subscriber requests the broker to subscribe to a topic. Broker acknowledges this and sends a SUBACK message that confirms the subscription. Publishing messages To publish a message, the publisher first connects to the broker (using TCP) After a connection between the publisher and broker is established, the publisher sends the message to the broker tagged as a specific topic and disconnects After the publisher sends the message to the broker and disconnects, broker sends the message to all the clients that have subscribed to the topic of the message.\nRetain messages MQTT protocol has the functionality to retain the last published message for a given topic. This is useful in cases when the subscriber connects to the broker after the publisher has connected and published it’s message. (In the above example, the subscriber connected to the broker before the publisher)\nAll the functionalities discussed above can be implemented by installing an open source MQTT broker- mosquitto\nIn the next topic, we will see how to establish and send data over publish/subscribe communication using mosquitto and analyse the packets sent using Wireshark.\nData Analysis In this section, we will send and receive data packets locally using MQTT protocol and analyse it on Wireshark.\nFirst of all, you need to install Mosquitto and Wireshark on your machine:\nMosquitto Install mosquitto- https://mosquitto.org/download/ I executed the following commands to install it on my ubuntu-16.04 machine sudo apt-add-repository ppa:mosquitto-dev/mosquitto-ppa sudo apt-get update Make sure that mosquitto broker is running before moving on to the next step (Check the status using systemctl status mosquitto.service)\nThe above command starts a client that connects to the broker (iot.eclipse.org) and then subscription is given to the topic “mqttest1”\nAt the same time when the above command is running locally, open another terminal window and type:\nThe above command starts a client that connects to the broker, sends “hello” with topic “mqttest1”\nYou can see the below output on the subscriber’s side when the publisher publishes a message:\nThis is an abstract view of how the communication takes place in MQTT protocol.\nTo understand things better, we can analyse the packets sent during this communication using Wireshark, just start listening to wlo1 before the communication starts.\nWe will get lots of data in the captured file, because all the data that is sent via WiFi will be included in the pcap. We will just filter out packets sent using MQTT protocol and analyse them.\nSubscriber connection to Broker Subscriber IP, Port: 192.168.43.224, 56178 Broker IP, Port: 198.41.39.241, 1883 Subscription to a topic Publisher connection to Broker Publisher IP, Port: 192.168.43.224, 56180 Publication with a topic Subscribers receiving data Security aspects Notice that by default, packets sent by MQTT Protocol are unencrypted!\nSo, if anyone can intercept the communication channel he/she can access the data that is being sent. This is quite a serious issue that can exist in real world IoT device communication.\nmosquitto provides a feature to encrypt the data that is being sent using TLS-1.2, which makes things quite secure “if implemented correctly” (Stress upon ‘if’). However, IoT world needs a more light weight protocol for ensuring security, hence NIST is now demanding light weight crypto to secure IoT devices: https://csrc.nist.gov/Projects/Lightweight-Cryptography\nYou can also read about this research by Teserakt on their end-to-end encryption solution for MQTT, which is quite interesting: https://teserakt.io/#products and https://teserakt.io/doc/teserakt-e4.pdf\nFuture Work As soon as I get sometime, I will try to post a write-up of analysis of data sent through encrypted media in case of vulnerable keys (such as TLS tunnels etc.)\nHope you had fun reading about MQTT! If you have any doubts, feel free to comment on this post or ping me on twitter!\n",
+  "wordCount" : "938",
+  "inLanguage": "en",
+  "datePublished": "2018-11-04T00:00:00Z",
+  "dateModified": "2018-11-04T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Ashutosh Ahelleya"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://ashutosh1206.github.io/blog/mqtt-protocol/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Ash's blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://ashutosh1206.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://ashutosh1206.github.io/" accesskey="h" title="Home (Alt + H)">Home</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://ashutosh1206.github.io/blog/" title="Blog">
+                    <span>Blog</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ashutosh1206.github.io/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ashutosh1206.github.io/archive/" title="Archive">
+                    <span>Archive</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ashutosh1206.github.io/ctf/" title="CTF">
+                    <span>CTF</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title">
+      Playing around with MQTT Protocol
+    </h1>
+    <div class="post-meta"><span title='2018-11-04 00:00:00 +0000 UTC'>November 4, 2018</span>&nbsp;·&nbsp;Ashutosh Ahelleya
+
+</div>
+  </header> 
+  <div class="post-content"><p>Recently, I happened to come across MQTT Protocol while doing background work for a project as a part of IoT course offered at the University. I liked it due to reasons which I will justify, hence this blog post!</p>
+<p>I spent some time yesterday looking at the working and specifications of MQTT v3.1.1 from the <a href="https://blog.teserakt.io/2018/11/01/introduction-to-mqtt/">blog post by teserakt</a> and through the documentation: <a href="http://docs.oasis-open.org/mqtt/mqtt/v3.1.1/mqtt-v3.1.1.html">http://docs.oasis-open.org/mqtt/mqtt/v3.1.1/mqtt-v3.1.1.html</a>, since I enjoy reading about the protocols and their implementation.</p>
+<p>This blog post will mostly cover what I read and learned about MQTT, so let’s get into it!</p>
+<!-- raw HTML omitted -->
+<ol>
+<li>Introduction
+<ul>
+<li>What is MQTT?</li>
+<li>Fundamental entities</li>
+</ul>
+</li>
+<li>Communication using MQTT Protocol</li>
+<li>Data analysis
+<ul>
+<li>Using mosquitto and Wireshark</li>
+</ul>
+</li>
+<li>Security aspects
+<ul>
+<li>Need for encrypted IoT communications</li>
+</ul>
+</li>
+</ol>
+<!-- raw HTML omitted -->
+<h3 id="what-is-mqtt">What is MQTT?<a hidden class="anchor" aria-hidden="true" href="#what-is-mqtt">#</a></h3>
+<p>MQTT stands for “Message Queuing Telemetry Transport” and is described as “a publish/subscribe, extremely simple and lightweight messaging protocol, designed for constrained devices and low-bandwidth, high-latency or unreliable networks” as per their site: <a href="http://mqtt.org/faq">http://mqtt.org/faq</a>. Due to these reasons, this protocol finds it use in IoT and other machine-to-machine communications.</p>
+<h3 id="telemetry-wut">Telemetry wut?<a hidden class="anchor" aria-hidden="true" href="#telemetry-wut">#</a></h3>
+<p>It is a method to collect data/measurements at remote points and sent to another location for analysis (For example, imagine an IoT device connected to an animal, that gives the location coordinates of that animal and also it’s pulse rate, to a zoology organisation for analysis located at a remote location)</p>
+<h3 id="fundamental-entities">Fundamental Entities<a hidden class="anchor" aria-hidden="true" href="#fundamental-entities">#</a></h3>
+<ol>
+<li>Publisher– creates messages, tags them with a topic and sends it to the broker server.</li>
+<li>Subscriber– has the capability to subscribe to multiple topics and will receive all messages tagged with these topics published by the publisher</li>
+<li>Broker Server– acts as an intermediate between publishers and subscribers and ensures integrity of the data that is being sent.</li>
+</ol>
+<p>Any device a.k.a. client can act as both publisher and subscriber, but only one role at a time.</p>
+<p><img loading="lazy" src="/mqtt-protocol-1.png" alt="picture"  />
+<br>
+<em>Reference</em>: <a href="https://wso2.com/library/articles/2016/06/article-the-basics-of-mqtt-and-how-wso2-products-support-mqtt-protocol/">https://wso2.com/library/articles/2016/06/article-the-basics-of-mqtt-and-how-wso2-products-support-mqtt-protocol/</a></p>
+<!-- raw HTML omitted -->
+<h2 id="communication-using-mqtt-protocol">Communication using MQTT protocol<a hidden class="anchor" aria-hidden="true" href="#communication-using-mqtt-protocol">#</a></h2>
+<h3 id="subscription">Subscription<a hidden class="anchor" aria-hidden="true" href="#subscription">#</a></h3>
+<ol>
+<li>To subscribe, the subscriber connects to the broker server (using TCP)</li>
+<li>After a connection between the subscriber and broker is established, subscriber requests the broker to subscribe to a topic.</li>
+<li>Broker acknowledges this and sends a SUBACK message that confirms the subscription.</li>
+</ol>
+<h3 id="publishing-messages">Publishing messages<a hidden class="anchor" aria-hidden="true" href="#publishing-messages">#</a></h3>
+<ol>
+<li>To publish a message, the publisher first connects to the broker (using TCP)</li>
+<li>After a connection between the publisher and broker is established, the publisher sends the message to the broker tagged as a specific topic and disconnects</li>
+</ol>
+<p>After the publisher sends the message to the broker and disconnects, broker sends the message to all the clients that have subscribed to the topic of the message.</p>
+<h3 id="retain-messages">Retain messages<a hidden class="anchor" aria-hidden="true" href="#retain-messages">#</a></h3>
+<p>MQTT protocol has the functionality to retain the last published message for a given topic. This is useful in cases when the subscriber connects to the broker after the publisher has connected and published it’s message. (In the above example, the subscriber connected to the broker before the publisher)</p>
+<p>All the functionalities discussed above can be implemented by installing an open source MQTT broker- mosquitto</p>
+<p>In the next topic, we will see how to establish and send data over publish/subscribe communication using mosquitto and analyse the packets sent using Wireshark.</p>
+<!-- raw HTML omitted -->
+<h2 id="data-analysis">Data Analysis<a hidden class="anchor" aria-hidden="true" href="#data-analysis">#</a></h2>
+<p>In this section, we will send and receive data packets locally using MQTT protocol and analyse it on Wireshark.</p>
+<p>First of all, you need to install Mosquitto and Wireshark on your machine:</p>
+<h3 id="mosquitto">Mosquitto<a hidden class="anchor" aria-hidden="true" href="#mosquitto">#</a></h3>
+<ol>
+<li>Install mosquitto- <a href="https://mosquitto.org/download/">https://mosquitto.org/download/</a>
+<ul>
+<li>I executed the following commands to install it on my ubuntu-16.04 machine
+<ul>
+<li><code>sudo apt-add-repository ppa:mosquitto-dev/mosquitto-ppa</code></li>
+<li><code>sudo apt-get update</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<p>Make sure that <strong>mosquitto</strong> broker is running before moving on to the next step (Check the status using <code>systemctl status mosquitto.service</code>)</p>
+<p><img loading="lazy" src="/mqtt-protocol-2.png" alt="picture"  />
+</p>
+<p><em>The above command starts a client that connects to the broker (iot.eclipse.org) and then subscription is given to the topic “mqttest1”</em></p>
+<p>At the same time when the above command is running locally, open another terminal window and type:</p>
+<p><img loading="lazy" src="/mqtt-protocol-3.png" alt="picture"  />
+</p>
+<p><em>The above command starts a client that connects to the broker, sends “hello” with topic “mqttest1”</em></p>
+<p>You can see the below output on the subscriber’s side when the publisher publishes a message:</p>
+<p><img loading="lazy" src="/mqtt-protocol-4.png" alt="picture"  />
+</p>
+<p>This is an abstract view of how the communication takes place in MQTT protocol.</p>
+<p>To understand things better, we can analyse the packets sent during this communication using Wireshark, just start listening to <code>wlo1</code> before the communication starts.</p>
+<p>We will get lots of data in the captured file, because all the data that is sent via WiFi will be included in the pcap. We will just filter out packets sent using MQTT protocol and analyse them.</p>
+<h3 id="subscriber-connection-to-broker">Subscriber connection to Broker<a hidden class="anchor" aria-hidden="true" href="#subscriber-connection-to-broker">#</a></h3>
+<!-- raw HTML omitted -->
+<ol>
+<li><strong>Subscriber IP, Port</strong>: 192.168.43.224, 56178</li>
+<li><strong>Broker IP, Port</strong>: 198.41.39.241, 1883</li>
+</ol>
+<!-- raw HTML omitted -->
+<h3 id="subscription-to-a-topic">Subscription to a topic<a hidden class="anchor" aria-hidden="true" href="#subscription-to-a-topic">#</a></h3>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<h3 id="publisher-connection-to-broker">Publisher connection to Broker<a hidden class="anchor" aria-hidden="true" href="#publisher-connection-to-broker">#</a></h3>
+<ol>
+<li><strong>Publisher IP, Port</strong>: 192.168.43.224, 56180</li>
+</ol>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<h3 id="publication-with-a-topic">Publication with a topic<a hidden class="anchor" aria-hidden="true" href="#publication-with-a-topic">#</a></h3>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<h3 id="subscribers-receiving-data">Subscribers receiving data<a hidden class="anchor" aria-hidden="true" href="#subscribers-receiving-data">#</a></h3>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<h2 id="security-aspects">Security aspects<a hidden class="anchor" aria-hidden="true" href="#security-aspects">#</a></h2>
+<p>Notice that by default, packets sent by MQTT Protocol are unencrypted!</p>
+<!-- raw HTML omitted -->
+<p>So, if anyone can intercept the communication channel he/she can access the data that is being sent. This is quite a serious issue that can exist in real world IoT device communication.</p>
+<p><code>mosquitto</code> provides a feature to encrypt the data that is being sent using TLS-1.2, which makes things quite secure “if implemented correctly” (Stress upon ‘if’). However, IoT world needs a more light weight protocol for ensuring security, hence NIST is now demanding light weight crypto to secure IoT devices: <a href="https://csrc.nist.gov/Projects/Lightweight-Cryptography">https://csrc.nist.gov/Projects/Lightweight-Cryptography</a></p>
+<p>You can also read about this research by Teserakt on their end-to-end encryption solution for MQTT, which is quite interesting: <a href="https://teserakt.io/#products">https://teserakt.io/#products</a> and <a href="https://teserakt.io/doc/teserakt-e4.pdf">https://teserakt.io/doc/teserakt-e4.pdf</a></p>
+<!-- raw HTML omitted -->
+<h2 id="future-work">Future Work<a hidden class="anchor" aria-hidden="true" href="#future-work">#</a></h2>
+<p>As soon as I get sometime, I will try to post a write-up of analysis of data sent through encrypted media in case of vulnerable keys (such as TLS tunnels etc.)</p>
+<p>Hope you had fun reading about MQTT! If you have any doubts, feel free to comment on this post or <a href="https://twitter.com/ashutosha_">ping me on twitter</a>!</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://ashutosh1206.github.io/">Ash&#39;s blog</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

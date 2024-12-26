@@ -1,70 +1,390 @@
-<!doctype html><html lang=en dir=auto><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>OPEC - ASIS CTF Quals | Ashutosh Ahelleya</title><meta name=keywords content="NumberTheory"><meta name=description content="Challenge Points: 207
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>OPEC - ASIS CTF Quals | Ash&#39;s blog</title>
+<meta name="keywords" content="NumberTheory">
+<meta name="description" content="Challenge Points: 207
 Challenge Description:
 We like the OPEC, but not oily one!
 This challenge is an Okamoto–Uchiyama cryptosystem. Let us see how encryption/decryption takes place in this public key cryptosystem.
 Okamoto Uchiyama Cryptosystem 101 Key Generation, Encryption and Decryption take place as follows (pasted from Wikipedia): We will see how the decryption formula gives us the message and hence prove it. We want to prove that:
-$$\frac{L(C^{p-1}\mod p^2)}{L(g^{p-1}\mod p^2)} = m \mod p$$ where \(L(x) = \frac{x-1}{p}\)"><meta name=author content="Ashutosh Ahelleya"><link rel=canonical href=https://ashutosh1206.github.io/ctf/asisquals18-opec/><link crossorigin=anonymous href=/assets/css/stylesheet.bccfefac377bc340f06c260aed1bddf49a4354816d7c570d6aac75a997986c95.css integrity="sha256-vM/vrDd7w0DwbCYK7Rvd9JpDVIFtfFcNaqx1qZeYbJU=" rel="preload stylesheet" as=style><script defer crossorigin=anonymous src=/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG+9vmJ0cTS+ovo0FeA=" onload=hljs.initHighlightingOnLoad()></script>
-<link rel=icon href=https://ashutosh1206.github.io/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://ashutosh1206.github.io/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://ashutosh1206.github.io/favicon-32x32.png><link rel=apple-touch-icon href=https://ashutosh1206.github.io/apple-touch-icon.png><link rel=mask-icon href=https://ashutosh1206.github.io/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--hljs-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css integrity=sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0 crossorigin=anonymous><script defer src=https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js integrity=sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4 crossorigin=anonymous></script>
-<script defer src=https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js integrity=sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05 crossorigin=anonymous onload=renderMathInElement(document.body)></script><meta property="og:title" content="OPEC - ASIS CTF Quals"><meta property="og:description" content="Challenge Points: 207
+$$\frac{L(C^{p-1}\mod p^2)}{L(g^{p-1}\mod p^2)} = m \mod p$$ where \(L(x) = \frac{x-1}{p}\)">
+<meta name="author" content="Ashutosh Ahelleya">
+<link rel="canonical" href="https://ashutosh1206.github.io/ctf/asisquals18-opec/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.bccfefac377bc340f06c260aed1bddf49a4354816d7c570d6aac75a997986c95.css" integrity="sha256-vM/vrDd7w0DwbCYK7Rvd9JpDVIFtfFcNaqx1qZeYbJU=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://ashutosh1206.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://ashutosh1206.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://ashutosh1206.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://ashutosh1206.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://ashutosh1206.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+<meta property="og:title" content="OPEC - ASIS CTF Quals" />
+<meta property="og:description" content="Challenge Points: 207
 Challenge Description:
 We like the OPEC, but not oily one!
 This challenge is an Okamoto–Uchiyama cryptosystem. Let us see how encryption/decryption takes place in this public key cryptosystem.
 Okamoto Uchiyama Cryptosystem 101 Key Generation, Encryption and Decryption take place as follows (pasted from Wikipedia): We will see how the decryption formula gives us the message and hence prove it. We want to prove that:
-$$\frac{L(C^{p-1}\mod p^2)}{L(g^{p-1}\mod p^2)} = m \mod p$$ where \(L(x) = \frac{x-1}{p}\)"><meta property="og:type" content="article"><meta property="og:url" content="https://ashutosh1206.github.io/ctf/asisquals18-opec/"><meta property="article:section" content="ctf"><meta property="article:published_time" content="2018-05-01T00:00:00+00:00"><meta property="article:modified_time" content="2018-05-01T00:00:00+00:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="OPEC - ASIS CTF Quals"><meta name=twitter:description content="Challenge Points: 207
+$$\frac{L(C^{p-1}\mod p^2)}{L(g^{p-1}\mod p^2)} = m \mod p$$ where \(L(x) = \frac{x-1}{p}\)" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://ashutosh1206.github.io/ctf/asisquals18-opec/" /><meta property="article:section" content="ctf" />
+<meta property="article:published_time" content="2018-05-01T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-05-01T00:00:00+00:00" /><meta property="og:site_name" content="Ash&#39;s blog" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="OPEC - ASIS CTF Quals"/>
+<meta name="twitter:description" content="Challenge Points: 207
 Challenge Description:
 We like the OPEC, but not oily one!
 This challenge is an Okamoto–Uchiyama cryptosystem. Let us see how encryption/decryption takes place in this public key cryptosystem.
 Okamoto Uchiyama Cryptosystem 101 Key Generation, Encryption and Decryption take place as follows (pasted from Wikipedia): We will see how the decryption formula gives us the message and hence prove it. We want to prove that:
-$$\frac{L(C^{p-1}\mod p^2)}{L(g^{p-1}\mod p^2)} = m \mod p$$ where \(L(x) = \frac{x-1}{p}\)"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Ctfs","item":"https://ashutosh1206.github.io/ctf/"},{"@type":"ListItem","position":2,"name":"OPEC - ASIS CTF Quals","item":"https://ashutosh1206.github.io/ctf/asisquals18-opec/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"OPEC - ASIS CTF Quals","name":"OPEC - ASIS CTF Quals","description":"Challenge Points: 207\nChallenge Description:\nWe like the OPEC, but not oily one!\nThis challenge is an Okamoto–Uchiyama cryptosystem. Let us see how encryption/decryption takes place in this public key cryptosystem.\nOkamoto Uchiyama Cryptosystem 101 Key Generation, Encryption and Decryption take place as follows (pasted from Wikipedia): We will see how the decryption formula gives us the message and hence prove it. We want to prove that:\n$$\\frac{L(C^{p-1}\\mod p^2)}{L(g^{p-1}\\mod p^2)} = m \\mod p$$ where \\(L(x) = \\frac{x-1}{p}\\)","keywords":["NumberTheory"],"articleBody":"Challenge Points: 207\nChallenge Description:\nWe like the OPEC, but not oily one!\nThis challenge is an Okamoto–Uchiyama cryptosystem. Let us see how encryption/decryption takes place in this public key cryptosystem.\nOkamoto Uchiyama Cryptosystem 101 Key Generation, Encryption and Decryption take place as follows (pasted from Wikipedia): We will see how the decryption formula gives us the message and hence prove it. We want to prove that:\n$$\\frac{L(C^{p-1}\\mod p^2)}{L(g^{p-1}\\mod p^2)} = m \\mod p$$ where \\(L(x) = \\frac{x-1}{p}\\)\nWe can simplify \\(C^{p-1}\\mod p^2\\) and write:\n\\((g^mh^r)^{p-1} = (g^mg^{nr})^{p-1} = (g^{p-1})^mg^{p(p-1)rpq} \\equiv (g^{p-1})\\mod p^2\\)\nSo, after simplification, we can rewrite the decryption formula as (Equation-1):\n$$\\frac{L(g^{(p-1)m}\\mod p^2)}{L(g^{p-1}\\mod p^2)} = m \\mod p$$\nNow, we will further simplify the above equation by simplifying numerator and denominator separately and combine them.\nSimplifying the denominator Denominator is: \\(L(g^{p-1})\\mod p\\)\nFrom Fermat’s Little Theorem we have, \\(g^{p-1}\\equiv 1\\mod p\\).\nHence, we can write \\(g^{p-1} = 1 + k*p\\).\n$$L(g^{p-1}) = \\frac{(g^{p-1}\\mod p^2) - 1}{p}\\mod p$$\nSubstituting values, we get: $$L(g^{p-1}) = \\frac{kp}{p} = k \\mod p$$\nTherefore, we now have the decryption formula as (Equation-2): $$L(g^{(p-1)m}\\mod p^2)*k^{-1} = m \\mod p $$\nSimplifying the numerator Numerator in Equation-1 is: \\(L(g^{(p-1)m}\\mod p^2)\\mod p\\)\n$$g^{(p-1)m} = g^{p-1}g^{p-1}g^{p-1}… (m;times) \\equiv 1\\mod p$$ $$g^{(p-1)m} = (1+k*p)^m = \\binom{m}{0}1 + \\binom{m}{0}kp + \\binom{m}{0}kp^2 + \\binom{m}{0}kp^3 + …$$ $$(1+k*p)^m \\equiv \\binom{m}{0}1 + \\binom{m}{0}kp\\mod p^2 = 1 + mkp$$\nTherefore we can write \\(L(g^{(p-1)m}\\mod p^2) = L(1+mkp) = \\frac{1+mkp-1}{p} \\equiv mk\\mod p\\)\nFrom the above simplification, we can rewrite Equation-2 as: $$\\frac{L(g^{(p-1)m}\\mod p^2)}{L(g^{p-1}\\mod p^2)} \\equiv mk*k^{-1} \\equiv m \\mod p$$\nSo, now that we have seen how the decryption formula really works, let us move on to the challenge.\nThe Challenge We are given an nc server that has the following challenge script and the public key parameters:\ndef produire_key(k): p = getPrime(k) n = p ** 3 while True: g = getRandomRange(1, n-1) g_p = pow(g, p-1, p**2) if pow(g_p, p, p**2) == 1: break h0 = getRandomRange(1, n-1) h = pow(h0, n, n) pubkey = (n, g, h) return pubkey def crypter(m, pubkey): n, g, h = pubkey Mlen = len(bin(bytes_to_long(m))[2:]) k = len(bin(n)[2:])/3 rlen = getRandomRange(1, k - Mlen) R = long_to_bytes(getRandomInteger(rlen)) r = bytes_to_long(sha256(m + R).digest()) c = (pow(g, bytes_to_long(m + R), n) * pow(h, r, n)) % n return c So, we see that the encryption system is an Okamoto-Uchiyama cryptosystem and \\(N=p*p*p\\). The security of this cryptosystem lies in the difficulty of factorisation of \\(N\\).\nWe can easily get \\(p\\) as \\(N^{\\frac{1}{3}}\\), decrypt the message using the decryption formula discussed in the previous section. I wrote the following python code to implement the same:\nimport gmpy2 from Crypto.Util.number import * def L(x, p): return (x-1)/p def res(x, y, p): return x*(gmpy2.invert(y, p)) c = 3630793803336423703478540952931945090101086803117469173526708024894344564148309963455942801003218904199054999179363503619271705324243229939041954742155318636531949635644071467790157232945029155278865509619967174388631769883540613982872983412688024107730281153498483837582563940581426721552527397816800830542365953123689666213113349897213078694559349105686371454226362646340002169729489910723303704621303479486062034634814395582797874219839052783091492127177623970083566846652450803278413975815143029405041027681340372914794965896573420848565833316655823760070619032997777968588739373667140072930503702037875323718814787207993452487947068834180768680640436036451217592601402506396297437873299829769750713407632322472155743633561517396992631103741296523078608306105528009027913341022087487987881868207632298554359273927377080984627356014411599451966739554852821983225993186433461352852219172190371682602629683269454148854339715393519362961838933766475261667176298929221646870149116081091898330338484973065444469295924404778953844171059759657047437929870403689260564393369242446002646073033627382589677456942004233040557638289108063442701392203959956206352370300951233348219495810541442268649533356739235913818877675872611298877333010745401377661961807111364081245923445875910207365760677312706012529641939068025946194733961708643458849155039426571596219891124749527191305943988313469903568444857347927671153206107172144966187601582956837263306261188463651515250744090125391634939866958431262636069574915275728165944303813104587422527102193254689654393995668593208688408753029058979052095913304129743342503255259885667418879640507037755492007786716063130304384438073061758428025446008914147069816424519897310405311497447378913859946443482641154886261951151112090996756371998913415962588305440100147726779350705428178586971946555548825586834820440262684 n = 11549944805066635917371611006579874790470525434825931187969265611500367611318859286043486761715687815819655917288041260314428800078994193671311381306516384790945080405444789748777488680882339804759981609246133456479190643043850730911749704144445521801747911161775984724101627801374394645404725658898282587967760515990262590177320969531777798879659352986551695215783333950400181541437882964853355753687891693910999555812938066237571959609814199086138389352464157680566422747521556734754008856200447358287245353251651340094404375816685740759692073646665712415022363691204868888105487858042108295847150106260153285522181469113985321818969975697515885271058265003325781668843012594836926854332367513488793208926746935495754026958702198006585896058288661563028321244010431218650015938360238495670746221980339450063987318459669892559190604058526685700940922503704585690899917320321077563851793610808123816288031446437445748893366485897356898182969865328972859999965109617706526644696489653442485436141244860163209258906076746155953242029263972159943000919929483231532635964317217838639084872281827900024591352910245602934577573881502370247543814326013051767181182973092969585736932912364868345076463403295221780637226756056345745552636702631098708549165009234934297822840617730590260524045681482675912646189579341473523380184247588441640630883894333660400261255268799119069674371524858513927904412557991909615032104939159057926611069487425445378461710650736205978635441795595058669402769026420226034753463918223506551926550077190797932213709441178068717995678784272102491163739684803174006491901808287637095968085153140491749222291374816219623010992876616131410442036603722245483150696927456774844696942948109228796674215790375408835940960664031158748130546050522232735320414947738493515375846301886811672698349837924126008191371495372168918882606759658273L g = 423523940272611509302041064263576142897305575121270097803748767309886027526255833456256152511606747812667833748813453200344146541257076866819660538324228713361867380162793526164845880297359819913292204902420056478386107929060759040005976249338073900676894103628351409427876290855722684708300015278995409194357370521957991159230314270315741290978795082250390920150303078587554783529087598689528509533877721450933723824207674274368644777489266679473043331086224619128527888682851174109343648810413088117044164322639509429675288086586309366798606025646538459485261018945311849530814012365551095554027294775644848052269805169768169745307652672064005265141560378551848068886172018015256451075998239505246676529013675862484986119571489277282791051967048922273561732680423808569903953877748891657111365248523273036931966013231615124052112892469474831339960519056318426886865720628596603025132672491604278241594737038252439570597352900597372256479181122743992964218653425065366202651731763257836406154091658022870540570015328241739174217238300291846525738682815035421803103099765943399002440776283180867377492331457061056363339060379134018011852974002228550363874548871997513158672232200031134583085442576874898406411064788745203173755946614543381596978022438254065508428095566188523757318649352124086126067921267610603166160929730839289959724063611977576006066012813497283375057380211859774205643727136201020218874014796548182426626759152946782156353384381126423315413831940627236287981787920391400612763070341632487799533969028020145238628729043745240317588293705257758806597284302819309044129840592673641340367624483136332483769881816243842595789843493877281222716962278093279753311822190598499715108686248952329648637498808201350344730344902624675579455682232537583916431433601373806981849603973696631612341605560321623547032905833852380014297525987572L h = 3573582196367950562514672649417938253983876484182641088189296135535476326853737407375694441049030290346214818885588792453409539628475181755478655167956876518035456194314436436870974792187052496496772427681615960124631956283436877375736591599883406775087402712882590373044440074663132255884176078601067439471638602390792516540787044011029323358867744287529784577225934180716079580902549273981241664747656847582082591050263238971516518812410240419006037104172402523205613047391851826637901453887619367409219281015341812712889158237474392740715355303551765211852082387885956568465671855644508521804088544105072324252065092122292571175190850426391808987173973944240057744299633851146041667668936235824733809233106343089754761109556757112535659636579980716733127362985281275492178371405500609922067809192232478820812850475094511513341601757496986265779222533125569989039228927155028000221332078764634628662498780274880183775637655147493638596617179273287256162692553836891358746033445061495990446726431870064032223896606235458975681416739316309587719255460508577739059865326292891314759380017826989724059440902707580331781665080812904178825859774725861680747247182544965442922892517918207618299944364750054188770446620208879581727328678286006793950325799735711077200424505873116191337619922094514213081280011165278280052323665871252026889039379660194193358224572878887387505676799690489753429499712754146881441729617947422680675823392371550570666252304830596885461430412411560208318552197008951895599219729268559931089941143199541375257693247613017302511300882669026725029837190529697393736809284782042003836287369472011782714980124153367673998099232812088876722528422096774647766868791955363748696265466931046196388076206467012727663502051912384430180605115489011402258861460022678923974041008168693039676496918719548640525989815702618901203186128375584L p = int(gmpy2.iroot(n, 3)[0]) cp = pow(c, p-1, p**2) gp = pow(g, p-1, p**2) x = res(L(cp, p), L(gp, p), p) % p print long_to_bytes(x) Got the flag when we run this script (plus some garbage string appended to the flag): ASIS{OPEC_IZ_EP0C_L1k3_Effic1ent_Probabilis7ic_Public-K3y_3ncryption_with_S4me_Prim3s!!!}\n","wordCount":"510","inLanguage":"en","datePublished":"2018-05-01T00:00:00Z","dateModified":"2018-05-01T00:00:00Z","author":{"@type":"Person","name":"Ashutosh Ahelleya"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://ashutosh1206.github.io/ctf/asisquals18-opec/"},"publisher":{"@type":"Organization","name":"Ashutosh Ahelleya","logo":{"@type":"ImageObject","url":"https://ashutosh1206.github.io/favicon.ico"}}}</script></head><body id=top><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://ashutosh1206.github.io/ accesskey=h title="Home (Alt + H)">Home</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)"><svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg><svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://ashutosh1206.github.io/blog/ title=Blog><span>Blog</span></a></li><li><a href=https://ashutosh1206.github.io/archive/ title=Archive><span>Archive</span></a></li><li><a href=https://ashutosh1206.github.io/ctf/ title=CTF><span>CTF</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class=post-title>OPEC - ASIS CTF Quals</h1><div class=post-meta><span title='2018-05-01 00:00:00 +0000 UTC'>May 1, 2018</span>&nbsp;·&nbsp;Ashutosh Ahelleya</div></header><div class=post-content><p><strong>Challenge Points</strong>: 207<br><strong>Challenge Description</strong>:</p><blockquote><p>We like the OPEC, but not oily one!</p></blockquote><p>This challenge is an <a href=https://en.wikipedia.org/wiki/Okamoto%E2%80%93Uchiyama_cryptosystem>Okamoto–Uchiyama cryptosystem</a>. Let us see how encryption/decryption takes place in this public key cryptosystem.</p><h2 id=okamoto-uchiyama-cryptosystem-101>Okamoto Uchiyama Cryptosystem 101<a hidden class=anchor aria-hidden=true href=#okamoto-uchiyama-cryptosystem-101>#</a></h2><p>Key Generation, Encryption and Decryption take place as follows (pasted from Wikipedia):
-<img loading=lazy src=/asisquals18-opec-1.png alt=picture></p><p>We will see how the decryption formula gives us the message and hence prove it. We want to prove that:<br>$$\frac{L(C^{p-1}\mod p^2)}{L(g^{p-1}\mod p^2)} = m \mod p$$
-where \(L(x) = \frac{x-1}{p}\)</p><p>We can simplify \(C^{p-1}\mod p^2\) and write:<br>\((g^mh^r)^{p-1} = (g^mg^{nr})^{p-1} = (g^{p-1})^mg^{p(p-1)rpq} \equiv (g^{p-1})\mod p^2\)</p><p>So, after simplification, we can rewrite the decryption formula as (<strong>Equation-1</strong>):<br>$$\frac{L(g^{(p-1)m}\mod p^2)}{L(g^{p-1}\mod p^2)} = m \mod p$$</p><p>Now, we will further simplify the above equation by simplifying numerator and denominator separately and combine them.</p><h3 id=simplifying-the-denominator>Simplifying the denominator<a hidden class=anchor aria-hidden=true href=#simplifying-the-denominator>#</a></h3><p>Denominator is: \(L(g^{p-1})\mod p\)</p><p>From <a href=https://en.wikipedia.org/wiki/Fermat%27s_little_theorem>Fermat&rsquo;s Little Theorem</a> we have, \(g^{p-1}\equiv 1\mod p\).<br>Hence, we can write \(g^{p-1} = 1 + k*p\).<br>$$L(g^{p-1}) = \frac{(g^{p-1}\mod p^2) - 1}{p}\mod p$$</p><p>Substituting values, we get:
-$$L(g^{p-1}) = \frac{kp}{p} = k \mod p$$</p><p>Therefore, we now have the decryption formula as (<strong>Equation-2</strong>):
-$$L(g^{(p-1)m}\mod p^2)*k^{-1} = m \mod p $$</p><h3 id=simplifying-the-numerator>Simplifying the numerator<a hidden class=anchor aria-hidden=true href=#simplifying-the-numerator>#</a></h3><p>Numerator in Equation-1 is: \(L(g^{(p-1)m}\mod p^2)\mod p\)</p><p>$$g^{(p-1)m} = g^{p-1}g^{p-1}g^{p-1}&mldr; (m;times) \equiv 1\mod p$$
-$$g^{(p-1)m} = (1+k*p)^m = \binom{m}{0}1 + \binom{m}{0}kp + \binom{m}{0}kp^2 + \binom{m}{0}kp^3 + &mldr;$$
-$$(1+k*p)^m \equiv \binom{m}{0}1 + \binom{m}{0}kp\mod p^2 = 1 + mkp$$</p><p>Therefore we can write \(L(g^{(p-1)m}\mod p^2) = L(1+mkp) = \frac{1+mkp-1}{p} \equiv mk\mod p\)</p><p>From the above simplification, we can rewrite <strong>Equation-2</strong> as:
-$$\frac{L(g^{(p-1)m}\mod p^2)}{L(g^{p-1}\mod p^2)} \equiv mk*k^{-1} \equiv m \mod p$$</p><p>So, now that we have seen how the decryption formula really works, let us move on to the challenge.</p><h2 id=the-challenge>The Challenge<a hidden class=anchor aria-hidden=true href=#the-challenge>#</a></h2><p><img loading=lazy src=/asisquals18-opec-2.png alt=picture></p><p>We are given an nc server that has the following challenge script and the public key parameters:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>produire_key</span>(k):
-</span></span><span style=display:flex><span>    p <span style=color:#f92672>=</span> getPrime(k)
-</span></span><span style=display:flex><span>    n <span style=color:#f92672>=</span> p <span style=color:#f92672>**</span> <span style=color:#ae81ff>3</span>
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>while</span> <span style=color:#66d9ef>True</span>:
-</span></span><span style=display:flex><span>        g <span style=color:#f92672>=</span> getRandomRange(<span style=color:#ae81ff>1</span>, n<span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>)
-</span></span><span style=display:flex><span>        g_p <span style=color:#f92672>=</span> pow(g, p<span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>, p<span style=color:#f92672>**</span><span style=color:#ae81ff>2</span>)
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> pow(g_p, p, p<span style=color:#f92672>**</span><span style=color:#ae81ff>2</span>) <span style=color:#f92672>==</span> <span style=color:#ae81ff>1</span>:
-</span></span><span style=display:flex><span>            <span style=color:#66d9ef>break</span>
-</span></span><span style=display:flex><span>    h0 <span style=color:#f92672>=</span> getRandomRange(<span style=color:#ae81ff>1</span>, n<span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>)
-</span></span><span style=display:flex><span>    h <span style=color:#f92672>=</span> pow(h0, n, n)
-</span></span><span style=display:flex><span>    pubkey <span style=color:#f92672>=</span> (n, g, h)
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> pubkey
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>crypter</span>(m, pubkey):
-</span></span><span style=display:flex><span>    n, g, h <span style=color:#f92672>=</span> pubkey
-</span></span><span style=display:flex><span>    Mlen <span style=color:#f92672>=</span> len(bin(bytes_to_long(m))[<span style=color:#ae81ff>2</span>:])
-</span></span><span style=display:flex><span>    k <span style=color:#f92672>=</span> len(bin(n)[<span style=color:#ae81ff>2</span>:])<span style=color:#f92672>/</span><span style=color:#ae81ff>3</span>
-</span></span><span style=display:flex><span>    rlen <span style=color:#f92672>=</span> getRandomRange(<span style=color:#ae81ff>1</span>, k <span style=color:#f92672>-</span> Mlen)
-</span></span><span style=display:flex><span>    R <span style=color:#f92672>=</span> long_to_bytes(getRandomInteger(rlen))
-</span></span><span style=display:flex><span>    r <span style=color:#f92672>=</span> bytes_to_long(sha256(m <span style=color:#f92672>+</span> R)<span style=color:#f92672>.</span>digest())
-</span></span><span style=display:flex><span>    c <span style=color:#f92672>=</span> (pow(g, bytes_to_long(m <span style=color:#f92672>+</span> R), n) <span style=color:#f92672>*</span> pow(h, r, n)) <span style=color:#f92672>%</span> n
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> c
-</span></span></code></pre></div><p>So, we see that the encryption system is an Okamoto-Uchiyama cryptosystem and \(N=p*p*p\). The security of this cryptosystem lies in the difficulty of factorisation of \(N\).</p><p>We can easily get \(p\) as \(N^{\frac{1}{3}}\), decrypt the message using the decryption formula discussed in the previous section. I wrote the following python code to implement the same:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> gmpy2
-</span></span><span style=display:flex><span><span style=color:#f92672>from</span> Crypto.Util.number <span style=color:#f92672>import</span> <span style=color:#f92672>*</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>L</span>(x, p):
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> (x<span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>)<span style=color:#f92672>/</span>p
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>res</span>(x, y, p):
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> x<span style=color:#f92672>*</span>(gmpy2<span style=color:#f92672>.</span>invert(y, p))
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>c <span style=color:#f92672>=</span> <span style=color:#ae81ff>3630793803336423703478540952931945090101086803117469173526708024894344564148309963455942801003218904199054999179363503619271705324243229939041954742155318636531949635644071467790157232945029155278865509619967174388631769883540613982872983412688024107730281153498483837582563940581426721552527397816800830542365953123689666213113349897213078694559349105686371454226362646340002169729489910723303704621303479486062034634814395582797874219839052783091492127177623970083566846652450803278413975815143029405041027681340372914794965896573420848565833316655823760070619032997777968588739373667140072930503702037875323718814787207993452487947068834180768680640436036451217592601402506396297437873299829769750713407632322472155743633561517396992631103741296523078608306105528009027913341022087487987881868207632298554359273927377080984627356014411599451966739554852821983225993186433461352852219172190371682602629683269454148854339715393519362961838933766475261667176298929221646870149116081091898330338484973065444469295924404778953844171059759657047437929870403689260564393369242446002646073033627382589677456942004233040557638289108063442701392203959956206352370300951233348219495810541442268649533356739235913818877675872611298877333010745401377661961807111364081245923445875910207365760677312706012529641939068025946194733961708643458849155039426571596219891124749527191305943988313469903568444857347927671153206107172144966187601582956837263306261188463651515250744090125391634939866958431262636069574915275728165944303813104587422527102193254689654393995668593208688408753029058979052095913304129743342503255259885667418879640507037755492007786716063130304384438073061758428025446008914147069816424519897310405311497447378913859946443482641154886261951151112090996756371998913415962588305440100147726779350705428178586971946555548825586834820440262684</span>
-</span></span><span style=display:flex><span>n <span style=color:#f92672>=</span> <span style=color:#ae81ff>11549944805066635917371611006579874790470525434825931187969265611500367611318859286043486761715687815819655917288041260314428800078994193671311381306516384790945080405444789748777488680882339804759981609246133456479190643043850730911749704144445521801747911161775984724101627801374394645404725658898282587967760515990262590177320969531777798879659352986551695215783333950400181541437882964853355753687891693910999555812938066237571959609814199086138389352464157680566422747521556734754008856200447358287245353251651340094404375816685740759692073646665712415022363691204868888105487858042108295847150106260153285522181469113985321818969975697515885271058265003325781668843012594836926854332367513488793208926746935495754026958702198006585896058288661563028321244010431218650015938360238495670746221980339450063987318459669892559190604058526685700940922503704585690899917320321077563851793610808123816288031446437445748893366485897356898182969865328972859999965109617706526644696489653442485436141244860163209258906076746155953242029263972159943000919929483231532635964317217838639084872281827900024591352910245602934577573881502370247543814326013051767181182973092969585736932912364868345076463403295221780637226756056345745552636702631098708549165009234934297822840617730590260524045681482675912646189579341473523380184247588441640630883894333660400261255268799119069674371524858513927904412557991909615032104939159057926611069487425445378461710650736205978635441795595058669402769026420226034753463918223506551926550077190797932213709441178068717995678784272102491163739684803174006491901808287637095968085153140491749222291374816219623010992876616131410442036603722245483150696927456774844696942948109228796674215790375408835940960664031158748130546050522232735320414947738493515375846301886811672698349837924126008191371495372168918882606759658273</span>L
-</span></span><span style=display:flex><span>g <span style=color:#f92672>=</span> <span style=color:#ae81ff>423523940272611509302041064263576142897305575121270097803748767309886027526255833456256152511606747812667833748813453200344146541257076866819660538324228713361867380162793526164845880297359819913292204902420056478386107929060759040005976249338073900676894103628351409427876290855722684708300015278995409194357370521957991159230314270315741290978795082250390920150303078587554783529087598689528509533877721450933723824207674274368644777489266679473043331086224619128527888682851174109343648810413088117044164322639509429675288086586309366798606025646538459485261018945311849530814012365551095554027294775644848052269805169768169745307652672064005265141560378551848068886172018015256451075998239505246676529013675862484986119571489277282791051967048922273561732680423808569903953877748891657111365248523273036931966013231615124052112892469474831339960519056318426886865720628596603025132672491604278241594737038252439570597352900597372256479181122743992964218653425065366202651731763257836406154091658022870540570015328241739174217238300291846525738682815035421803103099765943399002440776283180867377492331457061056363339060379134018011852974002228550363874548871997513158672232200031134583085442576874898406411064788745203173755946614543381596978022438254065508428095566188523757318649352124086126067921267610603166160929730839289959724063611977576006066012813497283375057380211859774205643727136201020218874014796548182426626759152946782156353384381126423315413831940627236287981787920391400612763070341632487799533969028020145238628729043745240317588293705257758806597284302819309044129840592673641340367624483136332483769881816243842595789843493877281222716962278093279753311822190598499715108686248952329648637498808201350344730344902624675579455682232537583916431433601373806981849603973696631612341605560321623547032905833852380014297525987572</span>L
-</span></span><span style=display:flex><span>h <span style=color:#f92672>=</span> <span style=color:#ae81ff>3573582196367950562514672649417938253983876484182641088189296135535476326853737407375694441049030290346214818885588792453409539628475181755478655167956876518035456194314436436870974792187052496496772427681615960124631956283436877375736591599883406775087402712882590373044440074663132255884176078601067439471638602390792516540787044011029323358867744287529784577225934180716079580902549273981241664747656847582082591050263238971516518812410240419006037104172402523205613047391851826637901453887619367409219281015341812712889158237474392740715355303551765211852082387885956568465671855644508521804088544105072324252065092122292571175190850426391808987173973944240057744299633851146041667668936235824733809233106343089754761109556757112535659636579980716733127362985281275492178371405500609922067809192232478820812850475094511513341601757496986265779222533125569989039228927155028000221332078764634628662498780274880183775637655147493638596617179273287256162692553836891358746033445061495990446726431870064032223896606235458975681416739316309587719255460508577739059865326292891314759380017826989724059440902707580331781665080812904178825859774725861680747247182544965442922892517918207618299944364750054188770446620208879581727328678286006793950325799735711077200424505873116191337619922094514213081280011165278280052323665871252026889039379660194193358224572878887387505676799690489753429499712754146881441729617947422680675823392371550570666252304830596885461430412411560208318552197008951895599219729268559931089941143199541375257693247613017302511300882669026725029837190529697393736809284782042003836287369472011782714980124153367673998099232812088876722528422096774647766868791955363748696265466931046196388076206467012727663502051912384430180605115489011402258861460022678923974041008168693039676496918719548640525989815702618901203186128375584</span>L
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>p <span style=color:#f92672>=</span> int(gmpy2<span style=color:#f92672>.</span>iroot(n, <span style=color:#ae81ff>3</span>)[<span style=color:#ae81ff>0</span>])
-</span></span><span style=display:flex><span>cp <span style=color:#f92672>=</span> pow(c, p<span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>, p<span style=color:#f92672>**</span><span style=color:#ae81ff>2</span>)
-</span></span><span style=display:flex><span>gp <span style=color:#f92672>=</span> pow(g, p<span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>, p<span style=color:#f92672>**</span><span style=color:#ae81ff>2</span>)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>x <span style=color:#f92672>=</span> res(L(cp, p), L(gp, p), p) <span style=color:#f92672>%</span> p
-</span></span><span style=display:flex><span>print long_to_bytes(x)
-</span></span></code></pre></div><p>Got the flag when we run this script (plus some garbage string appended to the flag): <strong>ASIS{OPEC_IZ_EP0C_L1k3_Effic1ent_Probabilis7ic_Public-K3y_3ncryption_with_S4me_Prim3s!!!}</strong></p></div><footer class=post-footer><ul class=post-tags><li><a href=https://ashutosh1206.github.io/tags/numbertheory/>NumberTheory</a></li></ul></footer></article></main><footer class=footer><span>&copy; 2023 <a href=https://ashutosh1206.github.io/>Ashutosh Ahelleya</a></span>
-<span>Powered by
-<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
-        <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg></a><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script></body></html>
+$$\frac{L(C^{p-1}\mod p^2)}{L(g^{p-1}\mod p^2)} = m \mod p$$ where \(L(x) = \frac{x-1}{p}\)"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Ctfs",
+      "item": "https://ashutosh1206.github.io/ctf/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "OPEC - ASIS CTF Quals",
+      "item": "https://ashutosh1206.github.io/ctf/asisquals18-opec/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "OPEC - ASIS CTF Quals",
+  "name": "OPEC - ASIS CTF Quals",
+  "description": "Challenge Points: 207\nChallenge Description:\nWe like the OPEC, but not oily one!\nThis challenge is an Okamoto–Uchiyama cryptosystem. Let us see how encryption/decryption takes place in this public key cryptosystem.\nOkamoto Uchiyama Cryptosystem 101 Key Generation, Encryption and Decryption take place as follows (pasted from Wikipedia): We will see how the decryption formula gives us the message and hence prove it. We want to prove that:\n$$\\frac{L(C^{p-1}\\mod p^2)}{L(g^{p-1}\\mod p^2)} = m \\mod p$$ where \\(L(x) = \\frac{x-1}{p}\\)",
+  "keywords": [
+    "NumberTheory"
+  ],
+  "articleBody": "Challenge Points: 207\nChallenge Description:\nWe like the OPEC, but not oily one!\nThis challenge is an Okamoto–Uchiyama cryptosystem. Let us see how encryption/decryption takes place in this public key cryptosystem.\nOkamoto Uchiyama Cryptosystem 101 Key Generation, Encryption and Decryption take place as follows (pasted from Wikipedia): We will see how the decryption formula gives us the message and hence prove it. We want to prove that:\n$$\\frac{L(C^{p-1}\\mod p^2)}{L(g^{p-1}\\mod p^2)} = m \\mod p$$ where \\(L(x) = \\frac{x-1}{p}\\)\nWe can simplify \\(C^{p-1}\\mod p^2\\) and write:\n\\((g^mh^r)^{p-1} = (g^mg^{nr})^{p-1} = (g^{p-1})^mg^{p(p-1)rpq} \\equiv (g^{p-1})\\mod p^2\\)\nSo, after simplification, we can rewrite the decryption formula as (Equation-1):\n$$\\frac{L(g^{(p-1)m}\\mod p^2)}{L(g^{p-1}\\mod p^2)} = m \\mod p$$\nNow, we will further simplify the above equation by simplifying numerator and denominator separately and combine them.\nSimplifying the denominator Denominator is: \\(L(g^{p-1})\\mod p\\)\nFrom Fermat’s Little Theorem we have, \\(g^{p-1}\\equiv 1\\mod p\\).\nHence, we can write \\(g^{p-1} = 1 + k*p\\).\n$$L(g^{p-1}) = \\frac{(g^{p-1}\\mod p^2) - 1}{p}\\mod p$$\nSubstituting values, we get: $$L(g^{p-1}) = \\frac{kp}{p} = k \\mod p$$\nTherefore, we now have the decryption formula as (Equation-2): $$L(g^{(p-1)m}\\mod p^2)*k^{-1} = m \\mod p $$\nSimplifying the numerator Numerator in Equation-1 is: \\(L(g^{(p-1)m}\\mod p^2)\\mod p\\)\n$$g^{(p-1)m} = g^{p-1}g^{p-1}g^{p-1}… (m;times) \\equiv 1\\mod p$$ $$g^{(p-1)m} = (1+k*p)^m = \\binom{m}{0}1 + \\binom{m}{0}kp + \\binom{m}{0}kp^2 + \\binom{m}{0}kp^3 + …$$ $$(1+k*p)^m \\equiv \\binom{m}{0}1 + \\binom{m}{0}kp\\mod p^2 = 1 + mkp$$\nTherefore we can write \\(L(g^{(p-1)m}\\mod p^2) = L(1+mkp) = \\frac{1+mkp-1}{p} \\equiv mk\\mod p\\)\nFrom the above simplification, we can rewrite Equation-2 as: $$\\frac{L(g^{(p-1)m}\\mod p^2)}{L(g^{p-1}\\mod p^2)} \\equiv mk*k^{-1} \\equiv m \\mod p$$\nSo, now that we have seen how the decryption formula really works, let us move on to the challenge.\nThe Challenge We are given an nc server that has the following challenge script and the public key parameters:\ndef produire_key(k): p = getPrime(k) n = p ** 3 while True: g = getRandomRange(1, n-1) g_p = pow(g, p-1, p**2) if pow(g_p, p, p**2) == 1: break h0 = getRandomRange(1, n-1) h = pow(h0, n, n) pubkey = (n, g, h) return pubkey def crypter(m, pubkey): n, g, h = pubkey Mlen = len(bin(bytes_to_long(m))[2:]) k = len(bin(n)[2:])/3 rlen = getRandomRange(1, k - Mlen) R = long_to_bytes(getRandomInteger(rlen)) r = bytes_to_long(sha256(m + R).digest()) c = (pow(g, bytes_to_long(m + R), n) * pow(h, r, n)) % n return c So, we see that the encryption system is an Okamoto-Uchiyama cryptosystem and \\(N=p*p*p\\). The security of this cryptosystem lies in the difficulty of factorisation of \\(N\\).\nWe can easily get \\(p\\) as \\(N^{\\frac{1}{3}}\\), decrypt the message using the decryption formula discussed in the previous section. I wrote the following python code to implement the same:\nimport gmpy2 from Crypto.Util.number import * def L(x, p): return (x-1)/p def res(x, y, p): return x*(gmpy2.invert(y, p)) c = 3630793803336423703478540952931945090101086803117469173526708024894344564148309963455942801003218904199054999179363503619271705324243229939041954742155318636531949635644071467790157232945029155278865509619967174388631769883540613982872983412688024107730281153498483837582563940581426721552527397816800830542365953123689666213113349897213078694559349105686371454226362646340002169729489910723303704621303479486062034634814395582797874219839052783091492127177623970083566846652450803278413975815143029405041027681340372914794965896573420848565833316655823760070619032997777968588739373667140072930503702037875323718814787207993452487947068834180768680640436036451217592601402506396297437873299829769750713407632322472155743633561517396992631103741296523078608306105528009027913341022087487987881868207632298554359273927377080984627356014411599451966739554852821983225993186433461352852219172190371682602629683269454148854339715393519362961838933766475261667176298929221646870149116081091898330338484973065444469295924404778953844171059759657047437929870403689260564393369242446002646073033627382589677456942004233040557638289108063442701392203959956206352370300951233348219495810541442268649533356739235913818877675872611298877333010745401377661961807111364081245923445875910207365760677312706012529641939068025946194733961708643458849155039426571596219891124749527191305943988313469903568444857347927671153206107172144966187601582956837263306261188463651515250744090125391634939866958431262636069574915275728165944303813104587422527102193254689654393995668593208688408753029058979052095913304129743342503255259885667418879640507037755492007786716063130304384438073061758428025446008914147069816424519897310405311497447378913859946443482641154886261951151112090996756371998913415962588305440100147726779350705428178586971946555548825586834820440262684 n = 11549944805066635917371611006579874790470525434825931187969265611500367611318859286043486761715687815819655917288041260314428800078994193671311381306516384790945080405444789748777488680882339804759981609246133456479190643043850730911749704144445521801747911161775984724101627801374394645404725658898282587967760515990262590177320969531777798879659352986551695215783333950400181541437882964853355753687891693910999555812938066237571959609814199086138389352464157680566422747521556734754008856200447358287245353251651340094404375816685740759692073646665712415022363691204868888105487858042108295847150106260153285522181469113985321818969975697515885271058265003325781668843012594836926854332367513488793208926746935495754026958702198006585896058288661563028321244010431218650015938360238495670746221980339450063987318459669892559190604058526685700940922503704585690899917320321077563851793610808123816288031446437445748893366485897356898182969865328972859999965109617706526644696489653442485436141244860163209258906076746155953242029263972159943000919929483231532635964317217838639084872281827900024591352910245602934577573881502370247543814326013051767181182973092969585736932912364868345076463403295221780637226756056345745552636702631098708549165009234934297822840617730590260524045681482675912646189579341473523380184247588441640630883894333660400261255268799119069674371524858513927904412557991909615032104939159057926611069487425445378461710650736205978635441795595058669402769026420226034753463918223506551926550077190797932213709441178068717995678784272102491163739684803174006491901808287637095968085153140491749222291374816219623010992876616131410442036603722245483150696927456774844696942948109228796674215790375408835940960664031158748130546050522232735320414947738493515375846301886811672698349837924126008191371495372168918882606759658273L g = 423523940272611509302041064263576142897305575121270097803748767309886027526255833456256152511606747812667833748813453200344146541257076866819660538324228713361867380162793526164845880297359819913292204902420056478386107929060759040005976249338073900676894103628351409427876290855722684708300015278995409194357370521957991159230314270315741290978795082250390920150303078587554783529087598689528509533877721450933723824207674274368644777489266679473043331086224619128527888682851174109343648810413088117044164322639509429675288086586309366798606025646538459485261018945311849530814012365551095554027294775644848052269805169768169745307652672064005265141560378551848068886172018015256451075998239505246676529013675862484986119571489277282791051967048922273561732680423808569903953877748891657111365248523273036931966013231615124052112892469474831339960519056318426886865720628596603025132672491604278241594737038252439570597352900597372256479181122743992964218653425065366202651731763257836406154091658022870540570015328241739174217238300291846525738682815035421803103099765943399002440776283180867377492331457061056363339060379134018011852974002228550363874548871997513158672232200031134583085442576874898406411064788745203173755946614543381596978022438254065508428095566188523757318649352124086126067921267610603166160929730839289959724063611977576006066012813497283375057380211859774205643727136201020218874014796548182426626759152946782156353384381126423315413831940627236287981787920391400612763070341632487799533969028020145238628729043745240317588293705257758806597284302819309044129840592673641340367624483136332483769881816243842595789843493877281222716962278093279753311822190598499715108686248952329648637498808201350344730344902624675579455682232537583916431433601373806981849603973696631612341605560321623547032905833852380014297525987572L h = 3573582196367950562514672649417938253983876484182641088189296135535476326853737407375694441049030290346214818885588792453409539628475181755478655167956876518035456194314436436870974792187052496496772427681615960124631956283436877375736591599883406775087402712882590373044440074663132255884176078601067439471638602390792516540787044011029323358867744287529784577225934180716079580902549273981241664747656847582082591050263238971516518812410240419006037104172402523205613047391851826637901453887619367409219281015341812712889158237474392740715355303551765211852082387885956568465671855644508521804088544105072324252065092122292571175190850426391808987173973944240057744299633851146041667668936235824733809233106343089754761109556757112535659636579980716733127362985281275492178371405500609922067809192232478820812850475094511513341601757496986265779222533125569989039228927155028000221332078764634628662498780274880183775637655147493638596617179273287256162692553836891358746033445061495990446726431870064032223896606235458975681416739316309587719255460508577739059865326292891314759380017826989724059440902707580331781665080812904178825859774725861680747247182544965442922892517918207618299944364750054188770446620208879581727328678286006793950325799735711077200424505873116191337619922094514213081280011165278280052323665871252026889039379660194193358224572878887387505676799690489753429499712754146881441729617947422680675823392371550570666252304830596885461430412411560208318552197008951895599219729268559931089941143199541375257693247613017302511300882669026725029837190529697393736809284782042003836287369472011782714980124153367673998099232812088876722528422096774647766868791955363748696265466931046196388076206467012727663502051912384430180605115489011402258861460022678923974041008168693039676496918719548640525989815702618901203186128375584L p = int(gmpy2.iroot(n, 3)[0]) cp = pow(c, p-1, p**2) gp = pow(g, p-1, p**2) x = res(L(cp, p), L(gp, p), p) % p print long_to_bytes(x) Got the flag when we run this script (plus some garbage string appended to the flag): ASIS{OPEC_IZ_EP0C_L1k3_Effic1ent_Probabilis7ic_Public-K3y_3ncryption_with_S4me_Prim3s!!!}\n",
+  "wordCount" : "510",
+  "inLanguage": "en",
+  "datePublished": "2018-05-01T00:00:00Z",
+  "dateModified": "2018-05-01T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Ashutosh Ahelleya"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://ashutosh1206.github.io/ctf/asisquals18-opec/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Ash's blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://ashutosh1206.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://ashutosh1206.github.io/" accesskey="h" title="Home (Alt + H)">Home</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://ashutosh1206.github.io/blog/" title="Blog">
+                    <span>Blog</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ashutosh1206.github.io/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ashutosh1206.github.io/archive/" title="Archive">
+                    <span>Archive</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ashutosh1206.github.io/ctf/" title="CTF">
+                    <span>CTF</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title">
+      OPEC - ASIS CTF Quals
+    </h1>
+    <div class="post-meta"><span title='2018-05-01 00:00:00 +0000 UTC'>May 1, 2018</span>&nbsp;·&nbsp;Ashutosh Ahelleya
+
+</div>
+  </header> 
+  <div class="post-content"><p><strong>Challenge Points</strong>: 207<br>
+<strong>Challenge Description</strong>:</p>
+<blockquote>
+<p>We like the OPEC, but not oily one!</p>
+</blockquote>
+<p>This challenge is an <a href="https://en.wikipedia.org/wiki/Okamoto%E2%80%93Uchiyama_cryptosystem">Okamoto–Uchiyama cryptosystem</a>. Let us see how encryption/decryption takes place in this public key cryptosystem.</p>
+<h2 id="okamoto-uchiyama-cryptosystem-101">Okamoto Uchiyama Cryptosystem 101<a hidden class="anchor" aria-hidden="true" href="#okamoto-uchiyama-cryptosystem-101">#</a></h2>
+<p>Key Generation, Encryption and Decryption take place as follows (pasted from Wikipedia):
+<img loading="lazy" src="/asisquals18-opec-1.png" alt="picture"  />
+</p>
+<p>We will see how the decryption formula gives us the message and hence prove it. We want to prove that:<br>
+$$\frac{L(C^{p-1}\mod p^2)}{L(g^{p-1}\mod p^2)} = m \mod p$$
+where \(L(x) = \frac{x-1}{p}\)</p>
+<p>We can simplify \(C^{p-1}\mod p^2\) and write:<br>
+\((g^mh^r)^{p-1} = (g^mg^{nr})^{p-1} = (g^{p-1})^mg^{p(p-1)rpq} \equiv (g^{p-1})\mod p^2\)</p>
+<p>So, after simplification, we can rewrite the decryption formula as (<strong>Equation-1</strong>):<br>
+$$\frac{L(g^{(p-1)m}\mod p^2)}{L(g^{p-1}\mod p^2)} = m \mod p$$</p>
+<p>Now, we will further simplify the above equation by simplifying numerator and denominator separately and combine them.</p>
+<h3 id="simplifying-the-denominator">Simplifying the denominator<a hidden class="anchor" aria-hidden="true" href="#simplifying-the-denominator">#</a></h3>
+<p>Denominator is: \(L(g^{p-1})\mod p\)</p>
+<p>From <a href="https://en.wikipedia.org/wiki/Fermat%27s_little_theorem">Fermat&rsquo;s Little Theorem</a> we have, \(g^{p-1}\equiv 1\mod p\).<br>
+Hence, we can write \(g^{p-1} = 1 + k*p\).<br>
+$$L(g^{p-1}) = \frac{(g^{p-1}\mod p^2) - 1}{p}\mod p$$</p>
+<p>Substituting values, we get:
+$$L(g^{p-1}) = \frac{kp}{p} = k \mod p$$</p>
+<p>Therefore, we now have the decryption formula as (<strong>Equation-2</strong>):
+$$L(g^{(p-1)m}\mod p^2)*k^{-1} = m \mod p $$</p>
+<h3 id="simplifying-the-numerator">Simplifying the numerator<a hidden class="anchor" aria-hidden="true" href="#simplifying-the-numerator">#</a></h3>
+<p>Numerator in Equation-1 is: \(L(g^{(p-1)m}\mod p^2)\mod p\)</p>
+<p>$$g^{(p-1)m} = g^{p-1}g^{p-1}g^{p-1}&hellip; (m;times) \equiv 1\mod p$$
+$$g^{(p-1)m} = (1+k*p)^m = \binom{m}{0}1 + \binom{m}{0}kp + \binom{m}{0}kp^2 + \binom{m}{0}kp^3 + &hellip;$$
+$$(1+k*p)^m \equiv \binom{m}{0}1 + \binom{m}{0}kp\mod p^2 = 1 + mkp$$</p>
+<p>Therefore we can write \(L(g^{(p-1)m}\mod p^2) = L(1+mkp) = \frac{1+mkp-1}{p} \equiv mk\mod p\)</p>
+<p>From the above simplification, we can rewrite <strong>Equation-2</strong> as:
+$$\frac{L(g^{(p-1)m}\mod p^2)}{L(g^{p-1}\mod p^2)} \equiv mk*k^{-1} \equiv m \mod p$$</p>
+<p>So, now that we have seen how the decryption formula really works, let us move on to the challenge.</p>
+<h2 id="the-challenge">The Challenge<a hidden class="anchor" aria-hidden="true" href="#the-challenge">#</a></h2>
+<p><img loading="lazy" src="/asisquals18-opec-2.png" alt="picture"  />
+</p>
+<p>We are given an nc server that has the following challenge script and the public key parameters:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">produire_key</span>(k):
+</span></span><span style="display:flex;"><span>    p <span style="color:#f92672">=</span> getPrime(k)
+</span></span><span style="display:flex;"><span>    n <span style="color:#f92672">=</span> p <span style="color:#f92672">**</span> <span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
+</span></span><span style="display:flex;"><span>        g <span style="color:#f92672">=</span> getRandomRange(<span style="color:#ae81ff">1</span>, n<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>        g_p <span style="color:#f92672">=</span> pow(g, p<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, p<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> pow(g_p, p, p<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>    h0 <span style="color:#f92672">=</span> getRandomRange(<span style="color:#ae81ff">1</span>, n<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>    h <span style="color:#f92672">=</span> pow(h0, n, n)
+</span></span><span style="display:flex;"><span>    pubkey <span style="color:#f92672">=</span> (n, g, h)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> pubkey
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">crypter</span>(m, pubkey):
+</span></span><span style="display:flex;"><span>    n, g, h <span style="color:#f92672">=</span> pubkey
+</span></span><span style="display:flex;"><span>    Mlen <span style="color:#f92672">=</span> len(bin(bytes_to_long(m))[<span style="color:#ae81ff">2</span>:])
+</span></span><span style="display:flex;"><span>    k <span style="color:#f92672">=</span> len(bin(n)[<span style="color:#ae81ff">2</span>:])<span style="color:#f92672">/</span><span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span>    rlen <span style="color:#f92672">=</span> getRandomRange(<span style="color:#ae81ff">1</span>, k <span style="color:#f92672">-</span> Mlen)
+</span></span><span style="display:flex;"><span>    R <span style="color:#f92672">=</span> long_to_bytes(getRandomInteger(rlen))
+</span></span><span style="display:flex;"><span>    r <span style="color:#f92672">=</span> bytes_to_long(sha256(m <span style="color:#f92672">+</span> R)<span style="color:#f92672">.</span>digest())
+</span></span><span style="display:flex;"><span>    c <span style="color:#f92672">=</span> (pow(g, bytes_to_long(m <span style="color:#f92672">+</span> R), n) <span style="color:#f92672">*</span> pow(h, r, n)) <span style="color:#f92672">%</span> n
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> c
+</span></span></code></pre></div><p>So, we see that the encryption system is an Okamoto-Uchiyama cryptosystem and \(N=p*p*p\). The security of this cryptosystem lies in the difficulty of factorisation of \(N\).</p>
+<p>We can easily get \(p\) as \(N^{\frac{1}{3}}\), decrypt the message using the decryption formula discussed in the previous section. I wrote the following python code to implement the same:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> gmpy2
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> Crypto.Util.number <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">L</span>(x, p):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> (x<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)<span style="color:#f92672">/</span>p
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">res</span>(x, y, p):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> x<span style="color:#f92672">*</span>(gmpy2<span style="color:#f92672">.</span>invert(y, p))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>c <span style="color:#f92672">=</span> <span style="color:#ae81ff">3630793803336423703478540952931945090101086803117469173526708024894344564148309963455942801003218904199054999179363503619271705324243229939041954742155318636531949635644071467790157232945029155278865509619967174388631769883540613982872983412688024107730281153498483837582563940581426721552527397816800830542365953123689666213113349897213078694559349105686371454226362646340002169729489910723303704621303479486062034634814395582797874219839052783091492127177623970083566846652450803278413975815143029405041027681340372914794965896573420848565833316655823760070619032997777968588739373667140072930503702037875323718814787207993452487947068834180768680640436036451217592601402506396297437873299829769750713407632322472155743633561517396992631103741296523078608306105528009027913341022087487987881868207632298554359273927377080984627356014411599451966739554852821983225993186433461352852219172190371682602629683269454148854339715393519362961838933766475261667176298929221646870149116081091898330338484973065444469295924404778953844171059759657047437929870403689260564393369242446002646073033627382589677456942004233040557638289108063442701392203959956206352370300951233348219495810541442268649533356739235913818877675872611298877333010745401377661961807111364081245923445875910207365760677312706012529641939068025946194733961708643458849155039426571596219891124749527191305943988313469903568444857347927671153206107172144966187601582956837263306261188463651515250744090125391634939866958431262636069574915275728165944303813104587422527102193254689654393995668593208688408753029058979052095913304129743342503255259885667418879640507037755492007786716063130304384438073061758428025446008914147069816424519897310405311497447378913859946443482641154886261951151112090996756371998913415962588305440100147726779350705428178586971946555548825586834820440262684</span>
+</span></span><span style="display:flex;"><span>n <span style="color:#f92672">=</span> <span style="color:#ae81ff">11549944805066635917371611006579874790470525434825931187969265611500367611318859286043486761715687815819655917288041260314428800078994193671311381306516384790945080405444789748777488680882339804759981609246133456479190643043850730911749704144445521801747911161775984724101627801374394645404725658898282587967760515990262590177320969531777798879659352986551695215783333950400181541437882964853355753687891693910999555812938066237571959609814199086138389352464157680566422747521556734754008856200447358287245353251651340094404375816685740759692073646665712415022363691204868888105487858042108295847150106260153285522181469113985321818969975697515885271058265003325781668843012594836926854332367513488793208926746935495754026958702198006585896058288661563028321244010431218650015938360238495670746221980339450063987318459669892559190604058526685700940922503704585690899917320321077563851793610808123816288031446437445748893366485897356898182969865328972859999965109617706526644696489653442485436141244860163209258906076746155953242029263972159943000919929483231532635964317217838639084872281827900024591352910245602934577573881502370247543814326013051767181182973092969585736932912364868345076463403295221780637226756056345745552636702631098708549165009234934297822840617730590260524045681482675912646189579341473523380184247588441640630883894333660400261255268799119069674371524858513927904412557991909615032104939159057926611069487425445378461710650736205978635441795595058669402769026420226034753463918223506551926550077190797932213709441178068717995678784272102491163739684803174006491901808287637095968085153140491749222291374816219623010992876616131410442036603722245483150696927456774844696942948109228796674215790375408835940960664031158748130546050522232735320414947738493515375846301886811672698349837924126008191371495372168918882606759658273</span>L
+</span></span><span style="display:flex;"><span>g <span style="color:#f92672">=</span> <span style="color:#ae81ff">423523940272611509302041064263576142897305575121270097803748767309886027526255833456256152511606747812667833748813453200344146541257076866819660538324228713361867380162793526164845880297359819913292204902420056478386107929060759040005976249338073900676894103628351409427876290855722684708300015278995409194357370521957991159230314270315741290978795082250390920150303078587554783529087598689528509533877721450933723824207674274368644777489266679473043331086224619128527888682851174109343648810413088117044164322639509429675288086586309366798606025646538459485261018945311849530814012365551095554027294775644848052269805169768169745307652672064005265141560378551848068886172018015256451075998239505246676529013675862484986119571489277282791051967048922273561732680423808569903953877748891657111365248523273036931966013231615124052112892469474831339960519056318426886865720628596603025132672491604278241594737038252439570597352900597372256479181122743992964218653425065366202651731763257836406154091658022870540570015328241739174217238300291846525738682815035421803103099765943399002440776283180867377492331457061056363339060379134018011852974002228550363874548871997513158672232200031134583085442576874898406411064788745203173755946614543381596978022438254065508428095566188523757318649352124086126067921267610603166160929730839289959724063611977576006066012813497283375057380211859774205643727136201020218874014796548182426626759152946782156353384381126423315413831940627236287981787920391400612763070341632487799533969028020145238628729043745240317588293705257758806597284302819309044129840592673641340367624483136332483769881816243842595789843493877281222716962278093279753311822190598499715108686248952329648637498808201350344730344902624675579455682232537583916431433601373806981849603973696631612341605560321623547032905833852380014297525987572</span>L
+</span></span><span style="display:flex;"><span>h <span style="color:#f92672">=</span> <span style="color:#ae81ff">3573582196367950562514672649417938253983876484182641088189296135535476326853737407375694441049030290346214818885588792453409539628475181755478655167956876518035456194314436436870974792187052496496772427681615960124631956283436877375736591599883406775087402712882590373044440074663132255884176078601067439471638602390792516540787044011029323358867744287529784577225934180716079580902549273981241664747656847582082591050263238971516518812410240419006037104172402523205613047391851826637901453887619367409219281015341812712889158237474392740715355303551765211852082387885956568465671855644508521804088544105072324252065092122292571175190850426391808987173973944240057744299633851146041667668936235824733809233106343089754761109556757112535659636579980716733127362985281275492178371405500609922067809192232478820812850475094511513341601757496986265779222533125569989039228927155028000221332078764634628662498780274880183775637655147493638596617179273287256162692553836891358746033445061495990446726431870064032223896606235458975681416739316309587719255460508577739059865326292891314759380017826989724059440902707580331781665080812904178825859774725861680747247182544965442922892517918207618299944364750054188770446620208879581727328678286006793950325799735711077200424505873116191337619922094514213081280011165278280052323665871252026889039379660194193358224572878887387505676799690489753429499712754146881441729617947422680675823392371550570666252304830596885461430412411560208318552197008951895599219729268559931089941143199541375257693247613017302511300882669026725029837190529697393736809284782042003836287369472011782714980124153367673998099232812088876722528422096774647766868791955363748696265466931046196388076206467012727663502051912384430180605115489011402258861460022678923974041008168693039676496918719548640525989815702618901203186128375584</span>L
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p <span style="color:#f92672">=</span> int(gmpy2<span style="color:#f92672">.</span>iroot(n, <span style="color:#ae81ff">3</span>)[<span style="color:#ae81ff">0</span>])
+</span></span><span style="display:flex;"><span>cp <span style="color:#f92672">=</span> pow(c, p<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, p<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>gp <span style="color:#f92672">=</span> pow(g, p<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, p<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>x <span style="color:#f92672">=</span> res(L(cp, p), L(gp, p), p) <span style="color:#f92672">%</span> p
+</span></span><span style="display:flex;"><span>print long_to_bytes(x)
+</span></span></code></pre></div><p>Got the flag when we run this script (plus some garbage string appended to the flag):   <strong>ASIS{OPEC_IZ_EP0C_L1k3_Effic1ent_Probabilis7ic_Public-K3y_3ncryption_with_S4me_Prim3s!!!}</strong></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://ashutosh1206.github.io/tags/numbertheory/">NumberTheory</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://ashutosh1206.github.io/">Ash&#39;s blog</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

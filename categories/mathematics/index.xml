@@ -1,2 +1,21 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Mathematics on Ashutosh Ahelleya</title><link>https://ashutosh1206.github.io/categories/mathematics/</link><description>Recent content in Mathematics on Ashutosh Ahelleya</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 28 Nov 2017 00:00:00 +0000</lastBuildDate><atom:link href="https://ashutosh1206.github.io/categories/mathematics/index.xml" rel="self" type="application/rss+xml"/><item><title>Finite Fields - Number Theory</title><link>https://ashutosh1206.github.io/blog/finite-fields/</link><pubDate>Tue, 28 Nov 2017 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/blog/finite-fields/</guid><description>This blog post covers one of the most important Mathematical Structures for Cryptography- Fields. It is used in both Symmetric and Asymmetric key Cryptography.
-This blog post gives a basic introduction to Finite Fields and arithmetic operations on it, but I hope the purpose of it is served- to make people, who don’t have basic knowledge about this, understand a few upcoming CTF write-ups, that are based on Finite Fields.</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Mathematics on Ash&#39;s blog</title>
+    <link>https://ashutosh1206.github.io/categories/mathematics/</link>
+    <description>Recent content in Mathematics on Ash&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 28 Nov 2017 00:00:00 +0000</lastBuildDate><atom:link href="https://ashutosh1206.github.io/categories/mathematics/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Finite Fields - Number Theory</title>
+      <link>https://ashutosh1206.github.io/blog/finite-fields/</link>
+      <pubDate>Tue, 28 Nov 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://ashutosh1206.github.io/blog/finite-fields/</guid>
+      <description>This blog post covers one of the most important Mathematical Structures for Cryptography- Fields. It is used in both Symmetric and Asymmetric key Cryptography.
+This blog post gives a basic introduction to Finite Fields and arithmetic operations on it, but I hope the purpose of it is served- to make people, who don’t have basic knowledge about this, understand a few upcoming CTF write-ups, that are based on Finite Fields.</description>
+    </item>
+    
+  </channel>
+</rss>

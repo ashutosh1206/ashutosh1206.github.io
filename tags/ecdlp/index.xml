@@ -1,5 +1,24 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>ECDLP on Ashutosh Ahelleya</title><link>https://ashutosh1206.github.io/tags/ecdlp/</link><description>Recent content in ECDLP on Ashutosh Ahelleya</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 12 Mar 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://ashutosh1206.github.io/tags/ecdlp/index.xml" rel="self" type="application/rss+xml"/><item><title>Alice sent Bob a meme - UTCTF</title><link>https://ashutosh1206.github.io/ctf/utctf19-alicebob/</link><pubDate>Tue, 12 Mar 2019 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/utctf19-alicebob/</guid><description>Challenge Points:
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>ECDLP on Ash&#39;s blog</title>
+    <link>https://ashutosh1206.github.io/tags/ecdlp/</link>
+    <description>Recent content in ECDLP on Ash&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 12 Mar 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://ashutosh1206.github.io/tags/ecdlp/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Alice sent Bob a meme - UTCTF</title>
+      <link>https://ashutosh1206.github.io/ctf/utctf19-alicebob/</link>
+      <pubDate>Tue, 12 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://ashutosh1206.github.io/ctf/utctf19-alicebob/</guid>
+      <description>Challenge Points:
 Challenge Description:
 Eve is an Apple Employee who has access to the iMessage KeyStore (because there is nothing stopping them). They know Alice and Bob use iMessage instead of Signal, therefore they decrypted their messages and see that Alice has sent Bob a meme. Eve suspects more is going on. Can you confirm their suspicions?
 tl;dr
-Extract data from given images using binwalk Tranform given diophantine equation into a cubic curve and retrieve EC parameters Solve ECDLP given in extracted data using Pohlig Hellman Algorithm Preliminary Analysis We are given three images: meme.</description></item></channel></rss>
+Extract data from given images using binwalk Tranform given diophantine equation into a cubic curve and retrieve EC parameters Solve ECDLP given in extracted data using Pohlig Hellman Algorithm Preliminary Analysis We are given three images: meme.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,171 +1,505 @@
-<!doctype html><html lang=en dir=auto><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>GCM - Nullcon HackIM CTF | Ashutosh Ahelleya</title><meta name=keywords content="CTR-Bit-Flippping,GCM"><meta name=description content="Challenge Points: 300
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>GCM - Nullcon HackIM CTF | Ash&#39;s blog</title>
+<meta name="keywords" content="CTR-Bit-Flippping, GCM">
+<meta name="description" content="Challenge Points: 300
 Challenge Description: [None]
 tl;dr
 CTR Bit Flipping Break GHASH to get authentication key H (unintended approach) Bypass authentication The way we solved it (unintended approach) was pretty interesting!
 Challenge Internals We are given a service that allows us to encrypt/decrypt data using AES-CTR mode. Code for this is as follows:
-def main(): global sessionid username = input('Enter username: ') sessionid = sha256(username.encode()).digest()[:10] while True: print(&#34;Menu&#34;) print(&#34;[1] Encrypt&#34;) print(&#34;[2] Decrypt&#34;) print(&#34;[3] Exit&#34;) choice = input(&#34;> &#34;) if choice == '1': msg = input('Enter message to be encrypted: ') if 'flag' in msg: print(&#34;You cant encrypt flag :(&#34;) continue c = encrypt(msg."><meta name=author content="Ashutosh Ahelleya"><link rel=canonical href=https://ashutosh1206.github.io/ctf/hackim19-gcm/><link crossorigin=anonymous href=/assets/css/stylesheet.bccfefac377bc340f06c260aed1bddf49a4354816d7c570d6aac75a997986c95.css integrity="sha256-vM/vrDd7w0DwbCYK7Rvd9JpDVIFtfFcNaqx1qZeYbJU=" rel="preload stylesheet" as=style><script defer crossorigin=anonymous src=/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG+9vmJ0cTS+ovo0FeA=" onload=hljs.initHighlightingOnLoad()></script>
-<link rel=icon href=https://ashutosh1206.github.io/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://ashutosh1206.github.io/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://ashutosh1206.github.io/favicon-32x32.png><link rel=apple-touch-icon href=https://ashutosh1206.github.io/apple-touch-icon.png><link rel=mask-icon href=https://ashutosh1206.github.io/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--hljs-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css integrity=sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0 crossorigin=anonymous><script defer src=https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js integrity=sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4 crossorigin=anonymous></script>
-<script defer src=https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js integrity=sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05 crossorigin=anonymous onload=renderMathInElement(document.body)></script><meta property="og:title" content="GCM - Nullcon HackIM CTF"><meta property="og:description" content="Challenge Points: 300
+def main(): global sessionid username = input(&#39;Enter username: &#39;) sessionid = sha256(username.encode()).digest()[:10] while True: print(&#34;Menu&#34;) print(&#34;[1] Encrypt&#34;) print(&#34;[2] Decrypt&#34;) print(&#34;[3] Exit&#34;) choice = input(&#34;&gt; &#34;) if choice == &#39;1&#39;: msg = input(&#39;Enter message to be encrypted: &#39;) if &#39;flag&#39; in msg: print(&#34;You cant encrypt flag :(&#34;) continue c = encrypt(msg.">
+<meta name="author" content="Ashutosh Ahelleya">
+<link rel="canonical" href="https://ashutosh1206.github.io/ctf/hackim19-gcm/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.bccfefac377bc340f06c260aed1bddf49a4354816d7c570d6aac75a997986c95.css" integrity="sha256-vM/vrDd7w0DwbCYK7Rvd9JpDVIFtfFcNaqx1qZeYbJU=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://ashutosh1206.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://ashutosh1206.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://ashutosh1206.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://ashutosh1206.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://ashutosh1206.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+<meta property="og:title" content="GCM - Nullcon HackIM CTF" />
+<meta property="og:description" content="Challenge Points: 300
 Challenge Description: [None]
 tl;dr
 CTR Bit Flipping Break GHASH to get authentication key H (unintended approach) Bypass authentication The way we solved it (unintended approach) was pretty interesting!
 Challenge Internals We are given a service that allows us to encrypt/decrypt data using AES-CTR mode. Code for this is as follows:
-def main(): global sessionid username = input('Enter username: ') sessionid = sha256(username.encode()).digest()[:10] while True: print(&#34;Menu&#34;) print(&#34;[1] Encrypt&#34;) print(&#34;[2] Decrypt&#34;) print(&#34;[3] Exit&#34;) choice = input(&#34;> &#34;) if choice == '1': msg = input('Enter message to be encrypted: ') if 'flag' in msg: print(&#34;You cant encrypt flag :(&#34;) continue c = encrypt(msg."><meta property="og:type" content="article"><meta property="og:url" content="https://ashutosh1206.github.io/ctf/hackim19-gcm/"><meta property="article:section" content="ctf"><meta property="article:published_time" content="2019-02-05T00:00:00+00:00"><meta property="article:modified_time" content="2019-02-05T00:00:00+00:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="GCM - Nullcon HackIM CTF"><meta name=twitter:description content="Challenge Points: 300
+def main(): global sessionid username = input(&#39;Enter username: &#39;) sessionid = sha256(username.encode()).digest()[:10] while True: print(&#34;Menu&#34;) print(&#34;[1] Encrypt&#34;) print(&#34;[2] Decrypt&#34;) print(&#34;[3] Exit&#34;) choice = input(&#34;&gt; &#34;) if choice == &#39;1&#39;: msg = input(&#39;Enter message to be encrypted: &#39;) if &#39;flag&#39; in msg: print(&#34;You cant encrypt flag :(&#34;) continue c = encrypt(msg." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://ashutosh1206.github.io/ctf/hackim19-gcm/" /><meta property="article:section" content="ctf" />
+<meta property="article:published_time" content="2019-02-05T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-02-05T00:00:00+00:00" /><meta property="og:site_name" content="Ash&#39;s blog" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="GCM - Nullcon HackIM CTF"/>
+<meta name="twitter:description" content="Challenge Points: 300
 Challenge Description: [None]
 tl;dr
 CTR Bit Flipping Break GHASH to get authentication key H (unintended approach) Bypass authentication The way we solved it (unintended approach) was pretty interesting!
 Challenge Internals We are given a service that allows us to encrypt/decrypt data using AES-CTR mode. Code for this is as follows:
-def main(): global sessionid username = input('Enter username: ') sessionid = sha256(username.encode()).digest()[:10] while True: print(&#34;Menu&#34;) print(&#34;[1] Encrypt&#34;) print(&#34;[2] Decrypt&#34;) print(&#34;[3] Exit&#34;) choice = input(&#34;> &#34;) if choice == '1': msg = input('Enter message to be encrypted: ') if 'flag' in msg: print(&#34;You cant encrypt flag :(&#34;) continue c = encrypt(msg."><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Ctfs","item":"https://ashutosh1206.github.io/ctf/"},{"@type":"ListItem","position":2,"name":"GCM - Nullcon HackIM CTF","item":"https://ashutosh1206.github.io/ctf/hackim19-gcm/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"GCM - Nullcon HackIM CTF","name":"GCM - Nullcon HackIM CTF","description":"Challenge Points: 300\nChallenge Description: [None]\ntl;dr\nCTR Bit Flipping Break GHASH to get authentication key H (unintended approach) Bypass authentication The way we solved it (unintended approach) was pretty interesting!\nChallenge Internals We are given a service that allows us to encrypt/decrypt data using AES-CTR mode. Code for this is as follows:\ndef main(): global sessionid username = input(\u0026#39;Enter username: \u0026#39;) sessionid = sha256(username.encode()).digest()[:10] while True: print(\u0026#34;Menu\u0026#34;) print(\u0026#34;[1] Encrypt\u0026#34;) print(\u0026#34;[2] Decrypt\u0026#34;) print(\u0026#34;[3] Exit\u0026#34;) choice = input(\u0026#34;\u0026gt; \u0026#34;) if choice == \u0026#39;1\u0026#39;: msg = input(\u0026#39;Enter message to be encrypted: \u0026#39;) if \u0026#39;flag\u0026#39; in msg: print(\u0026#34;You cant encrypt flag :(\u0026#34;) continue c = encrypt(msg.","keywords":["CTR-Bit-Flippping","GCM"],"articleBody":"Challenge Points: 300\nChallenge Description: [None]\ntl;dr\nCTR Bit Flipping Break GHASH to get authentication key H (unintended approach) Bypass authentication The way we solved it (unintended approach) was pretty interesting!\nChallenge Internals We are given a service that allows us to encrypt/decrypt data using AES-CTR mode. Code for this is as follows:\ndef main(): global sessionid username = input('Enter username: ') sessionid = sha256(username.encode()).digest()[:10] while True: print(\"Menu\") print(\"[1] Encrypt\") print(\"[2] Decrypt\") print(\"[3] Exit\") choice = input(\"\u003e \") if choice == '1': msg = input('Enter message to be encrypted: ') if 'flag' in msg: print(\"You cant encrypt flag :(\") continue c = encrypt(msg.encode()) nonce = hexlify(c[0]).decode() ciphertext = hexlify(c[1]).decode() tag = hexlify(c[2]).decode() print(nonce + ':' + ciphertext + ':' + tag) continue if choice == '2': nonce, ciphertext, tag = input( 'Enter message to be decrypted: ').split(':') nonce = long_to_bytes(int(nonce, 16)) ciphertext = long_to_bytes(int(ciphertext, 16)) tag = long_to_bytes(int(tag, 16)) pt = decrypt(nonce, ciphertext, tag).decode() if pt == 'may i please have the flag': print(\"Congrats %s\" % username) print(\"Here is your flag: %s\" % flag) print(pt) continue if choice == '3': break As you can see, the service does not allow encrypting messages that contain “flag” as a substring. Also, when we choose to decrypt data, the service checks if the decrypted data is equal to “may i please have the flag” and gives the flag only if it is true.\nClearly, we will have to bypass the above service:\nEncrypt some data that does not contain “flag”, let us say “may i please have the flak” Flip some bytes and get ciphertext of “may i please have the flag” Send ciphertext obtained in step-(2) for decryption and get the actual flag If what we just described in the above steps is correct, then a simple CTR Bit Flipping attack would be sufficient to get the flag.\nBut things are not easy as they seem to be. Let us look at the encryption and decryption functions:\ndef encrypt(msg): nonce = sessionid + Random.get_random_bytes(2) assert len(nonce) == 12 ctr = Counter.new(32, prefix=nonce) cipher = AES.new(key, AES.MODE_CTR, counter=ctr) ciphertext = cipher.encrypt(msg) tag = GHASH(ciphertext, nonce) return (nonce, ciphertext, tag) def decrypt(nonce, ciphertext, tag): assert len(nonce) == 12 assert GHASH(ciphertext, nonce) == tag ctr = Counter.new(32, prefix=nonce) cipher = AES.new(key, AES.MODE_CTR, counter=ctr) plaintext = cipher.decrypt(ciphertext) return plaintext As you can see, encrypt() not only encrypts our plaintext, but also creates an authentication tag - tag that happens to be a mitigation to CTR Bit Flipping Attack. Also, decrypt() function verifies if the authentication tag calculated from the ciphertext and authentication tag - tag given as input, match.\nAn authentication tag is basically a string assigned to a plaintext/ciphertext as a unique identifier. This means that if we flip bytes, we will not have the authentication tag of the corresponding new flipped data and we won’t be able to get the flag.\nNote: If you want to read more about Authenticated Encryption, you can read it from Crypton. In case you only want to read about Message Authentication Code (MACs), you can read about them from Crypton here.\nThis immediately shifts our target to the function that creates an authentication tag, and search for vulnerabilities that can be exploited, so that we can bypass the authentication.\nAnalysis of GHASH Function for generating authentication tag - GHASH()\ndef GHASH(ciphertext, nonce): assert len(nonce) == 12 c = AES.new(key, AES.MODE_ECB).encrypt(nonce + bytes(3) + b'\\x01') blocks = group(ciphertext) tag = bytes_to_long(c) for i, b in enumerate(blocks): tag += (bytes_to_long(b) * pow(bytes_to_long(H), i + 1, n)) % n return long_to_bytes(tag) `nonce` : 10 most significant bytes of sha256 of username + 2 random bytes `c` : AES ECB encryption of (nonce + \"\\x00\\x00\\x00\\x01\") `b` : ciphertext block in each iteration (16 bytes) Authentication tag - tag for a k-block plaintext is generated as:\n$$ tag = c + ((b_1 *(H^1;%;n));%;n) + ((b_2 *(H^2;%;n));%;n) + … + ((b_k *(H^k;%;n));%;n) $$\nFor a 1-block ciphertext, we can write:\n$$ tag = c+((b_1 + (H^1;%;n));%;n) $$\nThus, if we have c for every session, we can calculate secret value H as: $$ (tag-c)*(b^{-1}\\mod n) \\equiv H^1 \\mod n $$\nRetrieving c - unintended approach We know that c is AES ECB encryption of (nonce + “\\x00\\x00\\x00\\x01”)\nWe observe that: AES ECB encryption of (nonce + “\\x00\\x00\\x00\\x01”) is the same as “z”*16 (one block containing of z’s - 16 bytes) XORed with AES CTR encryption of “z”*16 (one block of z’s - 16 bytes).\nThat is:\n(AES_ECB_enc(nonce + \"\\x00\\x00\\x00\\x01\")) == ((\"zzzzzzzzzzzzzzzz\") xor (AES_CTR_enc(\"zzzzzzzzzzzzzzzz\"))).\nTo get c, we simply send “z”*16 to the service for encryption and xor the result with “z”*16 to get c\nGetting the flag Now that we know how to calculate c, we can get the flag with the following steps:\nEncrypt some data that does not contain “flag”, let us say “may i please have the flak” Flip some bytes and get ciphertext of “may i please have the flag” Calculate H, get authentication tag for “may i please have the flag” Send ciphertext obtained in (2) for decryption, along with authentication tag obtained in (3) and get the actual flag! Full exploit:\nfrom pwn import * from Crypto.Cipher import AES from Crypto.Util.number import * import hashlib n = 327989969870981036659934487747327553919 def _encrypt(plaintext): r.recvuntil(\"\u003e \") r.sendline(\"1\") r.recvuntil(\"encrypted: \") r.sendline(plaintext) return r.recvline().strip() def group(a, length=16): count = len(a) // length if len(a) % length != 0: count += 1 return [a[i * length: (i + 1) * length] for i in range(count)] def GHASH(ciphertext, nonce, c, H): assert len(nonce) == 12 blocks = group(ciphertext) tag = bytes_to_long(c) for i, b in enumerate(blocks): tag += (bytes_to_long(b) * pow(H, i + 1, n)) % n return long_to_bytes(tag) def xor(a, b): assert len(a) == len(b) return ''.join([chr(ord(ai)^ord(bi)) for ai, bi in zip(a,b)]) r = remote(\"crypto.ctf.nullcon.net\",\"5000\") r.recvuntil(\"username: \") r.sendline(\"test\") # Code for getting the authentication tag # nonce, ciphertext, tag = _encrypt(\"z\"*16).split(\":\") # nonce = nonce.decode(\"hex\") # ciphertext = ciphertext.decode(\"hex\") # tag = tag.decode(\"hex\") # # assert GCD(bytes_to_long(\"z\"*16), n) == 1 # assert bytes_to_long(\"z\"*16) \u003c n # # assert len(ciphertext) == 16 # c = xor(ciphertext, \"z\"*16) # b_inv = inverse(bytes_to_long(\"z\"*16), n) # H = ((bytes_to_long(tag) - bytes_to_long(c)) * b_inv) % n # # print H # print type(H) # print GHASH(ciphertext, nonce, c, H) # print tag H = 1100811469918366171773680758187695733 _plaintext = \"may i please have the flak\" _nonce, _ciphertext, _tag = _encrypt(_plaintext).split(\":\") _nonce = _nonce.decode(\"hex\") _ciphertext = _ciphertext.decode(\"hex\") _tag = _tag.decode(\"hex\") _c = xor(_ciphertext[:16], _plaintext[:16]) _ciphertext = _ciphertext[:-1] + chr(ord(_ciphertext[-1]) ^ ord('k') ^ ord('g')) __tag = GHASH(_ciphertext, _nonce, _c, H) _ciphertext = _ciphertext.encode(\"hex\") __tag = __tag.encode(\"hex\") _nonce = _nonce.encode(\"hex\") r.recvuntil(\"\u003e \") r.sendline(\"2\") r.recvuntil(\"decrypted: \") r.sendline(_nonce + \":\" + _ciphertext + \":\" + __tag) print r.recvline() print r.recvline() Running this script gave us the flag: hackim19{forb1dd3n_made_e4sy_a7gh12}\n","wordCount":"1121","inLanguage":"en","datePublished":"2019-02-05T00:00:00Z","dateModified":"2019-02-05T00:00:00Z","author":{"@type":"Person","name":"Ashutosh Ahelleya"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://ashutosh1206.github.io/ctf/hackim19-gcm/"},"publisher":{"@type":"Organization","name":"Ashutosh Ahelleya","logo":{"@type":"ImageObject","url":"https://ashutosh1206.github.io/favicon.ico"}}}</script></head><body id=top><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://ashutosh1206.github.io/ accesskey=h title="Home (Alt + H)">Home</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)"><svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg><svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://ashutosh1206.github.io/blog/ title=Blog><span>Blog</span></a></li><li><a href=https://ashutosh1206.github.io/archive/ title=Archive><span>Archive</span></a></li><li><a href=https://ashutosh1206.github.io/ctf/ title=CTF><span>CTF</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class=post-title>GCM - Nullcon HackIM CTF</h1><div class=post-meta><span title='2019-02-05 00:00:00 +0000 UTC'>February 5, 2019</span>&nbsp;·&nbsp;Ashutosh Ahelleya</div></header><div class=post-content><p><strong>Challenge Points</strong>: 300<br><strong>Challenge Description</strong>: [None]</p><p>tl;dr</p><ol><li>CTR Bit Flipping</li><li>Break GHASH to get authentication key <strong>H</strong> (unintended approach)</li><li>Bypass authentication</li></ol><p>The way we solved it (unintended approach) was pretty interesting!</p><h2 id=challenge-internals>Challenge Internals<a hidden class=anchor aria-hidden=true href=#challenge-internals>#</a></h2><p>We are given a service that allows us to encrypt/decrypt data using AES-CTR mode. Code for this is as follows:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>main</span>():
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>global</span> sessionid
-</span></span><span style=display:flex><span>    username <span style=color:#f92672>=</span> input(<span style=color:#e6db74>&#39;Enter username: &#39;</span>)
-</span></span><span style=display:flex><span>    sessionid <span style=color:#f92672>=</span> sha256(username<span style=color:#f92672>.</span>encode())<span style=color:#f92672>.</span>digest()[:<span style=color:#ae81ff>10</span>]
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>while</span> <span style=color:#66d9ef>True</span>:
-</span></span><span style=display:flex><span>        print(<span style=color:#e6db74>&#34;Menu&#34;</span>)
-</span></span><span style=display:flex><span>        print(<span style=color:#e6db74>&#34;[1] Encrypt&#34;</span>)
-</span></span><span style=display:flex><span>        print(<span style=color:#e6db74>&#34;[2] Decrypt&#34;</span>)
-</span></span><span style=display:flex><span>        print(<span style=color:#e6db74>&#34;[3] Exit&#34;</span>)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>        choice <span style=color:#f92672>=</span> input(<span style=color:#e6db74>&#34;&gt; &#34;</span>)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> choice <span style=color:#f92672>==</span> <span style=color:#e6db74>&#39;1&#39;</span>:
-</span></span><span style=display:flex><span>            msg <span style=color:#f92672>=</span> input(<span style=color:#e6db74>&#39;Enter message to be encrypted: &#39;</span>)
-</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> <span style=color:#e6db74>&#39;flag&#39;</span> <span style=color:#f92672>in</span> msg:
-</span></span><span style=display:flex><span>                print(<span style=color:#e6db74>&#34;You cant encrypt flag :(&#34;</span>)
-</span></span><span style=display:flex><span>                <span style=color:#66d9ef>continue</span>
-</span></span><span style=display:flex><span>            c <span style=color:#f92672>=</span> encrypt(msg<span style=color:#f92672>.</span>encode())
-</span></span><span style=display:flex><span>            nonce <span style=color:#f92672>=</span> hexlify(c[<span style=color:#ae81ff>0</span>])<span style=color:#f92672>.</span>decode()
-</span></span><span style=display:flex><span>            ciphertext <span style=color:#f92672>=</span> hexlify(c[<span style=color:#ae81ff>1</span>])<span style=color:#f92672>.</span>decode()
-</span></span><span style=display:flex><span>            tag <span style=color:#f92672>=</span> hexlify(c[<span style=color:#ae81ff>2</span>])<span style=color:#f92672>.</span>decode()
-</span></span><span style=display:flex><span>            print(nonce <span style=color:#f92672>+</span> <span style=color:#e6db74>&#39;:&#39;</span> <span style=color:#f92672>+</span> ciphertext <span style=color:#f92672>+</span> <span style=color:#e6db74>&#39;:&#39;</span> <span style=color:#f92672>+</span> tag)
-</span></span><span style=display:flex><span>            <span style=color:#66d9ef>continue</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> choice <span style=color:#f92672>==</span> <span style=color:#e6db74>&#39;2&#39;</span>:
-</span></span><span style=display:flex><span>            nonce, ciphertext, tag <span style=color:#f92672>=</span> input(
-</span></span><span style=display:flex><span>                <span style=color:#e6db74>&#39;Enter message to be decrypted: &#39;</span>)<span style=color:#f92672>.</span>split(<span style=color:#e6db74>&#39;:&#39;</span>)
-</span></span><span style=display:flex><span>            nonce <span style=color:#f92672>=</span> long_to_bytes(int(nonce, <span style=color:#ae81ff>16</span>))
-</span></span><span style=display:flex><span>            ciphertext <span style=color:#f92672>=</span> long_to_bytes(int(ciphertext, <span style=color:#ae81ff>16</span>))
-</span></span><span style=display:flex><span>            tag <span style=color:#f92672>=</span> long_to_bytes(int(tag, <span style=color:#ae81ff>16</span>))
-</span></span><span style=display:flex><span>            pt <span style=color:#f92672>=</span> decrypt(nonce, ciphertext, tag)<span style=color:#f92672>.</span>decode()
-</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> pt <span style=color:#f92672>==</span> <span style=color:#e6db74>&#39;may i please have the flag&#39;</span>:
-</span></span><span style=display:flex><span>                print(<span style=color:#e6db74>&#34;Congrats </span><span style=color:#e6db74>%s</span><span style=color:#e6db74>&#34;</span> <span style=color:#f92672>%</span> username)
-</span></span><span style=display:flex><span>                print(<span style=color:#e6db74>&#34;Here is your flag: </span><span style=color:#e6db74>%s</span><span style=color:#e6db74>&#34;</span> <span style=color:#f92672>%</span> flag)
-</span></span><span style=display:flex><span>            print(pt)
-</span></span><span style=display:flex><span>            <span style=color:#66d9ef>continue</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> choice <span style=color:#f92672>==</span> <span style=color:#e6db74>&#39;3&#39;</span>:
-</span></span><span style=display:flex><span>            <span style=color:#66d9ef>break</span>
+def main(): global sessionid username = input(&#39;Enter username: &#39;) sessionid = sha256(username.encode()).digest()[:10] while True: print(&#34;Menu&#34;) print(&#34;[1] Encrypt&#34;) print(&#34;[2] Decrypt&#34;) print(&#34;[3] Exit&#34;) choice = input(&#34;&gt; &#34;) if choice == &#39;1&#39;: msg = input(&#39;Enter message to be encrypted: &#39;) if &#39;flag&#39; in msg: print(&#34;You cant encrypt flag :(&#34;) continue c = encrypt(msg."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Ctfs",
+      "item": "https://ashutosh1206.github.io/ctf/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "GCM - Nullcon HackIM CTF",
+      "item": "https://ashutosh1206.github.io/ctf/hackim19-gcm/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "GCM - Nullcon HackIM CTF",
+  "name": "GCM - Nullcon HackIM CTF",
+  "description": "Challenge Points: 300\nChallenge Description: [None]\ntl;dr\nCTR Bit Flipping Break GHASH to get authentication key H (unintended approach) Bypass authentication The way we solved it (unintended approach) was pretty interesting!\nChallenge Internals We are given a service that allows us to encrypt/decrypt data using AES-CTR mode. Code for this is as follows:\ndef main(): global sessionid username = input(\u0026#39;Enter username: \u0026#39;) sessionid = sha256(username.encode()).digest()[:10] while True: print(\u0026#34;Menu\u0026#34;) print(\u0026#34;[1] Encrypt\u0026#34;) print(\u0026#34;[2] Decrypt\u0026#34;) print(\u0026#34;[3] Exit\u0026#34;) choice = input(\u0026#34;\u0026gt; \u0026#34;) if choice == \u0026#39;1\u0026#39;: msg = input(\u0026#39;Enter message to be encrypted: \u0026#39;) if \u0026#39;flag\u0026#39; in msg: print(\u0026#34;You cant encrypt flag :(\u0026#34;) continue c = encrypt(msg.",
+  "keywords": [
+    "CTR-Bit-Flippping", "GCM"
+  ],
+  "articleBody": "Challenge Points: 300\nChallenge Description: [None]\ntl;dr\nCTR Bit Flipping Break GHASH to get authentication key H (unintended approach) Bypass authentication The way we solved it (unintended approach) was pretty interesting!\nChallenge Internals We are given a service that allows us to encrypt/decrypt data using AES-CTR mode. Code for this is as follows:\ndef main(): global sessionid username = input('Enter username: ') sessionid = sha256(username.encode()).digest()[:10] while True: print(\"Menu\") print(\"[1] Encrypt\") print(\"[2] Decrypt\") print(\"[3] Exit\") choice = input(\"\u003e \") if choice == '1': msg = input('Enter message to be encrypted: ') if 'flag' in msg: print(\"You cant encrypt flag :(\") continue c = encrypt(msg.encode()) nonce = hexlify(c[0]).decode() ciphertext = hexlify(c[1]).decode() tag = hexlify(c[2]).decode() print(nonce + ':' + ciphertext + ':' + tag) continue if choice == '2': nonce, ciphertext, tag = input( 'Enter message to be decrypted: ').split(':') nonce = long_to_bytes(int(nonce, 16)) ciphertext = long_to_bytes(int(ciphertext, 16)) tag = long_to_bytes(int(tag, 16)) pt = decrypt(nonce, ciphertext, tag).decode() if pt == 'may i please have the flag': print(\"Congrats %s\" % username) print(\"Here is your flag: %s\" % flag) print(pt) continue if choice == '3': break As you can see, the service does not allow encrypting messages that contain “flag” as a substring. Also, when we choose to decrypt data, the service checks if the decrypted data is equal to “may i please have the flag” and gives the flag only if it is true.\nClearly, we will have to bypass the above service:\nEncrypt some data that does not contain “flag”, let us say “may i please have the flak” Flip some bytes and get ciphertext of “may i please have the flag” Send ciphertext obtained in step-(2) for decryption and get the actual flag If what we just described in the above steps is correct, then a simple CTR Bit Flipping attack would be sufficient to get the flag.\nBut things are not easy as they seem to be. Let us look at the encryption and decryption functions:\ndef encrypt(msg): nonce = sessionid + Random.get_random_bytes(2) assert len(nonce) == 12 ctr = Counter.new(32, prefix=nonce) cipher = AES.new(key, AES.MODE_CTR, counter=ctr) ciphertext = cipher.encrypt(msg) tag = GHASH(ciphertext, nonce) return (nonce, ciphertext, tag) def decrypt(nonce, ciphertext, tag): assert len(nonce) == 12 assert GHASH(ciphertext, nonce) == tag ctr = Counter.new(32, prefix=nonce) cipher = AES.new(key, AES.MODE_CTR, counter=ctr) plaintext = cipher.decrypt(ciphertext) return plaintext As you can see, encrypt() not only encrypts our plaintext, but also creates an authentication tag - tag that happens to be a mitigation to CTR Bit Flipping Attack. Also, decrypt() function verifies if the authentication tag calculated from the ciphertext and authentication tag - tag given as input, match.\nAn authentication tag is basically a string assigned to a plaintext/ciphertext as a unique identifier. This means that if we flip bytes, we will not have the authentication tag of the corresponding new flipped data and we won’t be able to get the flag.\nNote: If you want to read more about Authenticated Encryption, you can read it from Crypton. In case you only want to read about Message Authentication Code (MACs), you can read about them from Crypton here.\nThis immediately shifts our target to the function that creates an authentication tag, and search for vulnerabilities that can be exploited, so that we can bypass the authentication.\nAnalysis of GHASH Function for generating authentication tag - GHASH()\ndef GHASH(ciphertext, nonce): assert len(nonce) == 12 c = AES.new(key, AES.MODE_ECB).encrypt(nonce + bytes(3) + b'\\x01') blocks = group(ciphertext) tag = bytes_to_long(c) for i, b in enumerate(blocks): tag += (bytes_to_long(b) * pow(bytes_to_long(H), i + 1, n)) % n return long_to_bytes(tag) `nonce` : 10 most significant bytes of sha256 of username + 2 random bytes `c` : AES ECB encryption of (nonce + \"\\x00\\x00\\x00\\x01\") `b` : ciphertext block in each iteration (16 bytes) Authentication tag - tag for a k-block plaintext is generated as:\n$$ tag = c + ((b_1 *(H^1;%;n));%;n) + ((b_2 *(H^2;%;n));%;n) + … + ((b_k *(H^k;%;n));%;n) $$\nFor a 1-block ciphertext, we can write:\n$$ tag = c+((b_1 + (H^1;%;n));%;n) $$\nThus, if we have c for every session, we can calculate secret value H as: $$ (tag-c)*(b^{-1}\\mod n) \\equiv H^1 \\mod n $$\nRetrieving c - unintended approach We know that c is AES ECB encryption of (nonce + “\\x00\\x00\\x00\\x01”)\nWe observe that: AES ECB encryption of (nonce + “\\x00\\x00\\x00\\x01”) is the same as “z”*16 (one block containing of z’s - 16 bytes) XORed with AES CTR encryption of “z”*16 (one block of z’s - 16 bytes).\nThat is:\n(AES_ECB_enc(nonce + \"\\x00\\x00\\x00\\x01\")) == ((\"zzzzzzzzzzzzzzzz\") xor (AES_CTR_enc(\"zzzzzzzzzzzzzzzz\"))).\nTo get c, we simply send “z”*16 to the service for encryption and xor the result with “z”*16 to get c\nGetting the flag Now that we know how to calculate c, we can get the flag with the following steps:\nEncrypt some data that does not contain “flag”, let us say “may i please have the flak” Flip some bytes and get ciphertext of “may i please have the flag” Calculate H, get authentication tag for “may i please have the flag” Send ciphertext obtained in (2) for decryption, along with authentication tag obtained in (3) and get the actual flag! Full exploit:\nfrom pwn import * from Crypto.Cipher import AES from Crypto.Util.number import * import hashlib n = 327989969870981036659934487747327553919 def _encrypt(plaintext): r.recvuntil(\"\u003e \") r.sendline(\"1\") r.recvuntil(\"encrypted: \") r.sendline(plaintext) return r.recvline().strip() def group(a, length=16): count = len(a) // length if len(a) % length != 0: count += 1 return [a[i * length: (i + 1) * length] for i in range(count)] def GHASH(ciphertext, nonce, c, H): assert len(nonce) == 12 blocks = group(ciphertext) tag = bytes_to_long(c) for i, b in enumerate(blocks): tag += (bytes_to_long(b) * pow(H, i + 1, n)) % n return long_to_bytes(tag) def xor(a, b): assert len(a) == len(b) return ''.join([chr(ord(ai)^ord(bi)) for ai, bi in zip(a,b)]) r = remote(\"crypto.ctf.nullcon.net\",\"5000\") r.recvuntil(\"username: \") r.sendline(\"test\") # Code for getting the authentication tag # nonce, ciphertext, tag = _encrypt(\"z\"*16).split(\":\") # nonce = nonce.decode(\"hex\") # ciphertext = ciphertext.decode(\"hex\") # tag = tag.decode(\"hex\") # # assert GCD(bytes_to_long(\"z\"*16), n) == 1 # assert bytes_to_long(\"z\"*16) \u003c n # # assert len(ciphertext) == 16 # c = xor(ciphertext, \"z\"*16) # b_inv = inverse(bytes_to_long(\"z\"*16), n) # H = ((bytes_to_long(tag) - bytes_to_long(c)) * b_inv) % n # # print H # print type(H) # print GHASH(ciphertext, nonce, c, H) # print tag H = 1100811469918366171773680758187695733 _plaintext = \"may i please have the flak\" _nonce, _ciphertext, _tag = _encrypt(_plaintext).split(\":\") _nonce = _nonce.decode(\"hex\") _ciphertext = _ciphertext.decode(\"hex\") _tag = _tag.decode(\"hex\") _c = xor(_ciphertext[:16], _plaintext[:16]) _ciphertext = _ciphertext[:-1] + chr(ord(_ciphertext[-1]) ^ ord('k') ^ ord('g')) __tag = GHASH(_ciphertext, _nonce, _c, H) _ciphertext = _ciphertext.encode(\"hex\") __tag = __tag.encode(\"hex\") _nonce = _nonce.encode(\"hex\") r.recvuntil(\"\u003e \") r.sendline(\"2\") r.recvuntil(\"decrypted: \") r.sendline(_nonce + \":\" + _ciphertext + \":\" + __tag) print r.recvline() print r.recvline() Running this script gave us the flag: hackim19{forb1dd3n_made_e4sy_a7gh12}\n",
+  "wordCount" : "1121",
+  "inLanguage": "en",
+  "datePublished": "2019-02-05T00:00:00Z",
+  "dateModified": "2019-02-05T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Ashutosh Ahelleya"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://ashutosh1206.github.io/ctf/hackim19-gcm/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Ash's blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://ashutosh1206.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://ashutosh1206.github.io/" accesskey="h" title="Home (Alt + H)">Home</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://ashutosh1206.github.io/blog/" title="Blog">
+                    <span>Blog</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ashutosh1206.github.io/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ashutosh1206.github.io/archive/" title="Archive">
+                    <span>Archive</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ashutosh1206.github.io/ctf/" title="CTF">
+                    <span>CTF</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title">
+      GCM - Nullcon HackIM CTF
+    </h1>
+    <div class="post-meta"><span title='2019-02-05 00:00:00 +0000 UTC'>February 5, 2019</span>&nbsp;·&nbsp;Ashutosh Ahelleya
+
+</div>
+  </header> 
+  <div class="post-content"><p><strong>Challenge Points</strong>: 300<br>
+<strong>Challenge Description</strong>: [None]</p>
+<p>tl;dr</p>
+<ol>
+<li>CTR Bit Flipping</li>
+<li>Break GHASH to get authentication key <strong>H</strong> (unintended approach)</li>
+<li>Bypass authentication</li>
+</ol>
+<p>The way we solved it (unintended approach) was pretty interesting!</p>
+<h2 id="challenge-internals">Challenge Internals<a hidden class="anchor" aria-hidden="true" href="#challenge-internals">#</a></h2>
+<p>We are given a service that allows us to encrypt/decrypt data using AES-CTR mode. Code for this is as follows:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">main</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">global</span> sessionid
+</span></span><span style="display:flex;"><span>    username <span style="color:#f92672">=</span> input(<span style="color:#e6db74">&#39;Enter username: &#39;</span>)
+</span></span><span style="display:flex;"><span>    sessionid <span style="color:#f92672">=</span> sha256(username<span style="color:#f92672">.</span>encode())<span style="color:#f92672">.</span>digest()[:<span style="color:#ae81ff">10</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#34;Menu&#34;</span>)
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#34;[1] Encrypt&#34;</span>)
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#34;[2] Decrypt&#34;</span>)
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#34;[3] Exit&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        choice <span style="color:#f92672">=</span> input(<span style="color:#e6db74">&#34;&gt; &#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> choice <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;1&#39;</span>:
+</span></span><span style="display:flex;"><span>            msg <span style="color:#f92672">=</span> input(<span style="color:#e6db74">&#39;Enter message to be encrypted: &#39;</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#39;flag&#39;</span> <span style="color:#f92672">in</span> msg:
+</span></span><span style="display:flex;"><span>                print(<span style="color:#e6db74">&#34;You cant encrypt flag :(&#34;</span>)
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">continue</span>
+</span></span><span style="display:flex;"><span>            c <span style="color:#f92672">=</span> encrypt(msg<span style="color:#f92672">.</span>encode())
+</span></span><span style="display:flex;"><span>            nonce <span style="color:#f92672">=</span> hexlify(c[<span style="color:#ae81ff">0</span>])<span style="color:#f92672">.</span>decode()
+</span></span><span style="display:flex;"><span>            ciphertext <span style="color:#f92672">=</span> hexlify(c[<span style="color:#ae81ff">1</span>])<span style="color:#f92672">.</span>decode()
+</span></span><span style="display:flex;"><span>            tag <span style="color:#f92672">=</span> hexlify(c[<span style="color:#ae81ff">2</span>])<span style="color:#f92672">.</span>decode()
+</span></span><span style="display:flex;"><span>            print(nonce <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;:&#39;</span> <span style="color:#f92672">+</span> ciphertext <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;:&#39;</span> <span style="color:#f92672">+</span> tag)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">continue</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> choice <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;2&#39;</span>:
+</span></span><span style="display:flex;"><span>            nonce, ciphertext, tag <span style="color:#f92672">=</span> input(
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#39;Enter message to be decrypted: &#39;</span>)<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;:&#39;</span>)
+</span></span><span style="display:flex;"><span>            nonce <span style="color:#f92672">=</span> long_to_bytes(int(nonce, <span style="color:#ae81ff">16</span>))
+</span></span><span style="display:flex;"><span>            ciphertext <span style="color:#f92672">=</span> long_to_bytes(int(ciphertext, <span style="color:#ae81ff">16</span>))
+</span></span><span style="display:flex;"><span>            tag <span style="color:#f92672">=</span> long_to_bytes(int(tag, <span style="color:#ae81ff">16</span>))
+</span></span><span style="display:flex;"><span>            pt <span style="color:#f92672">=</span> decrypt(nonce, ciphertext, tag)<span style="color:#f92672">.</span>decode()
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> pt <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;may i please have the flag&#39;</span>:
+</span></span><span style="display:flex;"><span>                print(<span style="color:#e6db74">&#34;Congrats </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">%</span> username)
+</span></span><span style="display:flex;"><span>                print(<span style="color:#e6db74">&#34;Here is your flag: </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">%</span> flag)
+</span></span><span style="display:flex;"><span>            print(pt)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">continue</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> choice <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;3&#39;</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">break</span>
 </span></span></code></pre></div><p>As you can see, the service does not allow encrypting messages that contain &ldquo;flag&rdquo; as a substring. Also, when we choose to decrypt data, the service checks if the decrypted data is equal to &ldquo;may i please have the flag&rdquo;
-and gives the flag only if it is true.</p><p>Clearly, we will have to bypass the above service:</p><ol><li>Encrypt some data that does not contain &ldquo;flag&rdquo;, let us say &ldquo;may i please have the flak&rdquo;</li><li>Flip some bytes and get ciphertext of &ldquo;may i please have the flag&rdquo;</li><li>Send ciphertext obtained in step-(2) for decryption and get the actual flag</li></ol><p>If what we just described in the above steps is correct, then a simple <a href=https://github.com/ashutosh1206/Crypton/tree/master/Block-Cipher/Attack-CTR-Bit-Flipping>CTR Bit Flipping attack</a> would be
-sufficient to get the flag.</p><p>But things are not easy as they seem to be. Let us look at the encryption and decryption functions:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>encrypt</span>(msg):
-</span></span><span style=display:flex><span>    nonce <span style=color:#f92672>=</span> sessionid <span style=color:#f92672>+</span> Random<span style=color:#f92672>.</span>get_random_bytes(<span style=color:#ae81ff>2</span>)
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>assert</span> len(nonce) <span style=color:#f92672>==</span> <span style=color:#ae81ff>12</span>
-</span></span><span style=display:flex><span>    ctr <span style=color:#f92672>=</span> Counter<span style=color:#f92672>.</span>new(<span style=color:#ae81ff>32</span>, prefix<span style=color:#f92672>=</span>nonce)
-</span></span><span style=display:flex><span>    cipher <span style=color:#f92672>=</span> AES<span style=color:#f92672>.</span>new(key, AES<span style=color:#f92672>.</span>MODE_CTR, counter<span style=color:#f92672>=</span>ctr)
-</span></span><span style=display:flex><span>    ciphertext <span style=color:#f92672>=</span> cipher<span style=color:#f92672>.</span>encrypt(msg)
-</span></span><span style=display:flex><span>    tag <span style=color:#f92672>=</span> GHASH(ciphertext, nonce)
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> (nonce, ciphertext, tag)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>decrypt</span>(nonce, ciphertext, tag):
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>assert</span> len(nonce) <span style=color:#f92672>==</span> <span style=color:#ae81ff>12</span>
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>assert</span> GHASH(ciphertext, nonce) <span style=color:#f92672>==</span> tag
-</span></span><span style=display:flex><span>    ctr <span style=color:#f92672>=</span> Counter<span style=color:#f92672>.</span>new(<span style=color:#ae81ff>32</span>, prefix<span style=color:#f92672>=</span>nonce)
-</span></span><span style=display:flex><span>    cipher <span style=color:#f92672>=</span> AES<span style=color:#f92672>.</span>new(key, AES<span style=color:#f92672>.</span>MODE_CTR, counter<span style=color:#f92672>=</span>ctr)
-</span></span><span style=display:flex><span>    plaintext <span style=color:#f92672>=</span> cipher<span style=color:#f92672>.</span>decrypt(ciphertext)
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> plaintext
-</span></span></code></pre></div><p>As you can see, <code>encrypt()</code> not only encrypts our plaintext, but also creates an authentication tag - <code>tag</code> that happens to be a mitigation to CTR Bit Flipping Attack. Also, <code>decrypt()</code> function verifies if the authentication tag calculated from the ciphertext and authentication tag - <code>tag</code> given as input, match.</p><p>An authentication tag is basically a string assigned to a plaintext/ciphertext as a unique identifier. This means that if we flip bytes, we will not have the authentication tag of the corresponding new flipped data and we won&rsquo;t be able to get the flag.</p><blockquote><p><strong>Note</strong>: If you want to read more about Authenticated Encryption, you can read it <a href=https://github.com/ashutosh1206/Crypton/tree/master/Authenticated-Encryption>from Crypton</a>. In case you only want to read about Message Authentication Code (MACs), you can read about them <a href=https://github.com/ashutosh1206/Crypton/tree/master/Message-Authentication-Code>from Crypton here</a>.</p></blockquote><p>This immediately shifts our target to the function that creates an authentication tag, and search for vulnerabilities that can be exploited, so that we can bypass the authentication.</p><h2 id=analysis-of-ghash>Analysis of GHASH<a hidden class=anchor aria-hidden=true href=#analysis-of-ghash>#</a></h2><p>Function for generating authentication tag - <code>GHASH()</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>GHASH</span>(ciphertext, nonce):
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>assert</span> len(nonce) <span style=color:#f92672>==</span> <span style=color:#ae81ff>12</span>
-</span></span><span style=display:flex><span>    c <span style=color:#f92672>=</span> AES<span style=color:#f92672>.</span>new(key, AES<span style=color:#f92672>.</span>MODE_ECB)<span style=color:#f92672>.</span>encrypt(nonce <span style=color:#f92672>+</span> bytes(<span style=color:#ae81ff>3</span>) <span style=color:#f92672>+</span> <span style=color:#e6db74>b</span><span style=color:#e6db74>&#39;</span><span style=color:#ae81ff>\x01</span><span style=color:#e6db74>&#39;</span>)
-</span></span><span style=display:flex><span>    blocks <span style=color:#f92672>=</span> group(ciphertext)
-</span></span><span style=display:flex><span>    tag <span style=color:#f92672>=</span> bytes_to_long(c)
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> i, b <span style=color:#f92672>in</span> enumerate(blocks):
-</span></span><span style=display:flex><span>        tag <span style=color:#f92672>+=</span> (bytes_to_long(b) <span style=color:#f92672>*</span> pow(bytes_to_long(H), i <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span>, n)) <span style=color:#f92672>%</span> n
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> long_to_bytes(tag)
-</span></span></code></pre></div><pre tabindex=0><code>`nonce` : 10 most significant bytes of sha256 of username + 2 random bytes    
+and gives the flag only if it is true.</p>
+<p>Clearly, we will have to bypass the above service:</p>
+<ol>
+<li>Encrypt some data that does not contain &ldquo;flag&rdquo;, let us say &ldquo;may i please have the flak&rdquo;</li>
+<li>Flip some bytes and get ciphertext of &ldquo;may i please have the flag&rdquo;</li>
+<li>Send ciphertext obtained in step-(2) for decryption and get the actual flag</li>
+</ol>
+<p>If what we just described in the above steps is correct, then a simple <a href="https://github.com/ashutosh1206/Crypton/tree/master/Block-Cipher/Attack-CTR-Bit-Flipping">CTR Bit Flipping attack</a> would be
+sufficient to get the flag.</p>
+<p>But things are not easy as they seem to be. Let us look at the encryption and decryption functions:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">encrypt</span>(msg):
+</span></span><span style="display:flex;"><span>    nonce <span style="color:#f92672">=</span> sessionid <span style="color:#f92672">+</span> Random<span style="color:#f92672">.</span>get_random_bytes(<span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">assert</span> len(nonce) <span style="color:#f92672">==</span> <span style="color:#ae81ff">12</span>
+</span></span><span style="display:flex;"><span>    ctr <span style="color:#f92672">=</span> Counter<span style="color:#f92672">.</span>new(<span style="color:#ae81ff">32</span>, prefix<span style="color:#f92672">=</span>nonce)
+</span></span><span style="display:flex;"><span>    cipher <span style="color:#f92672">=</span> AES<span style="color:#f92672">.</span>new(key, AES<span style="color:#f92672">.</span>MODE_CTR, counter<span style="color:#f92672">=</span>ctr)
+</span></span><span style="display:flex;"><span>    ciphertext <span style="color:#f92672">=</span> cipher<span style="color:#f92672">.</span>encrypt(msg)
+</span></span><span style="display:flex;"><span>    tag <span style="color:#f92672">=</span> GHASH(ciphertext, nonce)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> (nonce, ciphertext, tag)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">decrypt</span>(nonce, ciphertext, tag):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">assert</span> len(nonce) <span style="color:#f92672">==</span> <span style="color:#ae81ff">12</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">assert</span> GHASH(ciphertext, nonce) <span style="color:#f92672">==</span> tag
+</span></span><span style="display:flex;"><span>    ctr <span style="color:#f92672">=</span> Counter<span style="color:#f92672">.</span>new(<span style="color:#ae81ff">32</span>, prefix<span style="color:#f92672">=</span>nonce)
+</span></span><span style="display:flex;"><span>    cipher <span style="color:#f92672">=</span> AES<span style="color:#f92672">.</span>new(key, AES<span style="color:#f92672">.</span>MODE_CTR, counter<span style="color:#f92672">=</span>ctr)
+</span></span><span style="display:flex;"><span>    plaintext <span style="color:#f92672">=</span> cipher<span style="color:#f92672">.</span>decrypt(ciphertext)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> plaintext
+</span></span></code></pre></div><p>As you can see, <code>encrypt()</code> not only encrypts our plaintext, but also creates an authentication tag - <code>tag</code> that happens to be a mitigation to CTR Bit Flipping Attack. Also, <code>decrypt()</code> function verifies if the authentication tag calculated from the ciphertext and authentication tag - <code>tag</code> given as input, match.</p>
+<p>An authentication tag is basically a string assigned to a plaintext/ciphertext as a unique identifier. This means that if we flip bytes, we will not have the authentication tag of the corresponding new flipped data and we won&rsquo;t be able to get the flag.</p>
+<blockquote>
+<p><strong>Note</strong>: If you want to read more about Authenticated Encryption, you can read it <a href="https://github.com/ashutosh1206/Crypton/tree/master/Authenticated-Encryption">from Crypton</a>. In case you only want to read about Message Authentication Code (MACs), you can read about them <a href="https://github.com/ashutosh1206/Crypton/tree/master/Message-Authentication-Code">from Crypton here</a>.</p>
+</blockquote>
+<p>This immediately shifts our target to the function that creates an authentication tag, and search for vulnerabilities that can be exploited, so that we can bypass the authentication.</p>
+<h2 id="analysis-of-ghash">Analysis of GHASH<a hidden class="anchor" aria-hidden="true" href="#analysis-of-ghash">#</a></h2>
+<p>Function for generating authentication tag - <code>GHASH()</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">GHASH</span>(ciphertext, nonce):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">assert</span> len(nonce) <span style="color:#f92672">==</span> <span style="color:#ae81ff">12</span>
+</span></span><span style="display:flex;"><span>    c <span style="color:#f92672">=</span> AES<span style="color:#f92672">.</span>new(key, AES<span style="color:#f92672">.</span>MODE_ECB)<span style="color:#f92672">.</span>encrypt(nonce <span style="color:#f92672">+</span> bytes(<span style="color:#ae81ff">3</span>) <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x01</span><span style="color:#e6db74">&#39;</span>)
+</span></span><span style="display:flex;"><span>    blocks <span style="color:#f92672">=</span> group(ciphertext)
+</span></span><span style="display:flex;"><span>    tag <span style="color:#f92672">=</span> bytes_to_long(c)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i, b <span style="color:#f92672">in</span> enumerate(blocks):
+</span></span><span style="display:flex;"><span>        tag <span style="color:#f92672">+=</span> (bytes_to_long(b) <span style="color:#f92672">*</span> pow(bytes_to_long(H), i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>, n)) <span style="color:#f92672">%</span> n
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> long_to_bytes(tag)
+</span></span></code></pre></div><pre tabindex="0"><code>`nonce` : 10 most significant bytes of sha256 of username + 2 random bytes    
 `c`     : AES ECB encryption of (nonce + &#34;\x00\x00\x00\x01&#34;)  
 `b`     : ciphertext block in each iteration (16 bytes)
-</code></pre><p>Authentication tag - <code>tag</code> for a <code>k</code>-block plaintext is generated as:<br>$$ tag = c + ((b_1 *(H^1;%;n));%;n) + ((b_2 *(H^2;%;n));%;n) + &mldr; + ((b_k *(H^k;%;n));%;n) $$</p><p>For a <code>1</code>-block ciphertext, we can write:<br>$$ tag = c+((b_1 + (H^1;%;n));%;n) $$</p><p>Thus, if we have <code>c</code> for every session, we can calculate secret value <code>H</code> as:
-$$ (tag-c)*(b^{-1}\mod n) \equiv H^1 \mod n $$</p><h2 id=retrieving-c---unintended-approach>Retrieving <code>c</code> - unintended approach<a hidden class=anchor aria-hidden=true href=#retrieving-c---unintended-approach>#</a></h2><p>We know that <code>c</code> is AES ECB encryption of (nonce + &ldquo;\x00\x00\x00\x01&rdquo;)</p><p>We observe that:
-AES ECB encryption of (nonce + &ldquo;\x00\x00\x00\x01&rdquo;) is the same as &ldquo;z&rdquo;*16 (one block containing of <code>z</code>&rsquo;s - 16 bytes) XORed with AES CTR encryption of &ldquo;z&rdquo;*16 (one block of <code>z</code>&rsquo;s - 16 bytes).</p><p>That is:<br><code>(AES_ECB_enc(nonce + "\x00\x00\x00\x01"))</code> == <code>(("zzzzzzzzzzzzzzzz") xor (AES_CTR_enc("zzzzzzzzzzzzzzzz")))</code>.</p><p>To get <code>c</code>, we simply send &ldquo;z&rdquo;*16 to the service for encryption and xor the result with &ldquo;z&rdquo;*16 to get <code>c</code></p><h2 id=getting-the-flag>Getting the flag<a hidden class=anchor aria-hidden=true href=#getting-the-flag>#</a></h2><p>Now that we know how to calculate <code>c</code>, we can get the flag with the following steps:</p><ol><li>Encrypt some data that does not contain &ldquo;flag&rdquo;, let us say &ldquo;may i please have the flak&rdquo;</li><li>Flip some bytes and get ciphertext of &ldquo;may i please have the flag&rdquo;</li><li>Calculate <code>H</code>, get authentication tag for &ldquo;may i please have the flag&rdquo;</li><li>Send ciphertext obtained in (2) for decryption, along with authentication tag obtained in (3) and get the actual flag!</li></ol><p>Full exploit:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>from</span> pwn <span style=color:#f92672>import</span> <span style=color:#f92672>*</span>
-</span></span><span style=display:flex><span><span style=color:#f92672>from</span> Crypto.Cipher <span style=color:#f92672>import</span> AES
-</span></span><span style=display:flex><span><span style=color:#f92672>from</span> Crypto.Util.number <span style=color:#f92672>import</span> <span style=color:#f92672>*</span>
-</span></span><span style=display:flex><span><span style=color:#f92672>import</span> hashlib
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>n <span style=color:#f92672>=</span> <span style=color:#ae81ff>327989969870981036659934487747327553919</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>_encrypt</span>(plaintext):
-</span></span><span style=display:flex><span>    r<span style=color:#f92672>.</span>recvuntil(<span style=color:#e6db74>&#34;&gt; &#34;</span>)
-</span></span><span style=display:flex><span>    r<span style=color:#f92672>.</span>sendline(<span style=color:#e6db74>&#34;1&#34;</span>)
-</span></span><span style=display:flex><span>    r<span style=color:#f92672>.</span>recvuntil(<span style=color:#e6db74>&#34;encrypted: &#34;</span>)
-</span></span><span style=display:flex><span>    r<span style=color:#f92672>.</span>sendline(plaintext)
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> r<span style=color:#f92672>.</span>recvline()<span style=color:#f92672>.</span>strip()
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>group</span>(a, length<span style=color:#f92672>=</span><span style=color:#ae81ff>16</span>):
-</span></span><span style=display:flex><span>    count <span style=color:#f92672>=</span> len(a) <span style=color:#f92672>//</span> length
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> len(a) <span style=color:#f92672>%</span> length <span style=color:#f92672>!=</span> <span style=color:#ae81ff>0</span>:
-</span></span><span style=display:flex><span>        count <span style=color:#f92672>+=</span> <span style=color:#ae81ff>1</span>
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> [a[i <span style=color:#f92672>*</span> length: (i <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span>) <span style=color:#f92672>*</span> length] <span style=color:#66d9ef>for</span> i <span style=color:#f92672>in</span> range(count)]
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>GHASH</span>(ciphertext, nonce, c, H):
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>assert</span> len(nonce) <span style=color:#f92672>==</span> <span style=color:#ae81ff>12</span>
-</span></span><span style=display:flex><span>    blocks <span style=color:#f92672>=</span> group(ciphertext)
-</span></span><span style=display:flex><span>    tag <span style=color:#f92672>=</span> bytes_to_long(c)
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> i, b <span style=color:#f92672>in</span> enumerate(blocks):
-</span></span><span style=display:flex><span>        tag <span style=color:#f92672>+=</span> (bytes_to_long(b) <span style=color:#f92672>*</span> pow(H, i <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span>, n)) <span style=color:#f92672>%</span> n
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> long_to_bytes(tag)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>xor</span>(a, b):
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>assert</span> len(a) <span style=color:#f92672>==</span> len(b)
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#e6db74>&#39;&#39;</span><span style=color:#f92672>.</span>join([chr(ord(ai)<span style=color:#f92672>^</span>ord(bi)) <span style=color:#66d9ef>for</span> ai, bi <span style=color:#f92672>in</span> zip(a,b)])
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>r <span style=color:#f92672>=</span> remote(<span style=color:#e6db74>&#34;crypto.ctf.nullcon.net&#34;</span>,<span style=color:#e6db74>&#34;5000&#34;</span>)
-</span></span><span style=display:flex><span>r<span style=color:#f92672>.</span>recvuntil(<span style=color:#e6db74>&#34;username: &#34;</span>)
-</span></span><span style=display:flex><span>r<span style=color:#f92672>.</span>sendline(<span style=color:#e6db74>&#34;test&#34;</span>)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Code for getting the authentication tag</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># nonce, ciphertext, tag = _encrypt(&#34;z&#34;*16).split(&#34;:&#34;)</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># nonce = nonce.decode(&#34;hex&#34;)</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># ciphertext = ciphertext.decode(&#34;hex&#34;)</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># tag = tag.decode(&#34;hex&#34;)</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># assert GCD(bytes_to_long(&#34;z&#34;*16), n) == 1</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># assert bytes_to_long(&#34;z&#34;*16) &lt; n</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># assert len(ciphertext) == 16</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># c = xor(ciphertext, &#34;z&#34;*16)</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># b_inv = inverse(bytes_to_long(&#34;z&#34;*16), n)</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># H = ((bytes_to_long(tag) - bytes_to_long(c)) * b_inv) % n</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># print H</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># print type(H)</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># print GHASH(ciphertext, nonce, c, H)</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># print tag</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>H <span style=color:#f92672>=</span> <span style=color:#ae81ff>1100811469918366171773680758187695733</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>_plaintext <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;may i please have the flak&#34;</span>
-</span></span><span style=display:flex><span>_nonce, _ciphertext, _tag <span style=color:#f92672>=</span> _encrypt(_plaintext)<span style=color:#f92672>.</span>split(<span style=color:#e6db74>&#34;:&#34;</span>)
-</span></span><span style=display:flex><span>_nonce <span style=color:#f92672>=</span> _nonce<span style=color:#f92672>.</span>decode(<span style=color:#e6db74>&#34;hex&#34;</span>)
-</span></span><span style=display:flex><span>_ciphertext <span style=color:#f92672>=</span> _ciphertext<span style=color:#f92672>.</span>decode(<span style=color:#e6db74>&#34;hex&#34;</span>)
-</span></span><span style=display:flex><span>_tag <span style=color:#f92672>=</span> _tag<span style=color:#f92672>.</span>decode(<span style=color:#e6db74>&#34;hex&#34;</span>)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>_c <span style=color:#f92672>=</span> xor(_ciphertext[:<span style=color:#ae81ff>16</span>], _plaintext[:<span style=color:#ae81ff>16</span>])
-</span></span><span style=display:flex><span>_ciphertext <span style=color:#f92672>=</span> _ciphertext[:<span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>] <span style=color:#f92672>+</span> chr(ord(_ciphertext[<span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>]) <span style=color:#f92672>^</span> ord(<span style=color:#e6db74>&#39;k&#39;</span>) <span style=color:#f92672>^</span> ord(<span style=color:#e6db74>&#39;g&#39;</span>))
-</span></span><span style=display:flex><span>__tag <span style=color:#f92672>=</span> GHASH(_ciphertext, _nonce, _c, H)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>_ciphertext <span style=color:#f92672>=</span> _ciphertext<span style=color:#f92672>.</span>encode(<span style=color:#e6db74>&#34;hex&#34;</span>)
-</span></span><span style=display:flex><span>__tag <span style=color:#f92672>=</span> __tag<span style=color:#f92672>.</span>encode(<span style=color:#e6db74>&#34;hex&#34;</span>)
-</span></span><span style=display:flex><span>_nonce <span style=color:#f92672>=</span> _nonce<span style=color:#f92672>.</span>encode(<span style=color:#e6db74>&#34;hex&#34;</span>)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>r<span style=color:#f92672>.</span>recvuntil(<span style=color:#e6db74>&#34;&gt; &#34;</span>)
-</span></span><span style=display:flex><span>r<span style=color:#f92672>.</span>sendline(<span style=color:#e6db74>&#34;2&#34;</span>)
-</span></span><span style=display:flex><span>r<span style=color:#f92672>.</span>recvuntil(<span style=color:#e6db74>&#34;decrypted: &#34;</span>)
-</span></span><span style=display:flex><span>r<span style=color:#f92672>.</span>sendline(_nonce <span style=color:#f92672>+</span> <span style=color:#e6db74>&#34;:&#34;</span> <span style=color:#f92672>+</span> _ciphertext <span style=color:#f92672>+</span> <span style=color:#e6db74>&#34;:&#34;</span> <span style=color:#f92672>+</span> __tag)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>print r<span style=color:#f92672>.</span>recvline()
-</span></span><span style=display:flex><span>print r<span style=color:#f92672>.</span>recvline()
-</span></span></code></pre></div><p>Running this script gave us the flag: <strong>hackim19{forb1dd3n_made_e4sy_a7gh12}</strong></p></div><footer class=post-footer><ul class=post-tags><li><a href=https://ashutosh1206.github.io/tags/ctr-bit-flippping/>CTR-Bit-Flippping</a></li><li><a href=https://ashutosh1206.github.io/tags/gcm/>GCM</a></li></ul></footer></article></main><footer class=footer><span>&copy; 2023 <a href=https://ashutosh1206.github.io/>Ashutosh Ahelleya</a></span>
-<span>Powered by
-<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
-        <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg></a><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script></body></html>
+</code></pre><p>Authentication tag - <code>tag</code> for a <code>k</code>-block plaintext is generated as:<br>
+$$ tag = c + ((b_1 *(H^1;%;n));%;n) + ((b_2 *(H^2;%;n));%;n) + &hellip; + ((b_k *(H^k;%;n));%;n) $$</p>
+<p>For a <code>1</code>-block ciphertext, we can write:<br>
+$$ tag = c+((b_1 + (H^1;%;n));%;n) $$</p>
+<p>Thus, if we have <code>c</code> for every session, we can calculate secret value <code>H</code> as:
+$$ (tag-c)*(b^{-1}\mod n) \equiv H^1 \mod n $$</p>
+<h2 id="retrieving-c---unintended-approach">Retrieving <code>c</code> - unintended approach<a hidden class="anchor" aria-hidden="true" href="#retrieving-c---unintended-approach">#</a></h2>
+<p>We know that <code>c</code> is AES ECB encryption of (nonce + &ldquo;\x00\x00\x00\x01&rdquo;)</p>
+<p>We observe that:
+AES ECB encryption of (nonce + &ldquo;\x00\x00\x00\x01&rdquo;) is the same as &ldquo;z&rdquo;*16 (one block containing of <code>z</code>&rsquo;s - 16 bytes) XORed with AES CTR encryption of &ldquo;z&rdquo;*16 (one block of <code>z</code>&rsquo;s - 16 bytes).</p>
+<p>That is:<br>
+<code>(AES_ECB_enc(nonce + &quot;\x00\x00\x00\x01&quot;))</code> ==  <code>((&quot;zzzzzzzzzzzzzzzz&quot;) xor (AES_CTR_enc(&quot;zzzzzzzzzzzzzzzz&quot;)))</code>.</p>
+<p>To get <code>c</code>, we simply send &ldquo;z&rdquo;*16 to the service for encryption and xor the result with &ldquo;z&rdquo;*16 to get <code>c</code></p>
+<h2 id="getting-the-flag">Getting the flag<a hidden class="anchor" aria-hidden="true" href="#getting-the-flag">#</a></h2>
+<p>Now that we know how to calculate <code>c</code>, we can get the flag with the following steps:</p>
+<ol>
+<li>Encrypt some data that does not contain &ldquo;flag&rdquo;, let us say &ldquo;may i please have the flak&rdquo;</li>
+<li>Flip some bytes and get ciphertext of &ldquo;may i please have the flag&rdquo;</li>
+<li>Calculate <code>H</code>, get authentication tag for &ldquo;may i please have the flag&rdquo;</li>
+<li>Send ciphertext obtained in (2) for decryption, along with authentication tag obtained in (3) and get the actual flag!</li>
+</ol>
+<p>Full exploit:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> Crypto.Cipher <span style="color:#f92672">import</span> AES
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> Crypto.Util.number <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> hashlib
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>n <span style="color:#f92672">=</span> <span style="color:#ae81ff">327989969870981036659934487747327553919</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_encrypt</span>(plaintext):
+</span></span><span style="display:flex;"><span>    r<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">&#34;&gt; &#34;</span>)
+</span></span><span style="display:flex;"><span>    r<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">&#34;1&#34;</span>)
+</span></span><span style="display:flex;"><span>    r<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">&#34;encrypted: &#34;</span>)
+</span></span><span style="display:flex;"><span>    r<span style="color:#f92672">.</span>sendline(plaintext)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> r<span style="color:#f92672">.</span>recvline()<span style="color:#f92672">.</span>strip()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">group</span>(a, length<span style="color:#f92672">=</span><span style="color:#ae81ff">16</span>):
+</span></span><span style="display:flex;"><span>    count <span style="color:#f92672">=</span> len(a) <span style="color:#f92672">//</span> length
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> len(a) <span style="color:#f92672">%</span> length <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>        count <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> [a[i <span style="color:#f92672">*</span> length: (i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">*</span> length] <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(count)]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">GHASH</span>(ciphertext, nonce, c, H):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">assert</span> len(nonce) <span style="color:#f92672">==</span> <span style="color:#ae81ff">12</span>
+</span></span><span style="display:flex;"><span>    blocks <span style="color:#f92672">=</span> group(ciphertext)
+</span></span><span style="display:flex;"><span>    tag <span style="color:#f92672">=</span> bytes_to_long(c)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i, b <span style="color:#f92672">in</span> enumerate(blocks):
+</span></span><span style="display:flex;"><span>        tag <span style="color:#f92672">+=</span> (bytes_to_long(b) <span style="color:#f92672">*</span> pow(H, i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>, n)) <span style="color:#f92672">%</span> n
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> long_to_bytes(tag)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">xor</span>(a, b):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">assert</span> len(a) <span style="color:#f92672">==</span> len(b)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#39;&#39;</span><span style="color:#f92672">.</span>join([chr(ord(ai)<span style="color:#f92672">^</span>ord(bi)) <span style="color:#66d9ef">for</span> ai, bi <span style="color:#f92672">in</span> zip(a,b)])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>r <span style="color:#f92672">=</span> remote(<span style="color:#e6db74">&#34;crypto.ctf.nullcon.net&#34;</span>,<span style="color:#e6db74">&#34;5000&#34;</span>)
+</span></span><span style="display:flex;"><span>r<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">&#34;username: &#34;</span>)
+</span></span><span style="display:flex;"><span>r<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">&#34;test&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Code for getting the authentication tag</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># nonce, ciphertext, tag = _encrypt(&#34;z&#34;*16).split(&#34;:&#34;)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># nonce = nonce.decode(&#34;hex&#34;)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ciphertext = ciphertext.decode(&#34;hex&#34;)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># tag = tag.decode(&#34;hex&#34;)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># assert GCD(bytes_to_long(&#34;z&#34;*16), n) == 1</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># assert bytes_to_long(&#34;z&#34;*16) &lt; n</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># assert len(ciphertext) == 16</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># c = xor(ciphertext, &#34;z&#34;*16)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># b_inv = inverse(bytes_to_long(&#34;z&#34;*16), n)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># H = ((bytes_to_long(tag) - bytes_to_long(c)) * b_inv) % n</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># print H</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># print type(H)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># print GHASH(ciphertext, nonce, c, H)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># print tag</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>H <span style="color:#f92672">=</span> <span style="color:#ae81ff">1100811469918366171773680758187695733</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>_plaintext <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;may i please have the flak&#34;</span>
+</span></span><span style="display:flex;"><span>_nonce, _ciphertext, _tag <span style="color:#f92672">=</span> _encrypt(_plaintext)<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#34;:&#34;</span>)
+</span></span><span style="display:flex;"><span>_nonce <span style="color:#f92672">=</span> _nonce<span style="color:#f92672">.</span>decode(<span style="color:#e6db74">&#34;hex&#34;</span>)
+</span></span><span style="display:flex;"><span>_ciphertext <span style="color:#f92672">=</span> _ciphertext<span style="color:#f92672">.</span>decode(<span style="color:#e6db74">&#34;hex&#34;</span>)
+</span></span><span style="display:flex;"><span>_tag <span style="color:#f92672">=</span> _tag<span style="color:#f92672">.</span>decode(<span style="color:#e6db74">&#34;hex&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>_c <span style="color:#f92672">=</span> xor(_ciphertext[:<span style="color:#ae81ff">16</span>], _plaintext[:<span style="color:#ae81ff">16</span>])
+</span></span><span style="display:flex;"><span>_ciphertext <span style="color:#f92672">=</span> _ciphertext[:<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>] <span style="color:#f92672">+</span> chr(ord(_ciphertext[<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]) <span style="color:#f92672">^</span> ord(<span style="color:#e6db74">&#39;k&#39;</span>) <span style="color:#f92672">^</span> ord(<span style="color:#e6db74">&#39;g&#39;</span>))
+</span></span><span style="display:flex;"><span>__tag <span style="color:#f92672">=</span> GHASH(_ciphertext, _nonce, _c, H)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>_ciphertext <span style="color:#f92672">=</span> _ciphertext<span style="color:#f92672">.</span>encode(<span style="color:#e6db74">&#34;hex&#34;</span>)
+</span></span><span style="display:flex;"><span>__tag <span style="color:#f92672">=</span> __tag<span style="color:#f92672">.</span>encode(<span style="color:#e6db74">&#34;hex&#34;</span>)
+</span></span><span style="display:flex;"><span>_nonce <span style="color:#f92672">=</span> _nonce<span style="color:#f92672">.</span>encode(<span style="color:#e6db74">&#34;hex&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>r<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">&#34;&gt; &#34;</span>)
+</span></span><span style="display:flex;"><span>r<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">&#34;2&#34;</span>)
+</span></span><span style="display:flex;"><span>r<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">&#34;decrypted: &#34;</span>)
+</span></span><span style="display:flex;"><span>r<span style="color:#f92672">.</span>sendline(_nonce <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;:&#34;</span> <span style="color:#f92672">+</span> _ciphertext <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;:&#34;</span> <span style="color:#f92672">+</span> __tag)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print r<span style="color:#f92672">.</span>recvline()
+</span></span><span style="display:flex;"><span>print r<span style="color:#f92672">.</span>recvline()
+</span></span></code></pre></div><p>Running this script gave us the flag: <strong>hackim19{forb1dd3n_made_e4sy_a7gh12}</strong></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://ashutosh1206.github.io/tags/ctr-bit-flippping/">CTR-Bit-Flippping</a></li>
+      <li><a href="https://ashutosh1206.github.io/tags/gcm/">GCM</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://ashutosh1206.github.io/">Ash&#39;s blog</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

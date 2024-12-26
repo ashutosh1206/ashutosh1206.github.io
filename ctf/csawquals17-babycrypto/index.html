@@ -1,19 +1,332 @@
-<!doctype html><html lang=en dir=auto><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>BabyCrypto - CSAW CTF Quals | Ashutosh Ahelleya</title><meta name=keywords content="BlockCipher,ECB-byte-at-a-time"><meta name=description content="This challenge was a bit overrated, there were no complications in the challenge, as you will see when we discuss the writeup.
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>BabyCrypto - CSAW CTF Quals | Ash&#39;s blog</title>
+<meta name="keywords" content="BlockCipher, ECB-byte-at-a-time">
+<meta name="description" content="This challenge was a bit overrated, there were no complications in the challenge, as you will see when we discuss the writeup.
 In this challenge, we are supposed to get the flag which is present in the server.
 The server has an input-output program running, which gives AES-ECB encryption of the input given to it. The encryption takes place as follows:
-Takes the input from the user Appends secret (which is the flag here) to the input Pads to make it a multiple of blocksize Encrypts the resultant string using AES in ECB mode Gives the ciphertext as the output We are only in control of the input to the server."><meta name=author content="Ashutosh Ahelleya"><link rel=canonical href=https://ashutosh1206.github.io/ctf/csawquals17-babycrypto/><link crossorigin=anonymous href=/assets/css/stylesheet.bccfefac377bc340f06c260aed1bddf49a4354816d7c570d6aac75a997986c95.css integrity="sha256-vM/vrDd7w0DwbCYK7Rvd9JpDVIFtfFcNaqx1qZeYbJU=" rel="preload stylesheet" as=style><script defer crossorigin=anonymous src=/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG+9vmJ0cTS+ovo0FeA=" onload=hljs.initHighlightingOnLoad()></script>
-<link rel=icon href=https://ashutosh1206.github.io/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://ashutosh1206.github.io/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://ashutosh1206.github.io/favicon-32x32.png><link rel=apple-touch-icon href=https://ashutosh1206.github.io/apple-touch-icon.png><link rel=mask-icon href=https://ashutosh1206.github.io/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--hljs-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css integrity=sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0 crossorigin=anonymous><script defer src=https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js integrity=sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4 crossorigin=anonymous></script>
-<script defer src=https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js integrity=sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05 crossorigin=anonymous onload=renderMathInElement(document.body)></script><meta property="og:title" content="BabyCrypto - CSAW CTF Quals"><meta property="og:description" content="This challenge was a bit overrated, there were no complications in the challenge, as you will see when we discuss the writeup.
+Takes the input from the user Appends secret (which is the flag here) to the input Pads to make it a multiple of blocksize Encrypts the resultant string using AES in ECB mode Gives the ciphertext as the output We are only in control of the input to the server.">
+<meta name="author" content="Ashutosh Ahelleya">
+<link rel="canonical" href="https://ashutosh1206.github.io/ctf/csawquals17-babycrypto/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.bccfefac377bc340f06c260aed1bddf49a4354816d7c570d6aac75a997986c95.css" integrity="sha256-vM/vrDd7w0DwbCYK7Rvd9JpDVIFtfFcNaqx1qZeYbJU=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://ashutosh1206.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://ashutosh1206.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://ashutosh1206.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://ashutosh1206.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://ashutosh1206.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+<meta property="og:title" content="BabyCrypto - CSAW CTF Quals" />
+<meta property="og:description" content="This challenge was a bit overrated, there were no complications in the challenge, as you will see when we discuss the writeup.
 In this challenge, we are supposed to get the flag which is present in the server.
 The server has an input-output program running, which gives AES-ECB encryption of the input given to it. The encryption takes place as follows:
-Takes the input from the user Appends secret (which is the flag here) to the input Pads to make it a multiple of blocksize Encrypts the resultant string using AES in ECB mode Gives the ciphertext as the output We are only in control of the input to the server."><meta property="og:type" content="article"><meta property="og:url" content="https://ashutosh1206.github.io/ctf/csawquals17-babycrypto/"><meta property="article:section" content="ctf"><meta property="article:published_time" content="2017-12-05T00:00:00+00:00"><meta property="article:modified_time" content="2017-12-05T00:00:00+00:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="BabyCrypto - CSAW CTF Quals"><meta name=twitter:description content="This challenge was a bit overrated, there were no complications in the challenge, as you will see when we discuss the writeup.
+Takes the input from the user Appends secret (which is the flag here) to the input Pads to make it a multiple of blocksize Encrypts the resultant string using AES in ECB mode Gives the ciphertext as the output We are only in control of the input to the server." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://ashutosh1206.github.io/ctf/csawquals17-babycrypto/" /><meta property="article:section" content="ctf" />
+<meta property="article:published_time" content="2017-12-05T00:00:00+00:00" />
+<meta property="article:modified_time" content="2017-12-05T00:00:00+00:00" /><meta property="og:site_name" content="Ash&#39;s blog" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="BabyCrypto - CSAW CTF Quals"/>
+<meta name="twitter:description" content="This challenge was a bit overrated, there were no complications in the challenge, as you will see when we discuss the writeup.
 In this challenge, we are supposed to get the flag which is present in the server.
 The server has an input-output program running, which gives AES-ECB encryption of the input given to it. The encryption takes place as follows:
-Takes the input from the user Appends secret (which is the flag here) to the input Pads to make it a multiple of blocksize Encrypts the resultant string using AES in ECB mode Gives the ciphertext as the output We are only in control of the input to the server."><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Ctfs","item":"https://ashutosh1206.github.io/ctf/"},{"@type":"ListItem","position":2,"name":"BabyCrypto - CSAW CTF Quals","item":"https://ashutosh1206.github.io/ctf/csawquals17-babycrypto/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"BabyCrypto - CSAW CTF Quals","name":"BabyCrypto - CSAW CTF Quals","description":"This challenge was a bit overrated, there were no complications in the challenge, as you will see when we discuss the writeup.\nIn this challenge, we are supposed to get the flag which is present in the server.\nThe server has an input-output program running, which gives AES-ECB encryption of the input given to it. The encryption takes place as follows:\nTakes the input from the user Appends secret (which is the flag here) to the input Pads to make it a multiple of blocksize Encrypts the resultant string using AES in ECB mode Gives the ciphertext as the output We are only in control of the input to the server.","keywords":["BlockCipher","ECB-byte-at-a-time"],"articleBody":"This challenge was a bit overrated, there were no complications in the challenge, as you will see when we discuss the writeup.\nIn this challenge, we are supposed to get the flag which is present in the server.\nThe server has an input-output program running, which gives AES-ECB encryption of the input given to it. The encryption takes place as follows:\nTakes the input from the user Appends secret (which is the flag here) to the input Pads to make it a multiple of blocksize Encrypts the resultant string using AES in ECB mode Gives the ciphertext as the output We are only in control of the input to the server. Using the input that we give, we need to get the secret.\nLet us have a look at how the blocks are divided when we send an input of size equal to the blocksize = 16:\n1st Block | 2nd Block | 3rd Block | ... Input | Secret | secret+padding ... The first block contains 16 bytes of our input, which is known to us.\nWhen we send an input of size one less than the blocksize, then the block division is as follows:\n1st Block | 2nd Block | 3rd Block | ... x | Secret[1:17] | secret[17:]+padding ... We can apply ECB Byte at a time attack in such a scenario about which you can read here:\nhttps://github.com/ashutosh1206/Crypton/tree/master/Block-Cipher/Attack-ECB-Byte-at-a-Time http://cryptopals.com/sets/2/challenges/12 Here x = input + Secret[0] and let the output in this case be c1.\nWe know the first 15 bytes of block #1, we can simply brute force 256 possibilities of the 16th byte in block #1 by checking the corresponding ciphertexts of block #1.\nFor the second byte we send 14 random bytes + 1 byte of secret(we got from previous step) as the input to the server and then brute force for 2nd byte of secret which again has 256 possibilties. We keep on continuing this process to get each byte of the secret and finally get the flag:\nFlag: flag{Crypt0_is_s0_h@rd_t0_d0…}\nTo practice challenges based on this attack, check out challenges given here\n","wordCount":"349","inLanguage":"en","datePublished":"2017-12-05T00:00:00Z","dateModified":"2017-12-05T00:00:00Z","author":{"@type":"Person","name":"Ashutosh Ahelleya"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://ashutosh1206.github.io/ctf/csawquals17-babycrypto/"},"publisher":{"@type":"Organization","name":"Ashutosh Ahelleya","logo":{"@type":"ImageObject","url":"https://ashutosh1206.github.io/favicon.ico"}}}</script></head><body id=top><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://ashutosh1206.github.io/ accesskey=h title="Home (Alt + H)">Home</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)"><svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg><svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://ashutosh1206.github.io/blog/ title=Blog><span>Blog</span></a></li><li><a href=https://ashutosh1206.github.io/archive/ title=Archive><span>Archive</span></a></li><li><a href=https://ashutosh1206.github.io/ctf/ title=CTF><span>CTF</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class=post-title>BabyCrypto - CSAW CTF Quals</h1><div class=post-meta><span title='2017-12-05 00:00:00 +0000 UTC'>December 5, 2017</span>&nbsp;·&nbsp;Ashutosh Ahelleya</div></header><div class=post-content><p>This challenge was a bit overrated, there were no complications in the challenge, as you will see when we discuss the writeup.</p><p>In this challenge, we are supposed to get the flag which is present in the server.<br>The server has an input-output program running, which gives AES-ECB encryption of the input given to it. The encryption takes place as follows:</p><ol><li>Takes the input from the user</li><li>Appends <code>secret</code> (which is the flag here) to the input</li><li>Pads to make it a multiple of blocksize</li><li>Encrypts the resultant string using AES in ECB mode</li><li>Gives the ciphertext as the output</li></ol><p>We are only in control of the input to the server. Using the input that we give, we need to get the <code>secret</code>.</p><p>Let us have a look at how the blocks are divided when we send an input of size equal to the blocksize = 16:</p><pre tabindex=0><code>       1st Block | 2nd Block | 3rd Block | ...
+Takes the input from the user Appends secret (which is the flag here) to the input Pads to make it a multiple of blocksize Encrypts the resultant string using AES in ECB mode Gives the ciphertext as the output We are only in control of the input to the server."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Ctfs",
+      "item": "https://ashutosh1206.github.io/ctf/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "BabyCrypto - CSAW CTF Quals",
+      "item": "https://ashutosh1206.github.io/ctf/csawquals17-babycrypto/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "BabyCrypto - CSAW CTF Quals",
+  "name": "BabyCrypto - CSAW CTF Quals",
+  "description": "This challenge was a bit overrated, there were no complications in the challenge, as you will see when we discuss the writeup.\nIn this challenge, we are supposed to get the flag which is present in the server.\nThe server has an input-output program running, which gives AES-ECB encryption of the input given to it. The encryption takes place as follows:\nTakes the input from the user Appends secret (which is the flag here) to the input Pads to make it a multiple of blocksize Encrypts the resultant string using AES in ECB mode Gives the ciphertext as the output We are only in control of the input to the server.",
+  "keywords": [
+    "BlockCipher", "ECB-byte-at-a-time"
+  ],
+  "articleBody": "This challenge was a bit overrated, there were no complications in the challenge, as you will see when we discuss the writeup.\nIn this challenge, we are supposed to get the flag which is present in the server.\nThe server has an input-output program running, which gives AES-ECB encryption of the input given to it. The encryption takes place as follows:\nTakes the input from the user Appends secret (which is the flag here) to the input Pads to make it a multiple of blocksize Encrypts the resultant string using AES in ECB mode Gives the ciphertext as the output We are only in control of the input to the server. Using the input that we give, we need to get the secret.\nLet us have a look at how the blocks are divided when we send an input of size equal to the blocksize = 16:\n1st Block | 2nd Block | 3rd Block | ... Input | Secret | secret+padding ... The first block contains 16 bytes of our input, which is known to us.\nWhen we send an input of size one less than the blocksize, then the block division is as follows:\n1st Block | 2nd Block | 3rd Block | ... x | Secret[1:17] | secret[17:]+padding ... We can apply ECB Byte at a time attack in such a scenario about which you can read here:\nhttps://github.com/ashutosh1206/Crypton/tree/master/Block-Cipher/Attack-ECB-Byte-at-a-Time http://cryptopals.com/sets/2/challenges/12 Here x = input + Secret[0] and let the output in this case be c1.\nWe know the first 15 bytes of block #1, we can simply brute force 256 possibilities of the 16th byte in block #1 by checking the corresponding ciphertexts of block #1.\nFor the second byte we send 14 random bytes + 1 byte of secret(we got from previous step) as the input to the server and then brute force for 2nd byte of secret which again has 256 possibilties. We keep on continuing this process to get each byte of the secret and finally get the flag:\nFlag: flag{Crypt0_is_s0_h@rd_t0_d0…}\nTo practice challenges based on this attack, check out challenges given here\n",
+  "wordCount" : "349",
+  "inLanguage": "en",
+  "datePublished": "2017-12-05T00:00:00Z",
+  "dateModified": "2017-12-05T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Ashutosh Ahelleya"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://ashutosh1206.github.io/ctf/csawquals17-babycrypto/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Ash's blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://ashutosh1206.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://ashutosh1206.github.io/" accesskey="h" title="Home (Alt + H)">Home</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://ashutosh1206.github.io/blog/" title="Blog">
+                    <span>Blog</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ashutosh1206.github.io/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ashutosh1206.github.io/archive/" title="Archive">
+                    <span>Archive</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ashutosh1206.github.io/ctf/" title="CTF">
+                    <span>CTF</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title">
+      BabyCrypto - CSAW CTF Quals
+    </h1>
+    <div class="post-meta"><span title='2017-12-05 00:00:00 +0000 UTC'>December 5, 2017</span>&nbsp;·&nbsp;Ashutosh Ahelleya
+
+</div>
+  </header> 
+  <div class="post-content"><p>This challenge was a bit overrated, there were no complications in the challenge, as you will see when we discuss the writeup.</p>
+<p>In this challenge, we are supposed to get the flag which is present in the server.<br>
+The server has an input-output program running, which gives AES-ECB encryption of the input given to it. The encryption takes place as follows:</p>
+<ol>
+<li>Takes the input from the user</li>
+<li>Appends <code>secret</code> (which is the flag here) to the input</li>
+<li>Pads to make it a multiple of blocksize</li>
+<li>Encrypts the resultant string using AES in ECB mode</li>
+<li>Gives the ciphertext as the output</li>
+</ol>
+<p>We are only in control of the input to the server. Using the input that we give, we need to get the <code>secret</code>.</p>
+<p>Let us have a look at how the blocks are divided when we send an input of size equal to the blocksize = 16:</p>
+<pre tabindex="0"><code>       1st Block | 2nd Block | 3rd Block | ...
        Input     | Secret    | secret+padding ...
-</code></pre><p>The first block contains 16 bytes of our input, which is known to us.<br>When we send an input of size one less than the blocksize, then the block division is as follows:</p><pre tabindex=0><code>        1st Block | 2nd Block    | 3rd Block | ...
+</code></pre><p>The first block contains 16 bytes of our input, which is known to us.<br>
+When we send an input of size one less than the blocksize, then the block division is as follows:</p>
+<pre tabindex="0"><code>        1st Block | 2nd Block    | 3rd Block | ...
         x         | Secret[1:17] | secret[17:]+padding ...
-</code></pre><p>We can apply ECB Byte at a time attack in such a scenario about which you can read here:</p><ol><li><a href=https://github.com/ashutosh1206/Crypton/tree/master/Block-Cipher/Attack-ECB-Byte-at-a-Time>https://github.com/ashutosh1206/Crypton/tree/master/Block-Cipher/Attack-ECB-Byte-at-a-Time</a></li><li><a href=http://cryptopals.com/sets/2/challenges/12>http://cryptopals.com/sets/2/challenges/12</a></li></ol><p>Here <code>x = input + Secret[0]</code> and let the output in this case be <code>c1</code>.</p><p>We know the first 15 bytes of <code>block #1</code>, we can simply brute force 256 possibilities of the 16th byte in <code>block #1</code> by checking the corresponding ciphertexts of <code>block #1</code>.</p><p><img loading=lazy src=/csawquals17-babycrypto-1.png alt=picture></p><p>For the second byte we send 14 random bytes + 1 byte of secret(we got from previous step) as the input to the server and then brute force for 2nd byte of secret which again has 256 possibilties. We keep on continuing this process to get each byte of the secret and finally get the flag:</p><p><img loading=lazy src=/csawquals17-babycrypto-2.png alt=picture></p><p><strong>Flag</strong>: flag{Crypt0_is_s0_h@rd_t0_d0&mldr;}</p><p>To practice challenges based on this attack, check out challenges given <a href=https://github.com/ashutosh1206/Crypton/tree/master/Block-Cipher/Attack-ECB-Byte-at-a-Time/Challenges>here</a></p></div><footer class=post-footer><ul class=post-tags><li><a href=https://ashutosh1206.github.io/tags/blockcipher/>BlockCipher</a></li><li><a href=https://ashutosh1206.github.io/tags/ecb-byte-at-a-time/>ECB-byte-at-a-time</a></li></ul></footer></article></main><footer class=footer><span>&copy; 2023 <a href=https://ashutosh1206.github.io/>Ashutosh Ahelleya</a></span>
-<span>Powered by
-<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
-        <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg></a><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script></body></html>
+</code></pre><p>We can apply ECB Byte at a time attack in such a scenario about which you can read here:</p>
+<ol>
+<li><a href="https://github.com/ashutosh1206/Crypton/tree/master/Block-Cipher/Attack-ECB-Byte-at-a-Time">https://github.com/ashutosh1206/Crypton/tree/master/Block-Cipher/Attack-ECB-Byte-at-a-Time</a></li>
+<li><a href="http://cryptopals.com/sets/2/challenges/12">http://cryptopals.com/sets/2/challenges/12</a></li>
+</ol>
+<p>Here <code>x = input + Secret[0]</code> and let the output in this case be <code>c1</code>.</p>
+<p>We know the first 15 bytes of <code>block #1</code>, we can simply brute force 256 possibilities of the 16th byte in <code>block #1</code> by checking the corresponding ciphertexts of <code>block #1</code>.</p>
+<p><img loading="lazy" src="/csawquals17-babycrypto-1.png" alt="picture"  />
+</p>
+<p>For the second byte we send 14 random bytes + 1 byte of secret(we got from previous step) as the input to the server and then brute force for 2nd byte of secret which again has 256 possibilties. We keep on continuing this process to get each byte of the secret and finally get the flag:</p>
+<p><img loading="lazy" src="/csawquals17-babycrypto-2.png" alt="picture"  />
+</p>
+<p><strong>Flag</strong>: flag{Crypt0_is_s0_h@rd_t0_d0&hellip;}</p>
+<p>To practice challenges based on this attack, check out challenges given <a href="https://github.com/ashutosh1206/Crypton/tree/master/Block-Cipher/Attack-ECB-Byte-at-a-Time/Challenges">here</a></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://ashutosh1206.github.io/tags/blockcipher/">BlockCipher</a></li>
+      <li><a href="https://ashutosh1206.github.io/tags/ecb-byte-at-a-time/">ECB-byte-at-a-time</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://ashutosh1206.github.io/">Ash&#39;s blog</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

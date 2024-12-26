@@ -1,233 +1,606 @@
-<!doctype html><html lang=en dir=auto><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>Crypto writeups - Hack.lu CTF | Ashutosh Ahelleya</title><meta name=keywords content="Elliptic-Curves"><meta name=description content="Hack.lu CTF is over and we (@teambi0s) finished 13th globally and since we were registered as a local team (thanks to @GeethnaTk) and stood first among the teams registered locally, hence we are eligible for prizes! Yay!
-This blog post covers detailed solutions to two of the crypto challenges from Hack.lu CTF 2018- Relations and Multiplayer Part-1. While the former was just about guessing (or detecting the pattern, whatever you want to say) of a black box encryption service, the latter was a more interesting challenge involving Elliptic Curves."><meta name=author content="Ashutosh Ahelleya"><link rel=canonical href=https://ashutosh1206.github.io/ctf/hacklu18-crypto/><link crossorigin=anonymous href=/assets/css/stylesheet.bccfefac377bc340f06c260aed1bddf49a4354816d7c570d6aac75a997986c95.css integrity="sha256-vM/vrDd7w0DwbCYK7Rvd9JpDVIFtfFcNaqx1qZeYbJU=" rel="preload stylesheet" as=style><script defer crossorigin=anonymous src=/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG+9vmJ0cTS+ovo0FeA=" onload=hljs.initHighlightingOnLoad()></script>
-<link rel=icon href=https://ashutosh1206.github.io/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://ashutosh1206.github.io/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://ashutosh1206.github.io/favicon-32x32.png><link rel=apple-touch-icon href=https://ashutosh1206.github.io/apple-touch-icon.png><link rel=mask-icon href=https://ashutosh1206.github.io/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--hljs-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css integrity=sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0 crossorigin=anonymous><script defer src=https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js integrity=sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4 crossorigin=anonymous></script>
-<script defer src=https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js integrity=sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05 crossorigin=anonymous onload=renderMathInElement(document.body)></script><meta property="og:title" content="Crypto writeups - Hack.lu CTF"><meta property="og:description" content="Hack.lu CTF is over and we (@teambi0s) finished 13th globally and since we were registered as a local team (thanks to @GeethnaTk) and stood first among the teams registered locally, hence we are eligible for prizes! Yay!
-This blog post covers detailed solutions to two of the crypto challenges from Hack.lu CTF 2018- Relations and Multiplayer Part-1. While the former was just about guessing (or detecting the pattern, whatever you want to say) of a black box encryption service, the latter was a more interesting challenge involving Elliptic Curves."><meta property="og:type" content="article"><meta property="og:url" content="https://ashutosh1206.github.io/ctf/hacklu18-crypto/"><meta property="article:section" content="ctf"><meta property="article:published_time" content="2018-10-18T00:00:00+00:00"><meta property="article:modified_time" content="2018-10-18T00:00:00+00:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="Crypto writeups - Hack.lu CTF"><meta name=twitter:description content="Hack.lu CTF is over and we (@teambi0s) finished 13th globally and since we were registered as a local team (thanks to @GeethnaTk) and stood first among the teams registered locally, hence we are eligible for prizes! Yay!
-This blog post covers detailed solutions to two of the crypto challenges from Hack.lu CTF 2018- Relations and Multiplayer Part-1. While the former was just about guessing (or detecting the pattern, whatever you want to say) of a black box encryption service, the latter was a more interesting challenge involving Elliptic Curves."><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Ctfs","item":"https://ashutosh1206.github.io/ctf/"},{"@type":"ListItem","position":2,"name":"Crypto writeups - Hack.lu CTF","item":"https://ashutosh1206.github.io/ctf/hacklu18-crypto/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"Crypto writeups - Hack.lu CTF","name":"Crypto writeups - Hack.lu CTF","description":"Hack.lu CTF is over and we (@teambi0s) finished 13th globally and since we were registered as a local team (thanks to @GeethnaTk) and stood first among the teams registered locally, hence we are eligible for prizes! Yay!\nThis blog post covers detailed solutions to two of the crypto challenges from Hack.lu CTF 2018- Relations and Multiplayer Part-1. While the former was just about guessing (or detecting the pattern, whatever you want to say) of a black box encryption service, the latter was a more interesting challenge involving Elliptic Curves.","keywords":["Elliptic-Curves"],"articleBody":"Hack.lu CTF is over and we (@teambi0s) finished 13th globally and since we were registered as a local team (thanks to @GeethnaTk) and stood first among the teams registered locally, hence we are eligible for prizes! Yay!\nThis blog post covers detailed solutions to two of the crypto challenges from Hack.lu CTF 2018- Relations and Multiplayer Part-1. While the former was just about guessing (or detecting the pattern, whatever you want to say) of a black box encryption service, the latter was a more interesting challenge involving Elliptic Curves.\nTo sum up, I enjoyed solving the crypto challenges this year, but I felt kinda sad and frustrated when Multiplayer Part-2 got removed because of some issues, as I spent quite a lot of time trying it. I learnt a lot meanwhile, so I guess it was worth it!\nKudos to the organisers for putting up a beautiful CTF! Let us move onto the solutions now 🙂\nRelations This was a fairly easy challenge although we are not given any encryption script. We are given three operations on the nc service to choose, XOR, ADD and DEC (decrypt). Then, we have to give an input string on which the selected operation is done.\nHow the operation takes place was unknown at that particular point of time. But we see something strange here:\nSo now we know that DEC operation takes in base64 key which it then uses to AES decrypt some string, which could possibly be our flag.\nThen, we started giving random inputs to XOR and ADD operations and my teammates noticed this:\nFor the same input ​00, ADD and XOR operations give the same output! I immediately thought that we can use this to leak out the string to which our input is XORed or ADDed. And that string could possibly be the key used as an input in ​DEC to AES decrypt our flag. How can we exploit this?\nConsider A, B of size 1-bit each. If A=1, A xor B and A+B will be equal only when B = 0. That’s it! We can use this property to generalise and get all the bits of the key:\nSend \\(2^0, 2^1, 2^2,…, 2^{127}\\) as inputs for both XOR and ADD and check if the outputs for XOR and ADD for an input match. If they match, then add 0 to the binary keystring, otherwise add 1. I wrote the following script to implement this attack:\nfrom pwn import * import string def choose_XOR_op(input): for i in input: assert i in string.hexdigits r.recvuntil(\"*\") r.sendline(\"XOR\") r.recvuntil(\"\u003e\u003e\") r.sendline(input) ct = r.recvline()[17:].strip() unknown = r.recvline().strip() return ct, unknown def choose_ADD_op(input): for i in input: assert i in string.hexdigits r.recvuntil(\"*\") r.sendline(\"ADD\") r.recvuntil(\"\u003e\u003e\") r.sendline(input) ct = r.recvline()[17:].strip() unknown = r.recvline().strip() return ct, unknown def choose_DEC_op(input): r.recvuntil(\"*\") r.sendline(\"DEC\") r.recvuntil(\"\u003e\u003e\") r.sendline(input) print r.recvline() print r.recvline() r.close() list1 = [2**i for i in range(128)] key = \"\" r = remote(\"arcade.fluxfingers.net\",\"1821\") for i in list1: ct, unknown = choose_XOR_op(hex(i)[2:].replace(\"L\",\"\")) ct1, unknown1 = choose_ADD_op(hex(i)[2:].replace(\"L\",\"\")) if ct+unknown == ct1+unknown1: key += \"0\" print key else: key += \"1\" print key key = hex(int(key[::-1], 2))[2:].replace(\"L\",\"\").decode(\"hex\").encode(\"base64\").replace(\"\\n\",\"\") choose_DEC_op(key) r.close() And got the flag!\nMultiplayer Part-1 Note: This challenge requires basic knowledge of Elliptic Curves. In case you don’t know ECC and want to start, you can use the following resources:\nhttp://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/ https://github.com/ashutosh1206/Crypton/tree/master/Elliptic-Curves In this challenge, we are given the following files: server.sage, parameters.sage and points.db. We can host the challenge locally using server.sage to test our exploit. Having a glance at the challenge description quickly reveals that this challenge is based on Elliptic Curves which is quite evident from parameters.sage as well:\nparam = { \"hacklu\": ((889774351128949770355298446172353873, 12345, 67890), # Generator of Subgroup of prime order 73 bits, 79182553273022138539034276599687 to be excact (238266381988261346751878607720968495, 591153005086204165523829267245014771), # challenge Q = xP, x random from [0, 79182553273022138539034276599687) (341454032985370081366658659122300896, 775807209463167910095539163959068826) ) } serverAdress = '0.0.0.0' serverPort = 23426 (p, a, b), (px, py), (qx, qy) = param[\"hacklu\"] E = EllipticCurve(GF(p), [a, b]) P = E((px, py)) Q = E((qx, qy)) def is_distinguished_point(p): return p[0] \u003c 2^(100) So the curve defined is \\(y^2\\equiv x^3 + a*x + b\\mod p\\), where\np = 889774351128949770355298446172353873 a = 12345 b = 67890 Also, \\(P\\) and \\(Q\\) are two points on this curve where \\(Q = x*P\\) (Note that * symbol here signifies Scalar Multiplication and x is the secret key whose value is unknown),\nP = (238266381988261346751878607720968495, 591153005086204165523829267245014771) Q = (341454032985370081366658659122300896, 775807209463167910095539163959068826) We are also given order of the subgroup generated by \\(P\\):\n79182553273022138539034276599687\nAccording to the property of Elliptic Curves: \\(n*P = 0\\), where \\(n\\) is the order of the subgroup generated by a point \\(P\\) on an Elliptic Curve.\nThe service communicates with the user using JSON request and JSON responses only. Let us analyse some code snippets below that are taken from server.sage.py.\nDLogHandler class:\nclass DLogHandler(asyncore.dispatcher_with_send): def handle_read(self): try: json_data = self.recv(_sage_const_8192 ) if not json_data: return data = json.loads(json_data) # check if the format is correct if not (\"x\" in data and \"y\" in data and \"c\" in data and \"d\" in data and \"groupID\" in data): response = json_response(_sage_const_3 ) else: c = Integer(data[\"c\"]) d = Integer(data[\"d\"]) x = Integer(data[\"x\"]) y = Integer(data[\"y\"]) X = E((x, y)) if X == c*P + d*Q: response = get_response(data[\"x\"], data[\"y\"], data[\"c\"], data[\"d\"], data[\"groupID\"]) else: print(\"expected %s = %d*%s + %d*%s, but got %s\" % (c*P + d*Q, c, P, d, Q, X)) response = json_response(_sage_const_4 ) self.send(response) except Exception as e: response = json_response(_sage_const_5 , ', \"Error Message\": \"%s\"' % e) So, the service takes JSON request containing x, y, c, d and groupID and checks if: $$X = (x, y) = c*P + d*Q$$ If the above condition is not satisfied, then JSON response simply contains an error message saying “Value mismatch! X != c*P + d*Q”. If the condition is satisfied then it calls get_response() function, which we will cover next.\nSince we know that server communicates with the user only through JSON requests and JSON responses, we can write a function that takes in x, y, c, d, groupID and returns a request in JSON format, to be sent to the service as input:\ndef json_input(x, y, c, d, groupID): dict1 = {'x': x, 'y': y, 'c': c, 'd': d, 'groupID': groupID} return json.dumps(dict1) Next, we analyse get_response:\n# Teams should choose a non-guessable groupID def get_response(x, y, c, d, groupID): # open connection to database conn = sqlite3.connect(\"points.db\") conn.row_factory = sqlite3.Row conn_cursor = conn.cursor() # convert sage integers to string to avoid \"Python int too large for SQLite INTEGER\" x = str(x) y = str(y) c = str(c) d = str(d) # Select records that map to the same X value conn_cursor.execute(\"SELECT * FROM points WHERE x = :x\", {\"x\": x}) query = conn_cursor.fetchall() # No record found -\u003e Point is not yet included if len(query) == _sage_const_0 : # Insert point into database conn_cursor.execute(\"INSERT INTO points (x, y, c, d, groupID) VALUES (?, ?, ?, ?, ?)\", (x, y, c, d, groupID)) # Get number of points added by this group conn_cursor.execute(\"SELECT x FROM points WHERE groupID = :gID\", {\"gID\": groupID}) points_found = conn_cursor.fetchall() add_param = ', \"points_found\": %d' % len(points_found) # When they found POINT_TRESHOLD distinguished points and a collision occured, return the colliding values as well if len(points_found) \u003e POINT_TRESHOLD: add_param += ', \"flag1\": \"%s\"' % FLAG1 if server.collision_found: # compute x from the collision, second flag is just x (not in flag format) add_param += ', \"collision\": %s' % (server.collision) response = json_response(_sage_const_0 , add_param) else: # One (or more) records found -\u003e check if they have the same exponents is_included = False for row in query: if row[\"c\"] == c and row[\"d\"] == d: is_included = True response = json_response(_sage_const_2 ) break if not is_included: # Exponents are different -\u003e Collision found, add this point conn_cursor.execute(\"INSERT INTO points (x, y, c, d, groupID, collision) VALUES (?, ?, ?, ?, ?, 1)\", (x, y, c, d, groupID)) # Get number of points added by this group conn_cursor.execute(\"SELECT x FROM points WHERE groupID = :gID\", {\"gID\": groupID}) points_found = conn_cursor.fetchall() add_param = ', \"points_found\": %d' % len(points_found) # add collision server.collision_found = True server.collision = '{\"c_1\": %s, \"d_1\": %s, \"c_2\": %s, \"d_2\": %s}' % (c, d, row[\"c\"], row[\"d\"]) if len(points_found) \u003e POINT_TRESHOLD: add_param += ', \"collision\": %s' % (server.collision) else: add_param += ', \"collision\": \"collision found but not enough distinguished points submitted yet\"' response = json_response(_sage_const_1 , add_param + ', \"c\": %s, \"d\": %s' % (row[\"c\"], row[\"d\"])) # close db connection and return response conn.commit() conn_cursor.close() conn.close() return response get_response does the following:\nSelects all rows from the database points.db that have the same value of x and checks if there exists any record that contains the same record ie. it checks if len(query) == 0 If the condition is true (there already exist records having same x), it checks whether ​c and d are same for the similar records found in step-1. If true, then an exact same input already exists in the database and hence it throws a JSON response “Point already included“. If false, then a collision is found. This implies that for a particular value of point X, we have found two pairs of exponents such that \\(X = c_1*P + d_1*Q = c_2*P + d_2*Q\\) Service adds this point to the database. It then calculates all x for which the groupID is same and assigns points_found = # x found. The counter points_found increases by one if a collision is found for a particular value of X. It checks if points_found \u003e 200 and displays output according to that (which does not affect our exploit since we only want points_found \u003e 200 at some point of time, to get the flag) If the condition is false (point X is not present in the database) Add the input points to the database It then calculates all x for which the groupID is same and assigns points_found = # x found It then checks if points_found \u003e 200. If true then it displays the flag for our challenge! The Exploit We know from the property of Elliptic Curves that \\(n*P = 0\\), where n is the order of the subgroup generated by a point \\(P\\) on an Elliptic Curve. We can use this property to exploit this challenge. Let us see how:\nIf we set d = 0, $$\\forall i\\in \\mathbb{I}, X = ((i*n+c)*P) + (0*Q) = ((i*n+c)*P)$$\nWe will now keep sending \\(c, d\\) as \\((c, 0), (c+n, 0), (c+2n, 0), …, (c+200n, 0)\\) having the same groupID (random enough to not collide with any other team’s groupID) and get 201 collisions which is just enough for us to get the flag. How? For the corresponding groupID, points_found = 201 \u003e 200.\nThen we send a random point on the curve having the same groupID as above and which is not there in the database. This will then pass the condition len(points_found) \u003e 200 and give us the flag.\nI wrote the script below to implement this attack in python. Note that ecauth is the python file I imported for doing Elliptic Curve operations:\nimport ecauth import sqlite3 import json from pwn import * def json_input(x, y, c, d, groupID): dict1 = {'x': x, 'y': y, 'c': c, 'd': d, 'groupID': groupID} return json.dumps(dict1) def create_curve(): p = 889774351128949770355298446172353873 a = 12345 b = 67890 curve = ecauth.CurveFp(p, a, b) return curve def base_point(curve, x, y, _order_point): P = ecauth.Point(curve, x, y, _order_point) return P curve = create_curve() _order_P = 79182553273022138539034276599687 _Px = 238266381988261346751878607720968495 _Py = 591153005086204165523829267245014771 P = base_point(curve, _Px, _Py, _order_P) _Qx = 341454032985370081366658659122300896 _Qy = 775807209463167910095539163959068826 Q = base_point(curve, _Qx, _Qy, _order_P) prev = 56558*P + 0*Q for i in range(210): r = remote(\"arcade.fluxfingers.net\",\"1822\") param = i*_order_P Point_x = (param + 56558)*P + 0*Q assert prev.x() == Point_x.x() and prev.y() == Point_x.y() data = json_input(Point_x.x(), Point_x.y(), param + 56558, 0, 888698063901) r.send(data) print i print r.recv() r.close() r = remote(\"arcade.fluxfingers.net\",\"1822\") Point_y = 35939*P + 11*Q data2 = json_input(Point_y.x(), Point_y.y(), 35939, 11, 888698063901) r.send(data2) print r.recv() r.close() Running the above script gives us the flag!\nVoila! It was fun!\nHowever, this approach will not get us a flag for the Multiplayer Part-2 (Find out why)! Waiting for the challenge author to discuss the intended solution for Multiplayer Part-2.\nUPDATE: Got the intended approach for both parts of this challenge: https://link.springer.com/content/pdf/10.1007%2F3-540-45537-X_17.pdf. Thanks to asante!\n","wordCount":"2058","inLanguage":"en","datePublished":"2018-10-18T00:00:00Z","dateModified":"2018-10-18T00:00:00Z","author":{"@type":"Person","name":"Ashutosh Ahelleya"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://ashutosh1206.github.io/ctf/hacklu18-crypto/"},"publisher":{"@type":"Organization","name":"Ashutosh Ahelleya","logo":{"@type":"ImageObject","url":"https://ashutosh1206.github.io/favicon.ico"}}}</script></head><body id=top><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://ashutosh1206.github.io/ accesskey=h title="Home (Alt + H)">Home</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)"><svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg><svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://ashutosh1206.github.io/blog/ title=Blog><span>Blog</span></a></li><li><a href=https://ashutosh1206.github.io/archive/ title=Archive><span>Archive</span></a></li><li><a href=https://ashutosh1206.github.io/ctf/ title=CTF><span>CTF</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class=post-title>Crypto writeups - Hack.lu CTF</h1><div class=post-meta><span title='2018-10-18 00:00:00 +0000 UTC'>October 18, 2018</span>&nbsp;·&nbsp;Ashutosh Ahelleya</div></header><div class=post-content><p>Hack.lu CTF is over and we (<a href=https://twitter.com/teambi0s>@teambi0s</a>) finished 13th globally and since we were registered as a local team (thanks to <a href=https://twitter.com/geethnatk>@GeethnaTk</a>) and stood first among the teams registered locally, hence we are eligible for prizes! Yay!</p><p>This blog post covers detailed solutions to two of the crypto challenges from Hack.lu CTF 2018- <strong>Relations</strong> and <strong>Multiplayer Part-1</strong>. While the former was just about guessing (or detecting the pattern, whatever you want to say) of a black box encryption service, the latter was a more interesting challenge involving Elliptic Curves.</p><p>To sum up, I enjoyed solving the crypto challenges this year, but I felt kinda sad and frustrated when Multiplayer Part-2 got removed because of some issues, as I spent quite a lot of time trying it. I learnt a lot meanwhile, so I guess it was worth it!</p><p>Kudos to the organisers for putting up a beautiful CTF! Let us move onto the solutions now 🙂</p><h1 id=relations>Relations<a hidden class=anchor aria-hidden=true href=#relations>#</a></h1><p><img loading=lazy src=/hacklu18-crypto-1.png alt=picture></p><p>This was a fairly easy challenge although we are not given any encryption script. We are given three operations on the nc service to choose, <code>XOR</code>, <code>ADD</code> and <code>DEC</code> (decrypt). Then, we have to give an input string on which the selected operation is done.</p><p>How the operation takes place was unknown at that particular point of time. But we see something strange here:</p><p><img loading=lazy src=/hacklu18-crypto-2.png alt=picture></p><p>So now we know that DEC operation takes in base64 key which it then uses to AES decrypt some string, which could possibly be our flag.</p><p>Then, we started giving random inputs to <code>XOR</code> and <code>ADD</code> operations and my teammates noticed this:</p><p><img loading=lazy src=/hacklu18-crypto-3.png alt=picture></p><p>For the same input ​00, ADD and XOR operations give the same output! I immediately thought that we can use this to leak out the string to which our input is XORed or ADDed. And that string could possibly be the key used as an input in ​DEC to AES decrypt our flag. How can we exploit this?</p><p>Consider A, B of size 1-bit each. If A=1, A xor B and A+B will be equal only when B = 0. That’s it! We can use this property to generalise and get all the bits of the key:</p><ol><li>Send \(2^0, 2^1, 2^2,&mldr;, 2^{127}\) as inputs for both XOR and ADD and check if the outputs for XOR and ADD for an input match.<ul><li>If they match, then add 0 to the binary keystring, otherwise add 1.</li></ul></li></ol><p>I wrote the following script to implement this attack:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>from</span> pwn <span style=color:#f92672>import</span> <span style=color:#f92672>*</span>
-</span></span><span style=display:flex><span><span style=color:#f92672>import</span> string
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>choose_XOR_op</span>(input):
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> i <span style=color:#f92672>in</span> input:
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>assert</span> i <span style=color:#f92672>in</span> string<span style=color:#f92672>.</span>hexdigits
-</span></span><span style=display:flex><span>    r<span style=color:#f92672>.</span>recvuntil(<span style=color:#e6db74>&#34;*&#34;</span>)
-</span></span><span style=display:flex><span>    r<span style=color:#f92672>.</span>sendline(<span style=color:#e6db74>&#34;XOR&#34;</span>)
-</span></span><span style=display:flex><span>    r<span style=color:#f92672>.</span>recvuntil(<span style=color:#e6db74>&#34;&gt;&gt;&#34;</span>)
-</span></span><span style=display:flex><span>    r<span style=color:#f92672>.</span>sendline(input)
-</span></span><span style=display:flex><span>    ct <span style=color:#f92672>=</span> r<span style=color:#f92672>.</span>recvline()[<span style=color:#ae81ff>17</span>:]<span style=color:#f92672>.</span>strip()
-</span></span><span style=display:flex><span>    unknown <span style=color:#f92672>=</span> r<span style=color:#f92672>.</span>recvline()<span style=color:#f92672>.</span>strip()
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> ct, unknown
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>choose_ADD_op</span>(input):
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> i <span style=color:#f92672>in</span> input:
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>assert</span> i <span style=color:#f92672>in</span> string<span style=color:#f92672>.</span>hexdigits
-</span></span><span style=display:flex><span>    r<span style=color:#f92672>.</span>recvuntil(<span style=color:#e6db74>&#34;*&#34;</span>)
-</span></span><span style=display:flex><span>    r<span style=color:#f92672>.</span>sendline(<span style=color:#e6db74>&#34;ADD&#34;</span>)
-</span></span><span style=display:flex><span>    r<span style=color:#f92672>.</span>recvuntil(<span style=color:#e6db74>&#34;&gt;&gt;&#34;</span>)
-</span></span><span style=display:flex><span>    r<span style=color:#f92672>.</span>sendline(input)
-</span></span><span style=display:flex><span>    ct <span style=color:#f92672>=</span> r<span style=color:#f92672>.</span>recvline()[<span style=color:#ae81ff>17</span>:]<span style=color:#f92672>.</span>strip()
-</span></span><span style=display:flex><span>    unknown <span style=color:#f92672>=</span> r<span style=color:#f92672>.</span>recvline()<span style=color:#f92672>.</span>strip()
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> ct, unknown
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>choose_DEC_op</span>(input):
-</span></span><span style=display:flex><span>    r<span style=color:#f92672>.</span>recvuntil(<span style=color:#e6db74>&#34;*&#34;</span>)
-</span></span><span style=display:flex><span>    r<span style=color:#f92672>.</span>sendline(<span style=color:#e6db74>&#34;DEC&#34;</span>)
-</span></span><span style=display:flex><span>    r<span style=color:#f92672>.</span>recvuntil(<span style=color:#e6db74>&#34;&gt;&gt;&#34;</span>)
-</span></span><span style=display:flex><span>    r<span style=color:#f92672>.</span>sendline(input)
-</span></span><span style=display:flex><span>    print r<span style=color:#f92672>.</span>recvline()
-</span></span><span style=display:flex><span>    print r<span style=color:#f92672>.</span>recvline()
-</span></span><span style=display:flex><span>    r<span style=color:#f92672>.</span>close()
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>list1 <span style=color:#f92672>=</span> [<span style=color:#ae81ff>2</span><span style=color:#f92672>**</span>i <span style=color:#66d9ef>for</span> i <span style=color:#f92672>in</span> range(<span style=color:#ae81ff>128</span>)]
-</span></span><span style=display:flex><span>key <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;&#34;</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>r <span style=color:#f92672>=</span> remote(<span style=color:#e6db74>&#34;arcade.fluxfingers.net&#34;</span>,<span style=color:#e6db74>&#34;1821&#34;</span>)
-</span></span><span style=display:flex><span><span style=color:#66d9ef>for</span> i <span style=color:#f92672>in</span> list1:
-</span></span><span style=display:flex><span>    ct, unknown <span style=color:#f92672>=</span> choose_XOR_op(hex(i)[<span style=color:#ae81ff>2</span>:]<span style=color:#f92672>.</span>replace(<span style=color:#e6db74>&#34;L&#34;</span>,<span style=color:#e6db74>&#34;&#34;</span>))
-</span></span><span style=display:flex><span>    ct1, unknown1 <span style=color:#f92672>=</span> choose_ADD_op(hex(i)[<span style=color:#ae81ff>2</span>:]<span style=color:#f92672>.</span>replace(<span style=color:#e6db74>&#34;L&#34;</span>,<span style=color:#e6db74>&#34;&#34;</span>))
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> ct<span style=color:#f92672>+</span>unknown <span style=color:#f92672>==</span> ct1<span style=color:#f92672>+</span>unknown1:
-</span></span><span style=display:flex><span>        key <span style=color:#f92672>+=</span> <span style=color:#e6db74>&#34;0&#34;</span>
-</span></span><span style=display:flex><span>        print key
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>else</span>:
-</span></span><span style=display:flex><span>        key <span style=color:#f92672>+=</span> <span style=color:#e6db74>&#34;1&#34;</span>
-</span></span><span style=display:flex><span>        print key
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>key <span style=color:#f92672>=</span> hex(int(key[::<span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>], <span style=color:#ae81ff>2</span>))[<span style=color:#ae81ff>2</span>:]<span style=color:#f92672>.</span>replace(<span style=color:#e6db74>&#34;L&#34;</span>,<span style=color:#e6db74>&#34;&#34;</span>)<span style=color:#f92672>.</span>decode(<span style=color:#e6db74>&#34;hex&#34;</span>)<span style=color:#f92672>.</span>encode(<span style=color:#e6db74>&#34;base64&#34;</span>)<span style=color:#f92672>.</span>replace(<span style=color:#e6db74>&#34;</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>,<span style=color:#e6db74>&#34;&#34;</span>)
-</span></span><span style=display:flex><span>choose_DEC_op(key)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>r<span style=color:#f92672>.</span>close()
-</span></span></code></pre></div><p>And got the flag!</p><p><img loading=lazy src=/hacklu18-crypto-4.png alt=picture></p><p></p><h1 id=multiplayer-part-1>Multiplayer Part-1<a hidden class=anchor aria-hidden=true href=#multiplayer-part-1>#</a></h1><p>Note: This challenge requires basic knowledge of Elliptic Curves. In case you don’t know ECC and want to start, you can use the following resources:</p><ol><li><a href=http://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/>http://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/</a></li><li><a href=https://github.com/ashutosh1206/Crypton/tree/master/Elliptic-Curves>https://github.com/ashutosh1206/Crypton/tree/master/Elliptic-Curves</a></li></ol><p><img loading=lazy src=/hacklu18-crypto-5.png alt=picture></p><p>In this challenge, we are given the following files: <code>server.sage</code>, <code>parameters.sage</code> and <code>points.db</code>. We can host the challenge locally using <code>server.sage</code> to test our exploit. Having a glance at the challenge description quickly reveals that this challenge is based on Elliptic Curves which is quite evident from <code>parameters.sage</code> as well:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>param <span style=color:#f92672>=</span> {   <span style=color:#e6db74>&#34;hacklu&#34;</span>:
-</span></span><span style=display:flex><span>            ((<span style=color:#ae81ff>889774351128949770355298446172353873</span>, <span style=color:#ae81ff>12345</span>, <span style=color:#ae81ff>67890</span>),
-</span></span><span style=display:flex><span>            <span style=color:#75715e># Generator of Subgroup of prime order 73 bits, 79182553273022138539034276599687 to be excact</span>
-</span></span><span style=display:flex><span>            (<span style=color:#ae81ff>238266381988261346751878607720968495</span>, <span style=color:#ae81ff>591153005086204165523829267245014771</span>),
-</span></span><span style=display:flex><span>            <span style=color:#75715e># challenge Q = xP, x random from [0, 79182553273022138539034276599687)</span>
-</span></span><span style=display:flex><span>            (<span style=color:#ae81ff>341454032985370081366658659122300896</span>, <span style=color:#ae81ff>775807209463167910095539163959068826</span>)
-</span></span><span style=display:flex><span>            )
-</span></span><span style=display:flex><span>        }
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>serverAdress <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;0.0.0.0&#39;</span>
-</span></span><span style=display:flex><span>serverPort <span style=color:#f92672>=</span> <span style=color:#ae81ff>23426</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>(p, a, b), (px, py), (qx, qy) <span style=color:#f92672>=</span> param[<span style=color:#e6db74>&#34;hacklu&#34;</span>]
-</span></span><span style=display:flex><span>E <span style=color:#f92672>=</span> EllipticCurve(GF(p), [a, b])
-</span></span><span style=display:flex><span>P <span style=color:#f92672>=</span> E((px, py))
-</span></span><span style=display:flex><span>Q <span style=color:#f92672>=</span> E((qx, qy))
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>is_distinguished_point</span>(p):
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> p[<span style=color:#ae81ff>0</span>] <span style=color:#f92672>&lt;</span> <span style=color:#ae81ff>2</span><span style=color:#f92672>^</span>(<span style=color:#ae81ff>100</span>)
-</span></span></code></pre></div><p>So the curve defined is \(y^2\equiv x^3 + a*x + b\mod p\), where</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>p <span style=color:#f92672>=</span> <span style=color:#ae81ff>889774351128949770355298446172353873</span>
-</span></span><span style=display:flex><span>a <span style=color:#f92672>=</span> <span style=color:#ae81ff>12345</span>
-</span></span><span style=display:flex><span>b <span style=color:#f92672>=</span> <span style=color:#ae81ff>67890</span>
-</span></span></code></pre></div><p>Also, \(P\) and \(Q\) are two points on this curve where \(Q = x*P\) (Note that * symbol here signifies <a href=https://github.com/ashutosh1206/Crypton/tree/master/Elliptic-Curves#scalar-multiplication>Scalar Multiplication</a> and x is the secret key whose value is unknown),</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>P <span style=color:#f92672>=</span> (<span style=color:#ae81ff>238266381988261346751878607720968495</span>, <span style=color:#ae81ff>591153005086204165523829267245014771</span>)
-</span></span><span style=display:flex><span>Q <span style=color:#f92672>=</span> (<span style=color:#ae81ff>341454032985370081366658659122300896</span>, <span style=color:#ae81ff>775807209463167910095539163959068826</span>)
-</span></span></code></pre></div><p>We are also given order of the subgroup generated by \(P\):<br>79182553273022138539034276599687</p><p>According to the property of Elliptic Curves: \(n*P = 0\), where \(n\) is the order of the subgroup generated by a point \(P\) on an Elliptic Curve.</p><p>The service communicates with the user using JSON request and JSON responses only. Let us analyse some code snippets below that are taken from <code>server.sage.py</code>.</p><p>DLogHandler class:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>DLogHandler</span>(asyncore<span style=color:#f92672>.</span>dispatcher_with_send):
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>handle_read</span>(self):
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>try</span>:
-</span></span><span style=display:flex><span>            json_data <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>recv(_sage_const_8192 )
-</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> <span style=color:#f92672>not</span> json_data:
-</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>            data <span style=color:#f92672>=</span> json<span style=color:#f92672>.</span>loads(json_data)
-</span></span><span style=display:flex><span>            <span style=color:#75715e># check if the format is correct</span>
-</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> <span style=color:#f92672>not</span> (<span style=color:#e6db74>&#34;x&#34;</span> <span style=color:#f92672>in</span> data <span style=color:#f92672>and</span> <span style=color:#e6db74>&#34;y&#34;</span> <span style=color:#f92672>in</span> data <span style=color:#f92672>and</span> <span style=color:#e6db74>&#34;c&#34;</span> <span style=color:#f92672>in</span> data <span style=color:#f92672>and</span> <span style=color:#e6db74>&#34;d&#34;</span> <span style=color:#f92672>in</span> data <span style=color:#f92672>and</span> <span style=color:#e6db74>&#34;groupID&#34;</span> <span style=color:#f92672>in</span> data):
-</span></span><span style=display:flex><span>                response <span style=color:#f92672>=</span> json_response(_sage_const_3 )
-</span></span><span style=display:flex><span>            <span style=color:#66d9ef>else</span>:
-</span></span><span style=display:flex><span>                c <span style=color:#f92672>=</span> Integer(data[<span style=color:#e6db74>&#34;c&#34;</span>])
-</span></span><span style=display:flex><span>                d <span style=color:#f92672>=</span> Integer(data[<span style=color:#e6db74>&#34;d&#34;</span>])
-</span></span><span style=display:flex><span>                x <span style=color:#f92672>=</span> Integer(data[<span style=color:#e6db74>&#34;x&#34;</span>])
-</span></span><span style=display:flex><span>                y <span style=color:#f92672>=</span> Integer(data[<span style=color:#e6db74>&#34;y&#34;</span>])
-</span></span><span style=display:flex><span>                X <span style=color:#f92672>=</span> E((x, y))
-</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> X <span style=color:#f92672>==</span> c<span style=color:#f92672>*</span>P <span style=color:#f92672>+</span> d<span style=color:#f92672>*</span>Q:
-</span></span><span style=display:flex><span>                    response <span style=color:#f92672>=</span> get_response(data[<span style=color:#e6db74>&#34;x&#34;</span>], data[<span style=color:#e6db74>&#34;y&#34;</span>], data[<span style=color:#e6db74>&#34;c&#34;</span>], data[<span style=color:#e6db74>&#34;d&#34;</span>], data[<span style=color:#e6db74>&#34;groupID&#34;</span>])
-</span></span><span style=display:flex><span>                <span style=color:#66d9ef>else</span>:
-</span></span><span style=display:flex><span>                    print(<span style=color:#e6db74>&#34;expected </span><span style=color:#e6db74>%s</span><span style=color:#e6db74> = </span><span style=color:#e6db74>%d</span><span style=color:#e6db74>*</span><span style=color:#e6db74>%s</span><span style=color:#e6db74> + </span><span style=color:#e6db74>%d</span><span style=color:#e6db74>*</span><span style=color:#e6db74>%s</span><span style=color:#e6db74>, but got </span><span style=color:#e6db74>%s</span><span style=color:#e6db74>&#34;</span> <span style=color:#f92672>%</span> (c<span style=color:#f92672>*</span>P <span style=color:#f92672>+</span> d<span style=color:#f92672>*</span>Q, c, P, d, Q, X))
-</span></span><span style=display:flex><span>                    response <span style=color:#f92672>=</span> json_response(_sage_const_4 )
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>            self<span style=color:#f92672>.</span>send(response)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>except</span> <span style=color:#a6e22e>Exception</span> <span style=color:#66d9ef>as</span> e:
-</span></span><span style=display:flex><span>            response <span style=color:#f92672>=</span> json_response(_sage_const_5 , <span style=color:#e6db74>&#39;, &#34;Error Message&#34;: &#34;</span><span style=color:#e6db74>%s</span><span style=color:#e6db74>&#34;&#39;</span> <span style=color:#f92672>%</span> e)
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Crypto writeups - Hack.lu CTF | Ash&#39;s blog</title>
+<meta name="keywords" content="Elliptic-Curves">
+<meta name="description" content="Hack.lu CTF is over and we (@teambi0s) finished 13th globally and since we were registered as a local team (thanks to @GeethnaTk) and stood first among the teams registered locally, hence we are eligible for prizes! Yay!
+This blog post covers detailed solutions to two of the crypto challenges from Hack.lu CTF 2018- Relations and Multiplayer Part-1. While the former was just about guessing (or detecting the pattern, whatever you want to say) of a black box encryption service, the latter was a more interesting challenge involving Elliptic Curves.">
+<meta name="author" content="Ashutosh Ahelleya">
+<link rel="canonical" href="https://ashutosh1206.github.io/ctf/hacklu18-crypto/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.bccfefac377bc340f06c260aed1bddf49a4354816d7c570d6aac75a997986c95.css" integrity="sha256-vM/vrDd7w0DwbCYK7Rvd9JpDVIFtfFcNaqx1qZeYbJU=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://ashutosh1206.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://ashutosh1206.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://ashutosh1206.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://ashutosh1206.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://ashutosh1206.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+<meta property="og:title" content="Crypto writeups - Hack.lu CTF" />
+<meta property="og:description" content="Hack.lu CTF is over and we (@teambi0s) finished 13th globally and since we were registered as a local team (thanks to @GeethnaTk) and stood first among the teams registered locally, hence we are eligible for prizes! Yay!
+This blog post covers detailed solutions to two of the crypto challenges from Hack.lu CTF 2018- Relations and Multiplayer Part-1. While the former was just about guessing (or detecting the pattern, whatever you want to say) of a black box encryption service, the latter was a more interesting challenge involving Elliptic Curves." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://ashutosh1206.github.io/ctf/hacklu18-crypto/" /><meta property="article:section" content="ctf" />
+<meta property="article:published_time" content="2018-10-18T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-10-18T00:00:00+00:00" /><meta property="og:site_name" content="Ash&#39;s blog" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Crypto writeups - Hack.lu CTF"/>
+<meta name="twitter:description" content="Hack.lu CTF is over and we (@teambi0s) finished 13th globally and since we were registered as a local team (thanks to @GeethnaTk) and stood first among the teams registered locally, hence we are eligible for prizes! Yay!
+This blog post covers detailed solutions to two of the crypto challenges from Hack.lu CTF 2018- Relations and Multiplayer Part-1. While the former was just about guessing (or detecting the pattern, whatever you want to say) of a black box encryption service, the latter was a more interesting challenge involving Elliptic Curves."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Ctfs",
+      "item": "https://ashutosh1206.github.io/ctf/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Crypto writeups - Hack.lu CTF",
+      "item": "https://ashutosh1206.github.io/ctf/hacklu18-crypto/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Crypto writeups - Hack.lu CTF",
+  "name": "Crypto writeups - Hack.lu CTF",
+  "description": "Hack.lu CTF is over and we (@teambi0s) finished 13th globally and since we were registered as a local team (thanks to @GeethnaTk) and stood first among the teams registered locally, hence we are eligible for prizes! Yay!\nThis blog post covers detailed solutions to two of the crypto challenges from Hack.lu CTF 2018- Relations and Multiplayer Part-1. While the former was just about guessing (or detecting the pattern, whatever you want to say) of a black box encryption service, the latter was a more interesting challenge involving Elliptic Curves.",
+  "keywords": [
+    "Elliptic-Curves"
+  ],
+  "articleBody": "Hack.lu CTF is over and we (@teambi0s) finished 13th globally and since we were registered as a local team (thanks to @GeethnaTk) and stood first among the teams registered locally, hence we are eligible for prizes! Yay!\nThis blog post covers detailed solutions to two of the crypto challenges from Hack.lu CTF 2018- Relations and Multiplayer Part-1. While the former was just about guessing (or detecting the pattern, whatever you want to say) of a black box encryption service, the latter was a more interesting challenge involving Elliptic Curves.\nTo sum up, I enjoyed solving the crypto challenges this year, but I felt kinda sad and frustrated when Multiplayer Part-2 got removed because of some issues, as I spent quite a lot of time trying it. I learnt a lot meanwhile, so I guess it was worth it!\nKudos to the organisers for putting up a beautiful CTF! Let us move onto the solutions now 🙂\nRelations This was a fairly easy challenge although we are not given any encryption script. We are given three operations on the nc service to choose, XOR, ADD and DEC (decrypt). Then, we have to give an input string on which the selected operation is done.\nHow the operation takes place was unknown at that particular point of time. But we see something strange here:\nSo now we know that DEC operation takes in base64 key which it then uses to AES decrypt some string, which could possibly be our flag.\nThen, we started giving random inputs to XOR and ADD operations and my teammates noticed this:\nFor the same input ​00, ADD and XOR operations give the same output! I immediately thought that we can use this to leak out the string to which our input is XORed or ADDed. And that string could possibly be the key used as an input in ​DEC to AES decrypt our flag. How can we exploit this?\nConsider A, B of size 1-bit each. If A=1, A xor B and A+B will be equal only when B = 0. That’s it! We can use this property to generalise and get all the bits of the key:\nSend \\(2^0, 2^1, 2^2,…, 2^{127}\\) as inputs for both XOR and ADD and check if the outputs for XOR and ADD for an input match. If they match, then add 0 to the binary keystring, otherwise add 1. I wrote the following script to implement this attack:\nfrom pwn import * import string def choose_XOR_op(input): for i in input: assert i in string.hexdigits r.recvuntil(\"*\") r.sendline(\"XOR\") r.recvuntil(\"\u003e\u003e\") r.sendline(input) ct = r.recvline()[17:].strip() unknown = r.recvline().strip() return ct, unknown def choose_ADD_op(input): for i in input: assert i in string.hexdigits r.recvuntil(\"*\") r.sendline(\"ADD\") r.recvuntil(\"\u003e\u003e\") r.sendline(input) ct = r.recvline()[17:].strip() unknown = r.recvline().strip() return ct, unknown def choose_DEC_op(input): r.recvuntil(\"*\") r.sendline(\"DEC\") r.recvuntil(\"\u003e\u003e\") r.sendline(input) print r.recvline() print r.recvline() r.close() list1 = [2**i for i in range(128)] key = \"\" r = remote(\"arcade.fluxfingers.net\",\"1821\") for i in list1: ct, unknown = choose_XOR_op(hex(i)[2:].replace(\"L\",\"\")) ct1, unknown1 = choose_ADD_op(hex(i)[2:].replace(\"L\",\"\")) if ct+unknown == ct1+unknown1: key += \"0\" print key else: key += \"1\" print key key = hex(int(key[::-1], 2))[2:].replace(\"L\",\"\").decode(\"hex\").encode(\"base64\").replace(\"\\n\",\"\") choose_DEC_op(key) r.close() And got the flag!\nMultiplayer Part-1 Note: This challenge requires basic knowledge of Elliptic Curves. In case you don’t know ECC and want to start, you can use the following resources:\nhttp://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/ https://github.com/ashutosh1206/Crypton/tree/master/Elliptic-Curves In this challenge, we are given the following files: server.sage, parameters.sage and points.db. We can host the challenge locally using server.sage to test our exploit. Having a glance at the challenge description quickly reveals that this challenge is based on Elliptic Curves which is quite evident from parameters.sage as well:\nparam = { \"hacklu\": ((889774351128949770355298446172353873, 12345, 67890), # Generator of Subgroup of prime order 73 bits, 79182553273022138539034276599687 to be excact (238266381988261346751878607720968495, 591153005086204165523829267245014771), # challenge Q = xP, x random from [0, 79182553273022138539034276599687) (341454032985370081366658659122300896, 775807209463167910095539163959068826) ) } serverAdress = '0.0.0.0' serverPort = 23426 (p, a, b), (px, py), (qx, qy) = param[\"hacklu\"] E = EllipticCurve(GF(p), [a, b]) P = E((px, py)) Q = E((qx, qy)) def is_distinguished_point(p): return p[0] \u003c 2^(100) So the curve defined is \\(y^2\\equiv x^3 + a*x + b\\mod p\\), where\np = 889774351128949770355298446172353873 a = 12345 b = 67890 Also, \\(P\\) and \\(Q\\) are two points on this curve where \\(Q = x*P\\) (Note that * symbol here signifies Scalar Multiplication and x is the secret key whose value is unknown),\nP = (238266381988261346751878607720968495, 591153005086204165523829267245014771) Q = (341454032985370081366658659122300896, 775807209463167910095539163959068826) We are also given order of the subgroup generated by \\(P\\):\n79182553273022138539034276599687\nAccording to the property of Elliptic Curves: \\(n*P = 0\\), where \\(n\\) is the order of the subgroup generated by a point \\(P\\) on an Elliptic Curve.\nThe service communicates with the user using JSON request and JSON responses only. Let us analyse some code snippets below that are taken from server.sage.py.\nDLogHandler class:\nclass DLogHandler(asyncore.dispatcher_with_send): def handle_read(self): try: json_data = self.recv(_sage_const_8192 ) if not json_data: return data = json.loads(json_data) # check if the format is correct if not (\"x\" in data and \"y\" in data and \"c\" in data and \"d\" in data and \"groupID\" in data): response = json_response(_sage_const_3 ) else: c = Integer(data[\"c\"]) d = Integer(data[\"d\"]) x = Integer(data[\"x\"]) y = Integer(data[\"y\"]) X = E((x, y)) if X == c*P + d*Q: response = get_response(data[\"x\"], data[\"y\"], data[\"c\"], data[\"d\"], data[\"groupID\"]) else: print(\"expected %s = %d*%s + %d*%s, but got %s\" % (c*P + d*Q, c, P, d, Q, X)) response = json_response(_sage_const_4 ) self.send(response) except Exception as e: response = json_response(_sage_const_5 , ', \"Error Message\": \"%s\"' % e) So, the service takes JSON request containing x, y, c, d and groupID and checks if: $$X = (x, y) = c*P + d*Q$$ If the above condition is not satisfied, then JSON response simply contains an error message saying “Value mismatch! X != c*P + d*Q”. If the condition is satisfied then it calls get_response() function, which we will cover next.\nSince we know that server communicates with the user only through JSON requests and JSON responses, we can write a function that takes in x, y, c, d, groupID and returns a request in JSON format, to be sent to the service as input:\ndef json_input(x, y, c, d, groupID): dict1 = {'x': x, 'y': y, 'c': c, 'd': d, 'groupID': groupID} return json.dumps(dict1) Next, we analyse get_response:\n# Teams should choose a non-guessable groupID def get_response(x, y, c, d, groupID): # open connection to database conn = sqlite3.connect(\"points.db\") conn.row_factory = sqlite3.Row conn_cursor = conn.cursor() # convert sage integers to string to avoid \"Python int too large for SQLite INTEGER\" x = str(x) y = str(y) c = str(c) d = str(d) # Select records that map to the same X value conn_cursor.execute(\"SELECT * FROM points WHERE x = :x\", {\"x\": x}) query = conn_cursor.fetchall() # No record found -\u003e Point is not yet included if len(query) == _sage_const_0 : # Insert point into database conn_cursor.execute(\"INSERT INTO points (x, y, c, d, groupID) VALUES (?, ?, ?, ?, ?)\", (x, y, c, d, groupID)) # Get number of points added by this group conn_cursor.execute(\"SELECT x FROM points WHERE groupID = :gID\", {\"gID\": groupID}) points_found = conn_cursor.fetchall() add_param = ', \"points_found\": %d' % len(points_found) # When they found POINT_TRESHOLD distinguished points and a collision occured, return the colliding values as well if len(points_found) \u003e POINT_TRESHOLD: add_param += ', \"flag1\": \"%s\"' % FLAG1 if server.collision_found: # compute x from the collision, second flag is just x (not in flag format) add_param += ', \"collision\": %s' % (server.collision) response = json_response(_sage_const_0 , add_param) else: # One (or more) records found -\u003e check if they have the same exponents is_included = False for row in query: if row[\"c\"] == c and row[\"d\"] == d: is_included = True response = json_response(_sage_const_2 ) break if not is_included: # Exponents are different -\u003e Collision found, add this point conn_cursor.execute(\"INSERT INTO points (x, y, c, d, groupID, collision) VALUES (?, ?, ?, ?, ?, 1)\", (x, y, c, d, groupID)) # Get number of points added by this group conn_cursor.execute(\"SELECT x FROM points WHERE groupID = :gID\", {\"gID\": groupID}) points_found = conn_cursor.fetchall() add_param = ', \"points_found\": %d' % len(points_found) # add collision server.collision_found = True server.collision = '{\"c_1\": %s, \"d_1\": %s, \"c_2\": %s, \"d_2\": %s}' % (c, d, row[\"c\"], row[\"d\"]) if len(points_found) \u003e POINT_TRESHOLD: add_param += ', \"collision\": %s' % (server.collision) else: add_param += ', \"collision\": \"collision found but not enough distinguished points submitted yet\"' response = json_response(_sage_const_1 , add_param + ', \"c\": %s, \"d\": %s' % (row[\"c\"], row[\"d\"])) # close db connection and return response conn.commit() conn_cursor.close() conn.close() return response get_response does the following:\nSelects all rows from the database points.db that have the same value of x and checks if there exists any record that contains the same record ie. it checks if len(query) == 0 If the condition is true (there already exist records having same x), it checks whether ​c and d are same for the similar records found in step-1. If true, then an exact same input already exists in the database and hence it throws a JSON response “Point already included“. If false, then a collision is found. This implies that for a particular value of point X, we have found two pairs of exponents such that \\(X = c_1*P + d_1*Q = c_2*P + d_2*Q\\) Service adds this point to the database. It then calculates all x for which the groupID is same and assigns points_found = # x found. The counter points_found increases by one if a collision is found for a particular value of X. It checks if points_found \u003e 200 and displays output according to that (which does not affect our exploit since we only want points_found \u003e 200 at some point of time, to get the flag) If the condition is false (point X is not present in the database) Add the input points to the database It then calculates all x for which the groupID is same and assigns points_found = # x found It then checks if points_found \u003e 200. If true then it displays the flag for our challenge! The Exploit We know from the property of Elliptic Curves that \\(n*P = 0\\), where n is the order of the subgroup generated by a point \\(P\\) on an Elliptic Curve. We can use this property to exploit this challenge. Let us see how:\nIf we set d = 0, $$\\forall i\\in \\mathbb{I}, X = ((i*n+c)*P) + (0*Q) = ((i*n+c)*P)$$\nWe will now keep sending \\(c, d\\) as \\((c, 0), (c+n, 0), (c+2n, 0), …, (c+200n, 0)\\) having the same groupID (random enough to not collide with any other team’s groupID) and get 201 collisions which is just enough for us to get the flag. How? For the corresponding groupID, points_found = 201 \u003e 200.\nThen we send a random point on the curve having the same groupID as above and which is not there in the database. This will then pass the condition len(points_found) \u003e 200 and give us the flag.\nI wrote the script below to implement this attack in python. Note that ecauth is the python file I imported for doing Elliptic Curve operations:\nimport ecauth import sqlite3 import json from pwn import * def json_input(x, y, c, d, groupID): dict1 = {'x': x, 'y': y, 'c': c, 'd': d, 'groupID': groupID} return json.dumps(dict1) def create_curve(): p = 889774351128949770355298446172353873 a = 12345 b = 67890 curve = ecauth.CurveFp(p, a, b) return curve def base_point(curve, x, y, _order_point): P = ecauth.Point(curve, x, y, _order_point) return P curve = create_curve() _order_P = 79182553273022138539034276599687 _Px = 238266381988261346751878607720968495 _Py = 591153005086204165523829267245014771 P = base_point(curve, _Px, _Py, _order_P) _Qx = 341454032985370081366658659122300896 _Qy = 775807209463167910095539163959068826 Q = base_point(curve, _Qx, _Qy, _order_P) prev = 56558*P + 0*Q for i in range(210): r = remote(\"arcade.fluxfingers.net\",\"1822\") param = i*_order_P Point_x = (param + 56558)*P + 0*Q assert prev.x() == Point_x.x() and prev.y() == Point_x.y() data = json_input(Point_x.x(), Point_x.y(), param + 56558, 0, 888698063901) r.send(data) print i print r.recv() r.close() r = remote(\"arcade.fluxfingers.net\",\"1822\") Point_y = 35939*P + 11*Q data2 = json_input(Point_y.x(), Point_y.y(), 35939, 11, 888698063901) r.send(data2) print r.recv() r.close() Running the above script gives us the flag!\nVoila! It was fun!\nHowever, this approach will not get us a flag for the Multiplayer Part-2 (Find out why)! Waiting for the challenge author to discuss the intended solution for Multiplayer Part-2.\nUPDATE: Got the intended approach for both parts of this challenge: https://link.springer.com/content/pdf/10.1007%2F3-540-45537-X_17.pdf. Thanks to asante!\n",
+  "wordCount" : "2058",
+  "inLanguage": "en",
+  "datePublished": "2018-10-18T00:00:00Z",
+  "dateModified": "2018-10-18T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Ashutosh Ahelleya"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://ashutosh1206.github.io/ctf/hacklu18-crypto/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Ash's blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://ashutosh1206.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://ashutosh1206.github.io/" accesskey="h" title="Home (Alt + H)">Home</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://ashutosh1206.github.io/blog/" title="Blog">
+                    <span>Blog</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ashutosh1206.github.io/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ashutosh1206.github.io/archive/" title="Archive">
+                    <span>Archive</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ashutosh1206.github.io/ctf/" title="CTF">
+                    <span>CTF</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title">
+      Crypto writeups - Hack.lu CTF
+    </h1>
+    <div class="post-meta"><span title='2018-10-18 00:00:00 +0000 UTC'>October 18, 2018</span>&nbsp;·&nbsp;Ashutosh Ahelleya
+
+</div>
+  </header> 
+  <div class="post-content"><p>Hack.lu CTF is over and we (<a href="https://twitter.com/teambi0s">@teambi0s</a>) finished 13th globally and since we were registered as a local team (thanks to <a href="https://twitter.com/geethnatk">@GeethnaTk</a>) and stood first among the teams registered locally, hence we are eligible for prizes! Yay!</p>
+<p>This blog post covers detailed solutions to two of the crypto challenges from Hack.lu CTF 2018- <strong>Relations</strong> and <strong>Multiplayer Part-1</strong>. While the former was just about guessing (or detecting the pattern, whatever you want to say) of a black box encryption service, the latter was a more interesting challenge involving Elliptic Curves.</p>
+<p>To sum up, I enjoyed solving the crypto challenges this year, but I felt kinda sad and frustrated when Multiplayer Part-2 got removed because of some issues, as I spent quite a lot of time trying it. I learnt a lot meanwhile, so I guess it was worth it!</p>
+<p>Kudos to the organisers for putting up a beautiful CTF! Let us move onto the solutions now 🙂</p>
+<h1 id="relations">Relations<a hidden class="anchor" aria-hidden="true" href="#relations">#</a></h1>
+<p><img loading="lazy" src="/hacklu18-crypto-1.png" alt="picture"  />
+</p>
+<p>This was a fairly easy challenge although we are not given any encryption script. We are given three operations on the nc service to choose, <code>XOR</code>, <code>ADD</code> and <code>DEC</code> (decrypt). Then, we have to give an input string on which the selected operation is done.</p>
+<p>How the operation takes place was unknown at that particular point of time. But we see something strange here:</p>
+<p><img loading="lazy" src="/hacklu18-crypto-2.png" alt="picture"  />
+</p>
+<p>So now we know that DEC operation takes in base64 key which it then uses to AES decrypt some string, which could possibly be our flag.</p>
+<p>Then, we started giving random inputs to <code>XOR</code> and <code>ADD</code> operations and my teammates noticed this:</p>
+<p><img loading="lazy" src="/hacklu18-crypto-3.png" alt="picture"  />
+</p>
+<p>For the same input ​00, ADD and XOR operations give the same output! I immediately thought that we can use this to leak out the string to which our input is XORed or ADDed. And that string could possibly be the key used as an input in ​DEC to AES decrypt our flag. How can we exploit this?</p>
+<p>Consider A, B of size 1-bit each. If A=1, A xor B and A+B will be equal only when B = 0. That’s it! We can use this property to generalise and get all the bits of the key:</p>
+<ol>
+<li>Send \(2^0, 2^1, 2^2,&hellip;, 2^{127}\) as inputs for both XOR and ADD and check if the outputs for XOR and ADD for an input match.
+<ul>
+<li>If they match, then add 0 to the binary keystring, otherwise add 1.</li>
+</ul>
+</li>
+</ol>
+<p>I wrote the following script to implement this attack:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> string
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">choose_XOR_op</span>(input):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> input:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">assert</span> i <span style="color:#f92672">in</span> string<span style="color:#f92672">.</span>hexdigits
+</span></span><span style="display:flex;"><span>    r<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">&#34;*&#34;</span>)
+</span></span><span style="display:flex;"><span>    r<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">&#34;XOR&#34;</span>)
+</span></span><span style="display:flex;"><span>    r<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">&#34;&gt;&gt;&#34;</span>)
+</span></span><span style="display:flex;"><span>    r<span style="color:#f92672">.</span>sendline(input)
+</span></span><span style="display:flex;"><span>    ct <span style="color:#f92672">=</span> r<span style="color:#f92672">.</span>recvline()[<span style="color:#ae81ff">17</span>:]<span style="color:#f92672">.</span>strip()
+</span></span><span style="display:flex;"><span>    unknown <span style="color:#f92672">=</span> r<span style="color:#f92672">.</span>recvline()<span style="color:#f92672">.</span>strip()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> ct, unknown
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">choose_ADD_op</span>(input):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> input:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">assert</span> i <span style="color:#f92672">in</span> string<span style="color:#f92672">.</span>hexdigits
+</span></span><span style="display:flex;"><span>    r<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">&#34;*&#34;</span>)
+</span></span><span style="display:flex;"><span>    r<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">&#34;ADD&#34;</span>)
+</span></span><span style="display:flex;"><span>    r<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">&#34;&gt;&gt;&#34;</span>)
+</span></span><span style="display:flex;"><span>    r<span style="color:#f92672">.</span>sendline(input)
+</span></span><span style="display:flex;"><span>    ct <span style="color:#f92672">=</span> r<span style="color:#f92672">.</span>recvline()[<span style="color:#ae81ff">17</span>:]<span style="color:#f92672">.</span>strip()
+</span></span><span style="display:flex;"><span>    unknown <span style="color:#f92672">=</span> r<span style="color:#f92672">.</span>recvline()<span style="color:#f92672">.</span>strip()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> ct, unknown
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">choose_DEC_op</span>(input):
+</span></span><span style="display:flex;"><span>    r<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">&#34;*&#34;</span>)
+</span></span><span style="display:flex;"><span>    r<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">&#34;DEC&#34;</span>)
+</span></span><span style="display:flex;"><span>    r<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">&#34;&gt;&gt;&#34;</span>)
+</span></span><span style="display:flex;"><span>    r<span style="color:#f92672">.</span>sendline(input)
+</span></span><span style="display:flex;"><span>    print r<span style="color:#f92672">.</span>recvline()
+</span></span><span style="display:flex;"><span>    print r<span style="color:#f92672">.</span>recvline()
+</span></span><span style="display:flex;"><span>    r<span style="color:#f92672">.</span>close()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>list1 <span style="color:#f92672">=</span> [<span style="color:#ae81ff">2</span><span style="color:#f92672">**</span>i <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">128</span>)]
+</span></span><span style="display:flex;"><span>key <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>r <span style="color:#f92672">=</span> remote(<span style="color:#e6db74">&#34;arcade.fluxfingers.net&#34;</span>,<span style="color:#e6db74">&#34;1821&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> list1:
+</span></span><span style="display:flex;"><span>    ct, unknown <span style="color:#f92672">=</span> choose_XOR_op(hex(i)[<span style="color:#ae81ff">2</span>:]<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">&#34;L&#34;</span>,<span style="color:#e6db74">&#34;&#34;</span>))
+</span></span><span style="display:flex;"><span>    ct1, unknown1 <span style="color:#f92672">=</span> choose_ADD_op(hex(i)[<span style="color:#ae81ff">2</span>:]<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">&#34;L&#34;</span>,<span style="color:#e6db74">&#34;&#34;</span>))
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ct<span style="color:#f92672">+</span>unknown <span style="color:#f92672">==</span> ct1<span style="color:#f92672">+</span>unknown1:
+</span></span><span style="display:flex;"><span>        key <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#34;0&#34;</span>
+</span></span><span style="display:flex;"><span>        print key
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>        key <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#34;1&#34;</span>
+</span></span><span style="display:flex;"><span>        print key
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>key <span style="color:#f92672">=</span> hex(int(key[::<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>], <span style="color:#ae81ff">2</span>))[<span style="color:#ae81ff">2</span>:]<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">&#34;L&#34;</span>,<span style="color:#e6db74">&#34;&#34;</span>)<span style="color:#f92672">.</span>decode(<span style="color:#e6db74">&#34;hex&#34;</span>)<span style="color:#f92672">.</span>encode(<span style="color:#e6db74">&#34;base64&#34;</span>)<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,<span style="color:#e6db74">&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>choose_DEC_op(key)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>r<span style="color:#f92672">.</span>close()
+</span></span></code></pre></div><p>And got the flag!</p>
+<p><img loading="lazy" src="/hacklu18-crypto-4.png" alt="picture"  />
+</p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h1 id="multiplayer-part-1">Multiplayer Part-1<a hidden class="anchor" aria-hidden="true" href="#multiplayer-part-1">#</a></h1>
+<p>Note: This challenge requires basic knowledge of Elliptic Curves. In case you don’t know  ECC and want to start, you can use the following resources:</p>
+<ol>
+<li><a href="http://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/">http://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/</a></li>
+<li><a href="https://github.com/ashutosh1206/Crypton/tree/master/Elliptic-Curves">https://github.com/ashutosh1206/Crypton/tree/master/Elliptic-Curves</a></li>
+</ol>
+<p><img loading="lazy" src="/hacklu18-crypto-5.png" alt="picture"  />
+</p>
+<p>In this challenge, we are given the following files: <code>server.sage</code>, <code>parameters.sage</code> and <code>points.db</code>. We can host the challenge locally using <code>server.sage</code> to test our exploit. Having a glance at the challenge description quickly reveals that this challenge is based on Elliptic Curves which is quite evident from <code>parameters.sage</code> as well:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>param <span style="color:#f92672">=</span> {   <span style="color:#e6db74">&#34;hacklu&#34;</span>:
+</span></span><span style="display:flex;"><span>            ((<span style="color:#ae81ff">889774351128949770355298446172353873</span>, <span style="color:#ae81ff">12345</span>, <span style="color:#ae81ff">67890</span>),
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># Generator of Subgroup of prime order 73 bits, 79182553273022138539034276599687 to be excact</span>
+</span></span><span style="display:flex;"><span>            (<span style="color:#ae81ff">238266381988261346751878607720968495</span>, <span style="color:#ae81ff">591153005086204165523829267245014771</span>),
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># challenge Q = xP, x random from [0, 79182553273022138539034276599687)</span>
+</span></span><span style="display:flex;"><span>            (<span style="color:#ae81ff">341454032985370081366658659122300896</span>, <span style="color:#ae81ff">775807209463167910095539163959068826</span>)
+</span></span><span style="display:flex;"><span>            )
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>serverAdress <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;0.0.0.0&#39;</span>
+</span></span><span style="display:flex;"><span>serverPort <span style="color:#f92672">=</span> <span style="color:#ae81ff">23426</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(p, a, b), (px, py), (qx, qy) <span style="color:#f92672">=</span> param[<span style="color:#e6db74">&#34;hacklu&#34;</span>]
+</span></span><span style="display:flex;"><span>E <span style="color:#f92672">=</span> EllipticCurve(GF(p), [a, b])
+</span></span><span style="display:flex;"><span>P <span style="color:#f92672">=</span> E((px, py))
+</span></span><span style="display:flex;"><span>Q <span style="color:#f92672">=</span> E((qx, qy))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">is_distinguished_point</span>(p):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> p[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">^</span>(<span style="color:#ae81ff">100</span>)
+</span></span></code></pre></div><p>So the curve defined is \(y^2\equiv x^3 + a*x + b\mod p\), where</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>p <span style="color:#f92672">=</span> <span style="color:#ae81ff">889774351128949770355298446172353873</span>
+</span></span><span style="display:flex;"><span>a <span style="color:#f92672">=</span> <span style="color:#ae81ff">12345</span>
+</span></span><span style="display:flex;"><span>b <span style="color:#f92672">=</span> <span style="color:#ae81ff">67890</span>
+</span></span></code></pre></div><p>Also, \(P\) and \(Q\) are two points on this curve where \(Q = x*P\) (Note that * symbol here signifies <a href="https://github.com/ashutosh1206/Crypton/tree/master/Elliptic-Curves#scalar-multiplication">Scalar Multiplication</a> and x is the secret key whose value is unknown),</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>P <span style="color:#f92672">=</span> (<span style="color:#ae81ff">238266381988261346751878607720968495</span>, <span style="color:#ae81ff">591153005086204165523829267245014771</span>)
+</span></span><span style="display:flex;"><span>Q <span style="color:#f92672">=</span> (<span style="color:#ae81ff">341454032985370081366658659122300896</span>, <span style="color:#ae81ff">775807209463167910095539163959068826</span>)
+</span></span></code></pre></div><p>We are also given order of the subgroup generated by \(P\):<br>
+79182553273022138539034276599687</p>
+<p>According to the property of Elliptic Curves: \(n*P = 0\), where \(n\) is the order of the subgroup generated by a point \(P\) on an Elliptic Curve.</p>
+<p>The service communicates with the user using JSON request and JSON responses only. Let us analyse some code snippets below that are taken from <code>server.sage.py</code>.</p>
+<p>DLogHandler class:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DLogHandler</span>(asyncore<span style="color:#f92672">.</span>dispatcher_with_send):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">handle_read</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>            json_data <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>recv(_sage_const_8192 )
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> json_data:
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            data <span style="color:#f92672">=</span> json<span style="color:#f92672">.</span>loads(json_data)
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># check if the format is correct</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> (<span style="color:#e6db74">&#34;x&#34;</span> <span style="color:#f92672">in</span> data <span style="color:#f92672">and</span> <span style="color:#e6db74">&#34;y&#34;</span> <span style="color:#f92672">in</span> data <span style="color:#f92672">and</span> <span style="color:#e6db74">&#34;c&#34;</span> <span style="color:#f92672">in</span> data <span style="color:#f92672">and</span> <span style="color:#e6db74">&#34;d&#34;</span> <span style="color:#f92672">in</span> data <span style="color:#f92672">and</span> <span style="color:#e6db74">&#34;groupID&#34;</span> <span style="color:#f92672">in</span> data):
+</span></span><span style="display:flex;"><span>                response <span style="color:#f92672">=</span> json_response(_sage_const_3 )
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>                c <span style="color:#f92672">=</span> Integer(data[<span style="color:#e6db74">&#34;c&#34;</span>])
+</span></span><span style="display:flex;"><span>                d <span style="color:#f92672">=</span> Integer(data[<span style="color:#e6db74">&#34;d&#34;</span>])
+</span></span><span style="display:flex;"><span>                x <span style="color:#f92672">=</span> Integer(data[<span style="color:#e6db74">&#34;x&#34;</span>])
+</span></span><span style="display:flex;"><span>                y <span style="color:#f92672">=</span> Integer(data[<span style="color:#e6db74">&#34;y&#34;</span>])
+</span></span><span style="display:flex;"><span>                X <span style="color:#f92672">=</span> E((x, y))
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> X <span style="color:#f92672">==</span> c<span style="color:#f92672">*</span>P <span style="color:#f92672">+</span> d<span style="color:#f92672">*</span>Q:
+</span></span><span style="display:flex;"><span>                    response <span style="color:#f92672">=</span> get_response(data[<span style="color:#e6db74">&#34;x&#34;</span>], data[<span style="color:#e6db74">&#34;y&#34;</span>], data[<span style="color:#e6db74">&#34;c&#34;</span>], data[<span style="color:#e6db74">&#34;d&#34;</span>], data[<span style="color:#e6db74">&#34;groupID&#34;</span>])
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>                    print(<span style="color:#e6db74">&#34;expected </span><span style="color:#e6db74">%s</span><span style="color:#e6db74"> = </span><span style="color:#e6db74">%d</span><span style="color:#e6db74">*</span><span style="color:#e6db74">%s</span><span style="color:#e6db74"> + </span><span style="color:#e6db74">%d</span><span style="color:#e6db74">*</span><span style="color:#e6db74">%s</span><span style="color:#e6db74">, but got </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">%</span> (c<span style="color:#f92672">*</span>P <span style="color:#f92672">+</span> d<span style="color:#f92672">*</span>Q, c, P, d, Q, X))
+</span></span><span style="display:flex;"><span>                    response <span style="color:#f92672">=</span> json_response(_sage_const_4 )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>send(response)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span> <span style="color:#66d9ef">as</span> e:
+</span></span><span style="display:flex;"><span>            response <span style="color:#f92672">=</span> json_response(_sage_const_5 , <span style="color:#e6db74">&#39;, &#34;Error Message&#34;: &#34;</span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#34;&#39;</span> <span style="color:#f92672">%</span> e)
 </span></span></code></pre></div><p>So, the service takes JSON request containing <code>x</code>, <code>y</code>, <code>c</code>, <code>d</code> and groupID and checks if:
 $$X = (x, y) = c*P + d*Q$$
-If the above condition is not satisfied, then JSON response simply contains an error message saying &ldquo;Value mismatch! X != c*P + d*Q&rdquo;. If the condition is satisfied then it calls get_response() function, which we will cover next.</p><p>Since we know that server communicates with the user only through JSON requests and JSON responses, we can write a function that takes in <code>x</code>, <code>y</code>, <code>c</code>, <code>d</code>, <code>groupID</code> and returns a request in JSON format, to be sent to the service as input:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>json_input</span>(x, y, c, d, groupID):
-</span></span><span style=display:flex><span>    dict1 <span style=color:#f92672>=</span> {<span style=color:#e6db74>&#39;x&#39;</span>: x, <span style=color:#e6db74>&#39;y&#39;</span>: y, <span style=color:#e6db74>&#39;c&#39;</span>: c, <span style=color:#e6db74>&#39;d&#39;</span>: d, <span style=color:#e6db74>&#39;groupID&#39;</span>: groupID}
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> json<span style=color:#f92672>.</span>dumps(dict1)
-</span></span></code></pre></div><p>Next, we analyse <code>get_response</code>:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75715e># Teams should choose a non-guessable groupID</span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>get_response</span>(x, y, c, d, groupID):
-</span></span><span style=display:flex><span>    <span style=color:#75715e># open connection to database</span>
-</span></span><span style=display:flex><span>    conn <span style=color:#f92672>=</span> sqlite3<span style=color:#f92672>.</span>connect(<span style=color:#e6db74>&#34;points.db&#34;</span>)
-</span></span><span style=display:flex><span>    conn<span style=color:#f92672>.</span>row_factory <span style=color:#f92672>=</span> sqlite3<span style=color:#f92672>.</span>Row
-</span></span><span style=display:flex><span>    conn_cursor <span style=color:#f92672>=</span> conn<span style=color:#f92672>.</span>cursor()
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    <span style=color:#75715e># convert sage integers to string to avoid &#34;Python int too large for SQLite INTEGER&#34;</span>
-</span></span><span style=display:flex><span>    x <span style=color:#f92672>=</span> str(x)
-</span></span><span style=display:flex><span>    y <span style=color:#f92672>=</span> str(y)
-</span></span><span style=display:flex><span>    c <span style=color:#f92672>=</span> str(c)
-</span></span><span style=display:flex><span>    d <span style=color:#f92672>=</span> str(d)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    <span style=color:#75715e># Select records that map to the same X value</span>
-</span></span><span style=display:flex><span>    conn_cursor<span style=color:#f92672>.</span>execute(<span style=color:#e6db74>&#34;SELECT * FROM points WHERE x = :x&#34;</span>, {<span style=color:#e6db74>&#34;x&#34;</span>: x})
-</span></span><span style=display:flex><span>    query <span style=color:#f92672>=</span> conn_cursor<span style=color:#f92672>.</span>fetchall()
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    <span style=color:#75715e># No record found -&gt; Point is not yet included</span>
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> len(query) <span style=color:#f92672>==</span> _sage_const_0 :
-</span></span><span style=display:flex><span>        <span style=color:#75715e># Insert point into database</span>
-</span></span><span style=display:flex><span>        conn_cursor<span style=color:#f92672>.</span>execute(<span style=color:#e6db74>&#34;INSERT INTO points (x, y, c, d, groupID) VALUES (?, ?, ?, ?, ?)&#34;</span>,
-</span></span><span style=display:flex><span>                  (x, y, c, d, groupID))
-</span></span><span style=display:flex><span>        <span style=color:#75715e># Get number of points added by this group</span>
-</span></span><span style=display:flex><span>        conn_cursor<span style=color:#f92672>.</span>execute(<span style=color:#e6db74>&#34;SELECT x FROM points WHERE groupID = :gID&#34;</span>, {<span style=color:#e6db74>&#34;gID&#34;</span>: groupID})
-</span></span><span style=display:flex><span>        points_found <span style=color:#f92672>=</span> conn_cursor<span style=color:#f92672>.</span>fetchall()
-</span></span><span style=display:flex><span>        add_param <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;, &#34;points_found&#34;: </span><span style=color:#e6db74>%d</span><span style=color:#e6db74>&#39;</span> <span style=color:#f92672>%</span> len(points_found)
-</span></span><span style=display:flex><span>        <span style=color:#75715e># When they found POINT_TRESHOLD distinguished points and a collision occured, return the colliding values as well</span>
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> len(points_found) <span style=color:#f92672>&gt;</span> POINT_TRESHOLD:
-</span></span><span style=display:flex><span>            add_param <span style=color:#f92672>+=</span> <span style=color:#e6db74>&#39;, &#34;flag1&#34;: &#34;</span><span style=color:#e6db74>%s</span><span style=color:#e6db74>&#34;&#39;</span> <span style=color:#f92672>%</span> FLAG1
-</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> server<span style=color:#f92672>.</span>collision_found:
-</span></span><span style=display:flex><span>                <span style=color:#75715e># compute x from the collision, second flag is just x (not in flag format)</span>
-</span></span><span style=display:flex><span>                add_param <span style=color:#f92672>+=</span> <span style=color:#e6db74>&#39;, &#34;collision&#34;: </span><span style=color:#e6db74>%s</span><span style=color:#e6db74>&#39;</span> <span style=color:#f92672>%</span> (server<span style=color:#f92672>.</span>collision)
-</span></span><span style=display:flex><span>        response <span style=color:#f92672>=</span> json_response(_sage_const_0 , add_param)
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>else</span>:
-</span></span><span style=display:flex><span>        <span style=color:#75715e># One (or more) records found -&gt; check if they have the same exponents</span>
-</span></span><span style=display:flex><span>        is_included <span style=color:#f92672>=</span> <span style=color:#66d9ef>False</span>
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>for</span> row <span style=color:#f92672>in</span> query:
-</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> row[<span style=color:#e6db74>&#34;c&#34;</span>] <span style=color:#f92672>==</span> c <span style=color:#f92672>and</span> row[<span style=color:#e6db74>&#34;d&#34;</span>] <span style=color:#f92672>==</span> d:
-</span></span><span style=display:flex><span>                is_included <span style=color:#f92672>=</span> <span style=color:#66d9ef>True</span>
-</span></span><span style=display:flex><span>                response <span style=color:#f92672>=</span> json_response(_sage_const_2 )
-</span></span><span style=display:flex><span>                <span style=color:#66d9ef>break</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> <span style=color:#f92672>not</span> is_included:
-</span></span><span style=display:flex><span>            <span style=color:#75715e># Exponents are different -&gt; Collision found, add this point</span>
-</span></span><span style=display:flex><span>            conn_cursor<span style=color:#f92672>.</span>execute(<span style=color:#e6db74>&#34;INSERT INTO points (x, y, c, d, groupID, collision) VALUES (?, ?, ?, ?, ?, 1)&#34;</span>,
-</span></span><span style=display:flex><span>                      (x, y, c, d, groupID))
-</span></span><span style=display:flex><span>            <span style=color:#75715e># Get number of points added by this group</span>
-</span></span><span style=display:flex><span>            conn_cursor<span style=color:#f92672>.</span>execute(<span style=color:#e6db74>&#34;SELECT x FROM points WHERE groupID = :gID&#34;</span>, {<span style=color:#e6db74>&#34;gID&#34;</span>: groupID})
-</span></span><span style=display:flex><span>            points_found <span style=color:#f92672>=</span> conn_cursor<span style=color:#f92672>.</span>fetchall()
-</span></span><span style=display:flex><span>            add_param <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;, &#34;points_found&#34;: </span><span style=color:#e6db74>%d</span><span style=color:#e6db74>&#39;</span> <span style=color:#f92672>%</span> len(points_found)
-</span></span><span style=display:flex><span>            <span style=color:#75715e># add collision</span>
-</span></span><span style=display:flex><span>            server<span style=color:#f92672>.</span>collision_found <span style=color:#f92672>=</span> <span style=color:#66d9ef>True</span>
-</span></span><span style=display:flex><span>            server<span style=color:#f92672>.</span>collision <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;{&#34;c_1&#34;: </span><span style=color:#e6db74>%s</span><span style=color:#e6db74>, &#34;d_1&#34;: </span><span style=color:#e6db74>%s</span><span style=color:#e6db74>, &#34;c_2&#34;: </span><span style=color:#e6db74>%s</span><span style=color:#e6db74>, &#34;d_2&#34;: </span><span style=color:#e6db74>%s</span><span style=color:#e6db74>}&#39;</span> <span style=color:#f92672>%</span> (c, d, row[<span style=color:#e6db74>&#34;c&#34;</span>], row[<span style=color:#e6db74>&#34;d&#34;</span>])
-</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> len(points_found) <span style=color:#f92672>&gt;</span> POINT_TRESHOLD:
-</span></span><span style=display:flex><span>                add_param <span style=color:#f92672>+=</span> <span style=color:#e6db74>&#39;, &#34;collision&#34;: </span><span style=color:#e6db74>%s</span><span style=color:#e6db74>&#39;</span> <span style=color:#f92672>%</span> (server<span style=color:#f92672>.</span>collision)
-</span></span><span style=display:flex><span>            <span style=color:#66d9ef>else</span>:
-</span></span><span style=display:flex><span>                add_param <span style=color:#f92672>+=</span> <span style=color:#e6db74>&#39;, &#34;collision&#34;: &#34;collision found but not enough distinguished points submitted yet&#34;&#39;</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>            response <span style=color:#f92672>=</span> json_response(_sage_const_1 , add_param <span style=color:#f92672>+</span> <span style=color:#e6db74>&#39;, &#34;c&#34;: </span><span style=color:#e6db74>%s</span><span style=color:#e6db74>, &#34;d&#34;: </span><span style=color:#e6db74>%s</span><span style=color:#e6db74>&#39;</span> <span style=color:#f92672>%</span> (row[<span style=color:#e6db74>&#34;c&#34;</span>], row[<span style=color:#e6db74>&#34;d&#34;</span>]))
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    <span style=color:#75715e># close db connection and return response</span>
-</span></span><span style=display:flex><span>    conn<span style=color:#f92672>.</span>commit()
-</span></span><span style=display:flex><span>    conn_cursor<span style=color:#f92672>.</span>close()
-</span></span><span style=display:flex><span>    conn<span style=color:#f92672>.</span>close()
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> response
-</span></span></code></pre></div><p><code>get_response</code> does the following:</p><ol><li>Selects all rows from the database points.db that have the same value of x and checks if there exists any record that contains the same record ie. it checks if len(query) == 0</li><li>If the condition is true (there already exist records having same x), it checks whether ​c and d are same for the similar records found in step-1.</li></ol><ul><li>If true, then an exact same input already exists in the database and hence it throws a JSON response “Point already included“.</li><li>If false, then a <strong>collision is found</strong>. This implies that for a particular value of point <code>X</code>, we have found two pairs of exponents such that<ul><li>\(X = c_1*P + d_1*Q = c_2*P + d_2*Q\)</li><li>Service adds this point to the database.</li><li>It then calculates all x for which the groupID is same and assigns points_found = # x found.</li><li>The counter points_found increases by one if a collision is found for a particular value of X. It checks if points_found > 200 and displays output according to that (which does not affect our exploit since we only want points_found > 200 at some point of time, to get the flag)</li></ul></li></ul><ol start=3><li>If the condition is false (point X is not present in the database)<ul><li>Add the input points to the database</li><li>It then calculates all x for which the groupID is same and assigns points_found = # x found</li><li>It then checks if points_found > 200.<ul><li>If true then it displays the flag for our challenge!</li></ul></li></ul></li></ol><h2 id=the-exploit>The Exploit<a hidden class=anchor aria-hidden=true href=#the-exploit>#</a></h2><p>We know from the property of Elliptic Curves that \(n*P = 0\), where <code>n</code> is the order of the subgroup generated by a point \(P\) on an Elliptic Curve. We can use this property to exploit this challenge. Let us see how:</p><p>If we set d = 0,
-$$\forall i\in \mathbb{I}, X = ((i*n+c)*P) + (0*Q) = ((i*n+c)*P)$$</p><p>We will now keep sending \(c, d\) as \((c, 0), (c+n, 0), (c+2n, 0), &mldr;, (c+200n, 0)\) having the same <code>groupID</code> (random enough to not collide with any other team’s groupID) and get 201 collisions which is just enough for us to get the flag. How? For the corresponding <code>groupID</code>, <code>points_found</code> = 201 > 200.</p><p>Then we send a random point on the curve having the same groupID as above and which is not there in the database. This will then pass the condition len(points_found) > 200 and give us the flag.</p><p>I wrote the script below to implement this attack in python. Note that ecauth is the python file I imported for doing Elliptic Curve operations:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> ecauth
-</span></span><span style=display:flex><span><span style=color:#f92672>import</span> sqlite3
-</span></span><span style=display:flex><span><span style=color:#f92672>import</span> json
-</span></span><span style=display:flex><span><span style=color:#f92672>from</span> pwn <span style=color:#f92672>import</span> <span style=color:#f92672>*</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>json_input</span>(x, y, c, d, groupID):
-</span></span><span style=display:flex><span>    dict1 <span style=color:#f92672>=</span> {<span style=color:#e6db74>&#39;x&#39;</span>: x, <span style=color:#e6db74>&#39;y&#39;</span>: y, <span style=color:#e6db74>&#39;c&#39;</span>: c, <span style=color:#e6db74>&#39;d&#39;</span>: d, <span style=color:#e6db74>&#39;groupID&#39;</span>: groupID}
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> json<span style=color:#f92672>.</span>dumps(dict1)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>create_curve</span>():
-</span></span><span style=display:flex><span>    p <span style=color:#f92672>=</span> <span style=color:#ae81ff>889774351128949770355298446172353873</span>
-</span></span><span style=display:flex><span>    a <span style=color:#f92672>=</span> <span style=color:#ae81ff>12345</span>
-</span></span><span style=display:flex><span>    b <span style=color:#f92672>=</span> <span style=color:#ae81ff>67890</span>
-</span></span><span style=display:flex><span>    curve <span style=color:#f92672>=</span> ecauth<span style=color:#f92672>.</span>CurveFp(p, a, b)
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> curve
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>base_point</span>(curve, x, y, _order_point):
-</span></span><span style=display:flex><span>    P <span style=color:#f92672>=</span> ecauth<span style=color:#f92672>.</span>Point(curve, x, y, _order_point)
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> P
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>curve <span style=color:#f92672>=</span> create_curve()
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>_order_P <span style=color:#f92672>=</span> <span style=color:#ae81ff>79182553273022138539034276599687</span>
-</span></span><span style=display:flex><span>_Px <span style=color:#f92672>=</span> <span style=color:#ae81ff>238266381988261346751878607720968495</span>
-</span></span><span style=display:flex><span>_Py <span style=color:#f92672>=</span> <span style=color:#ae81ff>591153005086204165523829267245014771</span>
-</span></span><span style=display:flex><span>P <span style=color:#f92672>=</span> base_point(curve, _Px, _Py, _order_P)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>_Qx <span style=color:#f92672>=</span> <span style=color:#ae81ff>341454032985370081366658659122300896</span>
-</span></span><span style=display:flex><span>_Qy <span style=color:#f92672>=</span> <span style=color:#ae81ff>775807209463167910095539163959068826</span>
-</span></span><span style=display:flex><span>Q <span style=color:#f92672>=</span> base_point(curve, _Qx, _Qy, _order_P)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>prev <span style=color:#f92672>=</span> <span style=color:#ae81ff>56558</span><span style=color:#f92672>*</span>P <span style=color:#f92672>+</span> <span style=color:#ae81ff>0</span><span style=color:#f92672>*</span>Q
-</span></span><span style=display:flex><span><span style=color:#66d9ef>for</span> i <span style=color:#f92672>in</span> range(<span style=color:#ae81ff>210</span>):
-</span></span><span style=display:flex><span>    r <span style=color:#f92672>=</span> remote(<span style=color:#e6db74>&#34;arcade.fluxfingers.net&#34;</span>,<span style=color:#e6db74>&#34;1822&#34;</span>)
-</span></span><span style=display:flex><span>    param <span style=color:#f92672>=</span> i<span style=color:#f92672>*</span>_order_P
-</span></span><span style=display:flex><span>    Point_x <span style=color:#f92672>=</span> (param <span style=color:#f92672>+</span> <span style=color:#ae81ff>56558</span>)<span style=color:#f92672>*</span>P <span style=color:#f92672>+</span> <span style=color:#ae81ff>0</span><span style=color:#f92672>*</span>Q
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>assert</span> prev<span style=color:#f92672>.</span>x() <span style=color:#f92672>==</span> Point_x<span style=color:#f92672>.</span>x() <span style=color:#f92672>and</span> prev<span style=color:#f92672>.</span>y() <span style=color:#f92672>==</span> Point_x<span style=color:#f92672>.</span>y()
-</span></span><span style=display:flex><span>    data <span style=color:#f92672>=</span> json_input(Point_x<span style=color:#f92672>.</span>x(), Point_x<span style=color:#f92672>.</span>y(), param <span style=color:#f92672>+</span> <span style=color:#ae81ff>56558</span>, <span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>888698063901</span>)
-</span></span><span style=display:flex><span>    r<span style=color:#f92672>.</span>send(data)
-</span></span><span style=display:flex><span>    print i
-</span></span><span style=display:flex><span>    print r<span style=color:#f92672>.</span>recv()
-</span></span><span style=display:flex><span>    r<span style=color:#f92672>.</span>close()
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>r <span style=color:#f92672>=</span> remote(<span style=color:#e6db74>&#34;arcade.fluxfingers.net&#34;</span>,<span style=color:#e6db74>&#34;1822&#34;</span>)
-</span></span><span style=display:flex><span>Point_y <span style=color:#f92672>=</span> <span style=color:#ae81ff>35939</span><span style=color:#f92672>*</span>P <span style=color:#f92672>+</span> <span style=color:#ae81ff>11</span><span style=color:#f92672>*</span>Q
-</span></span><span style=display:flex><span>data2 <span style=color:#f92672>=</span> json_input(Point_y<span style=color:#f92672>.</span>x(), Point_y<span style=color:#f92672>.</span>y(), <span style=color:#ae81ff>35939</span>, <span style=color:#ae81ff>11</span>, <span style=color:#ae81ff>888698063901</span>)
-</span></span><span style=display:flex><span>r<span style=color:#f92672>.</span>send(data2)
-</span></span><span style=display:flex><span>print r<span style=color:#f92672>.</span>recv()
-</span></span><span style=display:flex><span>r<span style=color:#f92672>.</span>close()
-</span></span></code></pre></div><p>Running the above script gives us the flag!</p><p><img loading=lazy src=/hacklu18-crypto-6.png alt=picture></p><p>Voila! It was fun!</p><p>However, this approach will not get us a flag for the Multiplayer Part-2 (Find out why)! Waiting for the challenge author to discuss the intended solution for Multiplayer Part-2.</p><p>UPDATE: Got the intended approach for both parts of this challenge: <a href=https://link.springer.com/content/pdf/10.1007%2F3-540-45537-X_17.pdf>https://link.springer.com/content/pdf/10.1007%2F3-540-45537-X_17.pdf</a>. Thanks to asante!</p></div><footer class=post-footer><ul class=post-tags><li><a href=https://ashutosh1206.github.io/tags/elliptic-curves/>Elliptic-Curves</a></li></ul></footer></article></main><footer class=footer><span>&copy; 2023 <a href=https://ashutosh1206.github.io/>Ashutosh Ahelleya</a></span>
-<span>Powered by
-<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
-        <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg></a><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script></body></html>
+If the above condition is not satisfied, then JSON response simply contains an error message saying &ldquo;Value mismatch! X != c*P + d*Q&rdquo;. If the condition is satisfied then it calls get_response() function, which we will cover next.</p>
+<p>Since we know that server communicates with the user only through JSON requests and JSON responses, we can write a function that takes in <code>x</code>, <code>y</code>, <code>c</code>, <code>d</code>, <code>groupID</code> and returns a request in JSON format, to be sent to the service as input:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">json_input</span>(x, y, c, d, groupID):
+</span></span><span style="display:flex;"><span>    dict1 <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;x&#39;</span>: x, <span style="color:#e6db74">&#39;y&#39;</span>: y, <span style="color:#e6db74">&#39;c&#39;</span>: c, <span style="color:#e6db74">&#39;d&#39;</span>: d, <span style="color:#e6db74">&#39;groupID&#39;</span>: groupID}
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> json<span style="color:#f92672">.</span>dumps(dict1)
+</span></span></code></pre></div><p>Next, we analyse <code>get_response</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># Teams should choose a non-guessable groupID</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_response</span>(x, y, c, d, groupID):
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># open connection to database</span>
+</span></span><span style="display:flex;"><span>    conn <span style="color:#f92672">=</span> sqlite3<span style="color:#f92672">.</span>connect(<span style="color:#e6db74">&#34;points.db&#34;</span>)
+</span></span><span style="display:flex;"><span>    conn<span style="color:#f92672">.</span>row_factory <span style="color:#f92672">=</span> sqlite3<span style="color:#f92672">.</span>Row
+</span></span><span style="display:flex;"><span>    conn_cursor <span style="color:#f92672">=</span> conn<span style="color:#f92672">.</span>cursor()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># convert sage integers to string to avoid &#34;Python int too large for SQLite INTEGER&#34;</span>
+</span></span><span style="display:flex;"><span>    x <span style="color:#f92672">=</span> str(x)
+</span></span><span style="display:flex;"><span>    y <span style="color:#f92672">=</span> str(y)
+</span></span><span style="display:flex;"><span>    c <span style="color:#f92672">=</span> str(c)
+</span></span><span style="display:flex;"><span>    d <span style="color:#f92672">=</span> str(d)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Select records that map to the same X value</span>
+</span></span><span style="display:flex;"><span>    conn_cursor<span style="color:#f92672">.</span>execute(<span style="color:#e6db74">&#34;SELECT * FROM points WHERE x = :x&#34;</span>, {<span style="color:#e6db74">&#34;x&#34;</span>: x})
+</span></span><span style="display:flex;"><span>    query <span style="color:#f92672">=</span> conn_cursor<span style="color:#f92672">.</span>fetchall()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># No record found -&gt; Point is not yet included</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> len(query) <span style="color:#f92672">==</span> _sage_const_0 :
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Insert point into database</span>
+</span></span><span style="display:flex;"><span>        conn_cursor<span style="color:#f92672">.</span>execute(<span style="color:#e6db74">&#34;INSERT INTO points (x, y, c, d, groupID) VALUES (?, ?, ?, ?, ?)&#34;</span>,
+</span></span><span style="display:flex;"><span>                  (x, y, c, d, groupID))
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Get number of points added by this group</span>
+</span></span><span style="display:flex;"><span>        conn_cursor<span style="color:#f92672">.</span>execute(<span style="color:#e6db74">&#34;SELECT x FROM points WHERE groupID = :gID&#34;</span>, {<span style="color:#e6db74">&#34;gID&#34;</span>: groupID})
+</span></span><span style="display:flex;"><span>        points_found <span style="color:#f92672">=</span> conn_cursor<span style="color:#f92672">.</span>fetchall()
+</span></span><span style="display:flex;"><span>        add_param <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;, &#34;points_found&#34;: </span><span style="color:#e6db74">%d</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> len(points_found)
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># When they found POINT_TRESHOLD distinguished points and a collision occured, return the colliding values as well</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> len(points_found) <span style="color:#f92672">&gt;</span> POINT_TRESHOLD:
+</span></span><span style="display:flex;"><span>            add_param <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#39;, &#34;flag1&#34;: &#34;</span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#34;&#39;</span> <span style="color:#f92672">%</span> FLAG1
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> server<span style="color:#f92672">.</span>collision_found:
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e"># compute x from the collision, second flag is just x (not in flag format)</span>
+</span></span><span style="display:flex;"><span>                add_param <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#39;, &#34;collision&#34;: </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> (server<span style="color:#f92672">.</span>collision)
+</span></span><span style="display:flex;"><span>        response <span style="color:#f92672">=</span> json_response(_sage_const_0 , add_param)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># One (or more) records found -&gt; check if they have the same exponents</span>
+</span></span><span style="display:flex;"><span>        is_included <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> row <span style="color:#f92672">in</span> query:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> row[<span style="color:#e6db74">&#34;c&#34;</span>] <span style="color:#f92672">==</span> c <span style="color:#f92672">and</span> row[<span style="color:#e6db74">&#34;d&#34;</span>] <span style="color:#f92672">==</span> d:
+</span></span><span style="display:flex;"><span>                is_included <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>                response <span style="color:#f92672">=</span> json_response(_sage_const_2 )
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> is_included:
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># Exponents are different -&gt; Collision found, add this point</span>
+</span></span><span style="display:flex;"><span>            conn_cursor<span style="color:#f92672">.</span>execute(<span style="color:#e6db74">&#34;INSERT INTO points (x, y, c, d, groupID, collision) VALUES (?, ?, ?, ?, ?, 1)&#34;</span>,
+</span></span><span style="display:flex;"><span>                      (x, y, c, d, groupID))
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># Get number of points added by this group</span>
+</span></span><span style="display:flex;"><span>            conn_cursor<span style="color:#f92672">.</span>execute(<span style="color:#e6db74">&#34;SELECT x FROM points WHERE groupID = :gID&#34;</span>, {<span style="color:#e6db74">&#34;gID&#34;</span>: groupID})
+</span></span><span style="display:flex;"><span>            points_found <span style="color:#f92672">=</span> conn_cursor<span style="color:#f92672">.</span>fetchall()
+</span></span><span style="display:flex;"><span>            add_param <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;, &#34;points_found&#34;: </span><span style="color:#e6db74">%d</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> len(points_found)
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># add collision</span>
+</span></span><span style="display:flex;"><span>            server<span style="color:#f92672">.</span>collision_found <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>            server<span style="color:#f92672">.</span>collision <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;{&#34;c_1&#34;: </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">, &#34;d_1&#34;: </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">, &#34;c_2&#34;: </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">, &#34;d_2&#34;: </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">}&#39;</span> <span style="color:#f92672">%</span> (c, d, row[<span style="color:#e6db74">&#34;c&#34;</span>], row[<span style="color:#e6db74">&#34;d&#34;</span>])
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> len(points_found) <span style="color:#f92672">&gt;</span> POINT_TRESHOLD:
+</span></span><span style="display:flex;"><span>                add_param <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#39;, &#34;collision&#34;: </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> (server<span style="color:#f92672">.</span>collision)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>                add_param <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#39;, &#34;collision&#34;: &#34;collision found but not enough distinguished points submitted yet&#34;&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            response <span style="color:#f92672">=</span> json_response(_sage_const_1 , add_param <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;, &#34;c&#34;: </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">, &#34;d&#34;: </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> (row[<span style="color:#e6db74">&#34;c&#34;</span>], row[<span style="color:#e6db74">&#34;d&#34;</span>]))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># close db connection and return response</span>
+</span></span><span style="display:flex;"><span>    conn<span style="color:#f92672">.</span>commit()
+</span></span><span style="display:flex;"><span>    conn_cursor<span style="color:#f92672">.</span>close()
+</span></span><span style="display:flex;"><span>    conn<span style="color:#f92672">.</span>close()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> response
+</span></span></code></pre></div><p><code>get_response</code> does the following:</p>
+<ol>
+<li>Selects all rows from the database points.db that have the same value of x and checks if there exists any record that contains the same record ie. it checks if len(query) == 0</li>
+<li>If the condition is true (there already exist records having same x), it checks whether ​c and d are same for the similar records found in step-1.</li>
+</ol>
+<ul>
+<li>If true, then an exact same input already exists in the database and hence it throws a JSON response “Point already included“.</li>
+<li>If false, then a <strong>collision is found</strong>. This implies that for a particular value of point <code>X</code>, we have found two pairs of exponents such that
+<ul>
+<li>\(X = c_1*P + d_1*Q = c_2*P + d_2*Q\)</li>
+<li>Service adds this point to the database.</li>
+<li>It then calculates all x for which the groupID is same and assigns points_found = # x found.</li>
+<li>The counter points_found increases by one if a collision is found for a particular value of X.  It checks if points_found &gt; 200 and displays output according to that (which does not affect our exploit since we only want points_found &gt; 200 at some point of time, to get the flag)</li>
+</ul>
+</li>
+</ul>
+<ol start="3">
+<li>If the condition is false (point X is not present in the database)
+<ul>
+<li>Add the input points to the database</li>
+<li>It then calculates all x for which the groupID is same and assigns points_found = # x found</li>
+<li>It then checks if points_found &gt; 200.
+<ul>
+<li>If true then it displays the flag for our challenge!</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="the-exploit">The Exploit<a hidden class="anchor" aria-hidden="true" href="#the-exploit">#</a></h2>
+<p>We know from the property of Elliptic Curves that \(n*P = 0\), where <code>n</code> is the order of the subgroup generated by a point \(P\) on an Elliptic Curve. We can use this property to exploit this challenge. Let us see how:</p>
+<p>If we set d = 0,
+$$\forall i\in \mathbb{I}, X = ((i*n+c)*P) + (0*Q) = ((i*n+c)*P)$$</p>
+<p>We will now keep sending \(c, d\) as \((c, 0), (c+n, 0), (c+2n, 0), &hellip;, (c+200n, 0)\) having the same <code>groupID</code> (random enough to not collide with any other team’s groupID) and get 201 collisions which is just enough for us to get the flag. How? For the corresponding <code>groupID</code>, <code>points_found</code> = 201 &gt; 200.</p>
+<p>Then we send a random point on the curve having the same groupID as above and which is not there in the database. This will then pass the condition len(points_found) &gt; 200 and give us the flag.</p>
+<p>I wrote the script below to implement this attack in python. Note that ecauth is the python file I imported for doing Elliptic Curve operations:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> ecauth
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> sqlite3
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> json
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">json_input</span>(x, y, c, d, groupID):
+</span></span><span style="display:flex;"><span>    dict1 <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;x&#39;</span>: x, <span style="color:#e6db74">&#39;y&#39;</span>: y, <span style="color:#e6db74">&#39;c&#39;</span>: c, <span style="color:#e6db74">&#39;d&#39;</span>: d, <span style="color:#e6db74">&#39;groupID&#39;</span>: groupID}
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> json<span style="color:#f92672">.</span>dumps(dict1)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">create_curve</span>():
+</span></span><span style="display:flex;"><span>    p <span style="color:#f92672">=</span> <span style="color:#ae81ff">889774351128949770355298446172353873</span>
+</span></span><span style="display:flex;"><span>    a <span style="color:#f92672">=</span> <span style="color:#ae81ff">12345</span>
+</span></span><span style="display:flex;"><span>    b <span style="color:#f92672">=</span> <span style="color:#ae81ff">67890</span>
+</span></span><span style="display:flex;"><span>    curve <span style="color:#f92672">=</span> ecauth<span style="color:#f92672">.</span>CurveFp(p, a, b)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> curve
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">base_point</span>(curve, x, y, _order_point):
+</span></span><span style="display:flex;"><span>    P <span style="color:#f92672">=</span> ecauth<span style="color:#f92672">.</span>Point(curve, x, y, _order_point)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> P
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>curve <span style="color:#f92672">=</span> create_curve()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>_order_P <span style="color:#f92672">=</span> <span style="color:#ae81ff">79182553273022138539034276599687</span>
+</span></span><span style="display:flex;"><span>_Px <span style="color:#f92672">=</span> <span style="color:#ae81ff">238266381988261346751878607720968495</span>
+</span></span><span style="display:flex;"><span>_Py <span style="color:#f92672">=</span> <span style="color:#ae81ff">591153005086204165523829267245014771</span>
+</span></span><span style="display:flex;"><span>P <span style="color:#f92672">=</span> base_point(curve, _Px, _Py, _order_P)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>_Qx <span style="color:#f92672">=</span> <span style="color:#ae81ff">341454032985370081366658659122300896</span>
+</span></span><span style="display:flex;"><span>_Qy <span style="color:#f92672">=</span> <span style="color:#ae81ff">775807209463167910095539163959068826</span>
+</span></span><span style="display:flex;"><span>Q <span style="color:#f92672">=</span> base_point(curve, _Qx, _Qy, _order_P)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>prev <span style="color:#f92672">=</span> <span style="color:#ae81ff">56558</span><span style="color:#f92672">*</span>P <span style="color:#f92672">+</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">*</span>Q
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">210</span>):
+</span></span><span style="display:flex;"><span>    r <span style="color:#f92672">=</span> remote(<span style="color:#e6db74">&#34;arcade.fluxfingers.net&#34;</span>,<span style="color:#e6db74">&#34;1822&#34;</span>)
+</span></span><span style="display:flex;"><span>    param <span style="color:#f92672">=</span> i<span style="color:#f92672">*</span>_order_P
+</span></span><span style="display:flex;"><span>    Point_x <span style="color:#f92672">=</span> (param <span style="color:#f92672">+</span> <span style="color:#ae81ff">56558</span>)<span style="color:#f92672">*</span>P <span style="color:#f92672">+</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">*</span>Q
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">assert</span> prev<span style="color:#f92672">.</span>x() <span style="color:#f92672">==</span> Point_x<span style="color:#f92672">.</span>x() <span style="color:#f92672">and</span> prev<span style="color:#f92672">.</span>y() <span style="color:#f92672">==</span> Point_x<span style="color:#f92672">.</span>y()
+</span></span><span style="display:flex;"><span>    data <span style="color:#f92672">=</span> json_input(Point_x<span style="color:#f92672">.</span>x(), Point_x<span style="color:#f92672">.</span>y(), param <span style="color:#f92672">+</span> <span style="color:#ae81ff">56558</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">888698063901</span>)
+</span></span><span style="display:flex;"><span>    r<span style="color:#f92672">.</span>send(data)
+</span></span><span style="display:flex;"><span>    print i
+</span></span><span style="display:flex;"><span>    print r<span style="color:#f92672">.</span>recv()
+</span></span><span style="display:flex;"><span>    r<span style="color:#f92672">.</span>close()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>r <span style="color:#f92672">=</span> remote(<span style="color:#e6db74">&#34;arcade.fluxfingers.net&#34;</span>,<span style="color:#e6db74">&#34;1822&#34;</span>)
+</span></span><span style="display:flex;"><span>Point_y <span style="color:#f92672">=</span> <span style="color:#ae81ff">35939</span><span style="color:#f92672">*</span>P <span style="color:#f92672">+</span> <span style="color:#ae81ff">11</span><span style="color:#f92672">*</span>Q
+</span></span><span style="display:flex;"><span>data2 <span style="color:#f92672">=</span> json_input(Point_y<span style="color:#f92672">.</span>x(), Point_y<span style="color:#f92672">.</span>y(), <span style="color:#ae81ff">35939</span>, <span style="color:#ae81ff">11</span>, <span style="color:#ae81ff">888698063901</span>)
+</span></span><span style="display:flex;"><span>r<span style="color:#f92672">.</span>send(data2)
+</span></span><span style="display:flex;"><span>print r<span style="color:#f92672">.</span>recv()
+</span></span><span style="display:flex;"><span>r<span style="color:#f92672">.</span>close()
+</span></span></code></pre></div><p>Running the above script gives us the flag!</p>
+<p><img loading="lazy" src="/hacklu18-crypto-6.png" alt="picture"  />
+</p>
+<p>Voila! It was fun!</p>
+<p>However, this approach will not get us a flag for the Multiplayer Part-2 (Find out why)! Waiting for the challenge author to discuss the intended solution for Multiplayer Part-2.</p>
+<p>UPDATE: Got the intended approach for both parts of this challenge: <a href="https://link.springer.com/content/pdf/10.1007%2F3-540-45537-X_17.pdf">https://link.springer.com/content/pdf/10.1007%2F3-540-45537-X_17.pdf</a>. Thanks to asante!</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://ashutosh1206.github.io/tags/elliptic-curves/">Elliptic-Curves</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://ashutosh1206.github.io/">Ash&#39;s blog</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

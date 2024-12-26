@@ -1,58 +1,368 @@
-<!doctype html><html lang=en dir=auto><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>Simpler Than RSA - MeePwn CTF | Ashutosh Ahelleya</title><meta name=keywords content="RSA,NumberTheory"><meta name=description content="Challenge Points: 100
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Simpler Than RSA - MeePwn CTF | Ash&#39;s blog</title>
+<meta name="keywords" content="RSA, NumberTheory">
+<meta name="description" content="Challenge Points: 100
 We are given an encryption script simple.py:
 Other than the ciphertext, values of n, g, h are also public. The following function is used to generate values for the challenge:
 def generate(nbits): p = getPrime(nbits) q = getPrime(nbits) n = p * q * p g = random.randint(1, n) h = pow(g, n, n) return (n, g, h) The encryption function:
-def encrypt(m, n, g, h): r = random."><meta name=author content="Ashutosh Ahelleya"><link rel=canonical href=https://ashutosh1206.github.io/ctf/meepwn17-simpler-than-rsa/><link crossorigin=anonymous href=/assets/css/stylesheet.bccfefac377bc340f06c260aed1bddf49a4354816d7c570d6aac75a997986c95.css integrity="sha256-vM/vrDd7w0DwbCYK7Rvd9JpDVIFtfFcNaqx1qZeYbJU=" rel="preload stylesheet" as=style><script defer crossorigin=anonymous src=/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG+9vmJ0cTS+ovo0FeA=" onload=hljs.initHighlightingOnLoad()></script>
-<link rel=icon href=https://ashutosh1206.github.io/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://ashutosh1206.github.io/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://ashutosh1206.github.io/favicon-32x32.png><link rel=apple-touch-icon href=https://ashutosh1206.github.io/apple-touch-icon.png><link rel=mask-icon href=https://ashutosh1206.github.io/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--hljs-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css integrity=sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0 crossorigin=anonymous><script defer src=https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js integrity=sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4 crossorigin=anonymous></script>
-<script defer src=https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js integrity=sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05 crossorigin=anonymous onload=renderMathInElement(document.body)></script><meta property="og:title" content="Simpler Than RSA - MeePwn CTF"><meta property="og:description" content="Challenge Points: 100
+def encrypt(m, n, g, h): r = random.">
+<meta name="author" content="Ashutosh Ahelleya">
+<link rel="canonical" href="https://ashutosh1206.github.io/ctf/meepwn17-simpler-than-rsa/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.bccfefac377bc340f06c260aed1bddf49a4354816d7c570d6aac75a997986c95.css" integrity="sha256-vM/vrDd7w0DwbCYK7Rvd9JpDVIFtfFcNaqx1qZeYbJU=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://ashutosh1206.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://ashutosh1206.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://ashutosh1206.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://ashutosh1206.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://ashutosh1206.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+<meta property="og:title" content="Simpler Than RSA - MeePwn CTF" />
+<meta property="og:description" content="Challenge Points: 100
 We are given an encryption script simple.py:
 Other than the ciphertext, values of n, g, h are also public. The following function is used to generate values for the challenge:
 def generate(nbits): p = getPrime(nbits) q = getPrime(nbits) n = p * q * p g = random.randint(1, n) h = pow(g, n, n) return (n, g, h) The encryption function:
-def encrypt(m, n, g, h): r = random."><meta property="og:type" content="article"><meta property="og:url" content="https://ashutosh1206.github.io/ctf/meepwn17-simpler-than-rsa/"><meta property="article:section" content="ctf"><meta property="article:published_time" content="2018-03-02T00:00:00+00:00"><meta property="article:modified_time" content="2018-03-02T00:00:00+00:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="Simpler Than RSA - MeePwn CTF"><meta name=twitter:description content="Challenge Points: 100
+def encrypt(m, n, g, h): r = random." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://ashutosh1206.github.io/ctf/meepwn17-simpler-than-rsa/" /><meta property="article:section" content="ctf" />
+<meta property="article:published_time" content="2018-03-02T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-03-02T00:00:00+00:00" /><meta property="og:site_name" content="Ash&#39;s blog" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Simpler Than RSA - MeePwn CTF"/>
+<meta name="twitter:description" content="Challenge Points: 100
 We are given an encryption script simple.py:
 Other than the ciphertext, values of n, g, h are also public. The following function is used to generate values for the challenge:
 def generate(nbits): p = getPrime(nbits) q = getPrime(nbits) n = p * q * p g = random.randint(1, n) h = pow(g, n, n) return (n, g, h) The encryption function:
-def encrypt(m, n, g, h): r = random."><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Ctfs","item":"https://ashutosh1206.github.io/ctf/"},{"@type":"ListItem","position":2,"name":"Simpler Than RSA - MeePwn CTF","item":"https://ashutosh1206.github.io/ctf/meepwn17-simpler-than-rsa/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"Simpler Than RSA - MeePwn CTF","name":"Simpler Than RSA - MeePwn CTF","description":"Challenge Points: 100\nWe are given an encryption script simple.py:\nOther than the ciphertext, values of n, g, h are also public. The following function is used to generate values for the challenge:\ndef generate(nbits): p = getPrime(nbits) q = getPrime(nbits) n = p * q * p g = random.randint(1, n) h = pow(g, n, n) return (n, g, h) The encryption function:\ndef encrypt(m, n, g, h): r = random.","keywords":["RSA","NumberTheory"],"articleBody":"Challenge Points: 100\nWe are given an encryption script simple.py:\nOther than the ciphertext, values of n, g, h are also public. The following function is used to generate values for the challenge:\ndef generate(nbits): p = getPrime(nbits) q = getPrime(nbits) n = p * q * p g = random.randint(1, n) h = pow(g, n, n) return (n, g, h) The encryption function:\ndef encrypt(m, n, g, h): r = random.randint(1, n) c = pow(pow(g, m, n) * pow(h, r, n), 1, n) return c As we can see, the ciphertext for each character in the plaintext is generated separately.\nFor \\(i^{th}\\) byte of message we can write the corresponding ciphertext as:\n$$c_i \\equiv ((g^{m_i}\\mod n) * (h^r\\mod n)) \\mod n$$ Given: \\(h \\equiv g^n \\mod n\\). We can now write:\n$$c_i \\equiv ((g^{m_i}\\mod n) * (g^{nr}\\mod n)) \\mod n$$ $$\\implies c_i \\equiv g^{m_i + nr}\\mod n$$\nSince \\(n = p*p*q\\),\n\\(c_i \\equiv g^{m_i + p^2qr}\\mod n\\)\n\\(c_i \\equiv g^{m_i + npr}\\mod n\\) –\u003e (1)\nTaking power \\((p-1)*(q-1)\\) on both sides of (1), we get:\n\\(c_i^{(p-1)(q-1)}\\equiv g^{(m_i + npr)(p-1)(q-1)}\\mod n\\)\n\\(c_i^{(p-1)(q-1)}\\equiv g^{m_i(p-1)(q-1)}*g^{nrp(p-1)(q-1)}\\mod n \\)\nSince \\(\\phi(n) = p(p-1)(q-1)\\),\n$$c_i^{(p-1)(q-1)}\\equiv g^{m_i(p-1)(q-1)}*g^{nr\\phi(n)}\\mod n $$\nFrom Euler’s Theorem, we have:\n\\(a^{\\phi(n)}\\equiv 1\\mod n\\)\nHence, we can write:\n\\(c_i^{(p-1)(q-1)}\\equiv g^{m_i(p-1)(q-1)}\\mod n\\) –\u003e (2)\nNow that we have eliminated r from the equation, let us first get the factors of n using factordb.com:\np = 1057817919251064684989791981 q = 1103935256393984899021164397 Now that we have the factors, we can use (2) to get solution for each ciphertext byte.\nFor each byte, we just have to check for 256 possibilities of corresponding message byte and a total of 54*256 brute-force checks to get the flag (We already know the other values in (2): p, q, \\(c_i\\)).\nFull exploit:\nimport gmpy2 from Crypto.Util.number import * n = 1235280093599323856390922798440377476467763531842392869674688408727824382702235317 g = 1110549711091392805024587195974719739929628997819528005374351081843256209971586072 h = 610466084395822279908554174354632326166097007218620288020807622478449585661028278 p = 1057817919251064684989791981 q = 1103935256393984899021164397 assert (p**2)*q == n phin = p*(p-1)*(q-1) # enc.txt is the ciphertext file list1 = open(\"enc.txt\",'r').read()[1:-2] list1 = list1.split(\",\") list1 = [int(i[:-1]) for i in list1] # Exploit list1 = [pow(i, (p-1)*(q-1), n) for i in list1] msg = \"\" for i in list1: for j in range(1, 256): if pow(g, j*(p-1)*(q-1), n) == i: msg += chr(j) print msg Flag: MeePwnCTF{well_is_fact0rizati0n_0nly_w4y_to_s0lve_it?}\n","wordCount":"374","inLanguage":"en","datePublished":"2018-03-02T00:00:00Z","dateModified":"2018-03-02T00:00:00Z","author":{"@type":"Person","name":"Ashutosh Ahelleya"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://ashutosh1206.github.io/ctf/meepwn17-simpler-than-rsa/"},"publisher":{"@type":"Organization","name":"Ashutosh Ahelleya","logo":{"@type":"ImageObject","url":"https://ashutosh1206.github.io/favicon.ico"}}}</script></head><body id=top><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://ashutosh1206.github.io/ accesskey=h title="Home (Alt + H)">Home</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)"><svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg><svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://ashutosh1206.github.io/blog/ title=Blog><span>Blog</span></a></li><li><a href=https://ashutosh1206.github.io/archive/ title=Archive><span>Archive</span></a></li><li><a href=https://ashutosh1206.github.io/ctf/ title=CTF><span>CTF</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class=post-title>Simpler Than RSA - MeePwn CTF</h1><div class=post-meta><span title='2018-03-02 00:00:00 +0000 UTC'>March 2, 2018</span>&nbsp;·&nbsp;Ashutosh Ahelleya</div></header><div class=post-content><p><strong>Challenge Points</strong>: 100</p><p>We are given an encryption script <a href=https://github.com/ashutosh1206/Crypto-CTF-Writeups/blob/master/2017/MeePwn-CTF/Simpler-Than-RSA/simple.py>simple.py</a>:</p><p>Other than the ciphertext, values of <code>n</code>, <code>g</code>, <code>h</code> are also public. The following function is used to generate values for the challenge:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>generate</span>(nbits):
-</span></span><span style=display:flex><span>	p <span style=color:#f92672>=</span> getPrime(nbits)
-</span></span><span style=display:flex><span>	q <span style=color:#f92672>=</span> getPrime(nbits)
-</span></span><span style=display:flex><span>	n <span style=color:#f92672>=</span> p <span style=color:#f92672>*</span> q <span style=color:#f92672>*</span> p
-</span></span><span style=display:flex><span>	g <span style=color:#f92672>=</span> random<span style=color:#f92672>.</span>randint(<span style=color:#ae81ff>1</span>, n)
-</span></span><span style=display:flex><span>	h <span style=color:#f92672>=</span> pow(g, n, n)
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> (n, g, h)
-</span></span></code></pre></div><p>The encryption function:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>encrypt</span>(m, n, g, h):
-</span></span><span style=display:flex><span>	r <span style=color:#f92672>=</span> random<span style=color:#f92672>.</span>randint(<span style=color:#ae81ff>1</span>, n)
-</span></span><span style=display:flex><span>	c <span style=color:#f92672>=</span> pow(pow(g, m, n) <span style=color:#f92672>*</span> pow(h, r, n), <span style=color:#ae81ff>1</span>, n)
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> c
-</span></span></code></pre></div><p>As we can see, the ciphertext for each character in the plaintext is generated separately.<br>For \(i^{th}\) byte of message we can write the corresponding ciphertext as:<br>$$c_i \equiv ((g^{m_i}\mod n) * (h^r\mod n)) \mod n$$
-Given: \(h \equiv g^n \mod n\). We can now write:<br>$$c_i \equiv ((g^{m_i}\mod n) * (g^{nr}\mod n)) \mod n$$
-$$\implies c_i \equiv g^{m_i + nr}\mod n$$</p><p>Since \(n = p*p*q\),<br>\(c_i \equiv g^{m_i + p^2qr}\mod n\)<br>\(c_i \equiv g^{m_i + npr}\mod n\) &ndash;> <strong>(1)</strong></p><p>Taking power \((p-1)*(q-1)\) on both sides of <strong>(1)</strong>, we get:<br>\(c_i^{(p-1)(q-1)}\equiv g^{(m_i + npr)(p-1)(q-1)}\mod n\)<br>\(c_i^{(p-1)(q-1)}\equiv g^{m_i(p-1)(q-1)}*g^{nrp(p-1)(q-1)}\mod n \)</p><p>Since \(\phi(n) = p(p-1)(q-1)\),<br>$$c_i^{(p-1)(q-1)}\equiv g^{m_i(p-1)(q-1)}*g^{nr\phi(n)}\mod n $$</p><p>From Euler&rsquo;s Theorem, we have:<br>\(a^{\phi(n)}\equiv 1\mod n\)</p><p>Hence, we can write:<br>\(c_i^{(p-1)(q-1)}\equiv g^{m_i(p-1)(q-1)}\mod n\) &ndash;> <strong>(2)</strong></p><p>Now that we have eliminated <code>r</code> from the equation, let us first get the factors of <code>n</code> using <a href=factordb.com>factordb.com</a>:</p><pre tabindex=0><code>    p = 1057817919251064684989791981
+def encrypt(m, n, g, h): r = random."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Ctfs",
+      "item": "https://ashutosh1206.github.io/ctf/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Simpler Than RSA - MeePwn CTF",
+      "item": "https://ashutosh1206.github.io/ctf/meepwn17-simpler-than-rsa/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Simpler Than RSA - MeePwn CTF",
+  "name": "Simpler Than RSA - MeePwn CTF",
+  "description": "Challenge Points: 100\nWe are given an encryption script simple.py:\nOther than the ciphertext, values of n, g, h are also public. The following function is used to generate values for the challenge:\ndef generate(nbits): p = getPrime(nbits) q = getPrime(nbits) n = p * q * p g = random.randint(1, n) h = pow(g, n, n) return (n, g, h) The encryption function:\ndef encrypt(m, n, g, h): r = random.",
+  "keywords": [
+    "RSA", "NumberTheory"
+  ],
+  "articleBody": "Challenge Points: 100\nWe are given an encryption script simple.py:\nOther than the ciphertext, values of n, g, h are also public. The following function is used to generate values for the challenge:\ndef generate(nbits): p = getPrime(nbits) q = getPrime(nbits) n = p * q * p g = random.randint(1, n) h = pow(g, n, n) return (n, g, h) The encryption function:\ndef encrypt(m, n, g, h): r = random.randint(1, n) c = pow(pow(g, m, n) * pow(h, r, n), 1, n) return c As we can see, the ciphertext for each character in the plaintext is generated separately.\nFor \\(i^{th}\\) byte of message we can write the corresponding ciphertext as:\n$$c_i \\equiv ((g^{m_i}\\mod n) * (h^r\\mod n)) \\mod n$$ Given: \\(h \\equiv g^n \\mod n\\). We can now write:\n$$c_i \\equiv ((g^{m_i}\\mod n) * (g^{nr}\\mod n)) \\mod n$$ $$\\implies c_i \\equiv g^{m_i + nr}\\mod n$$\nSince \\(n = p*p*q\\),\n\\(c_i \\equiv g^{m_i + p^2qr}\\mod n\\)\n\\(c_i \\equiv g^{m_i + npr}\\mod n\\) –\u003e (1)\nTaking power \\((p-1)*(q-1)\\) on both sides of (1), we get:\n\\(c_i^{(p-1)(q-1)}\\equiv g^{(m_i + npr)(p-1)(q-1)}\\mod n\\)\n\\(c_i^{(p-1)(q-1)}\\equiv g^{m_i(p-1)(q-1)}*g^{nrp(p-1)(q-1)}\\mod n \\)\nSince \\(\\phi(n) = p(p-1)(q-1)\\),\n$$c_i^{(p-1)(q-1)}\\equiv g^{m_i(p-1)(q-1)}*g^{nr\\phi(n)}\\mod n $$\nFrom Euler’s Theorem, we have:\n\\(a^{\\phi(n)}\\equiv 1\\mod n\\)\nHence, we can write:\n\\(c_i^{(p-1)(q-1)}\\equiv g^{m_i(p-1)(q-1)}\\mod n\\) –\u003e (2)\nNow that we have eliminated r from the equation, let us first get the factors of n using factordb.com:\np = 1057817919251064684989791981 q = 1103935256393984899021164397 Now that we have the factors, we can use (2) to get solution for each ciphertext byte.\nFor each byte, we just have to check for 256 possibilities of corresponding message byte and a total of 54*256 brute-force checks to get the flag (We already know the other values in (2): p, q, \\(c_i\\)).\nFull exploit:\nimport gmpy2 from Crypto.Util.number import * n = 1235280093599323856390922798440377476467763531842392869674688408727824382702235317 g = 1110549711091392805024587195974719739929628997819528005374351081843256209971586072 h = 610466084395822279908554174354632326166097007218620288020807622478449585661028278 p = 1057817919251064684989791981 q = 1103935256393984899021164397 assert (p**2)*q == n phin = p*(p-1)*(q-1) # enc.txt is the ciphertext file list1 = open(\"enc.txt\",'r').read()[1:-2] list1 = list1.split(\",\") list1 = [int(i[:-1]) for i in list1] # Exploit list1 = [pow(i, (p-1)*(q-1), n) for i in list1] msg = \"\" for i in list1: for j in range(1, 256): if pow(g, j*(p-1)*(q-1), n) == i: msg += chr(j) print msg Flag: MeePwnCTF{well_is_fact0rizati0n_0nly_w4y_to_s0lve_it?}\n",
+  "wordCount" : "374",
+  "inLanguage": "en",
+  "datePublished": "2018-03-02T00:00:00Z",
+  "dateModified": "2018-03-02T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Ashutosh Ahelleya"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://ashutosh1206.github.io/ctf/meepwn17-simpler-than-rsa/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Ash's blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://ashutosh1206.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://ashutosh1206.github.io/" accesskey="h" title="Home (Alt + H)">Home</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://ashutosh1206.github.io/blog/" title="Blog">
+                    <span>Blog</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ashutosh1206.github.io/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ashutosh1206.github.io/archive/" title="Archive">
+                    <span>Archive</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ashutosh1206.github.io/ctf/" title="CTF">
+                    <span>CTF</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title">
+      Simpler Than RSA - MeePwn CTF
+    </h1>
+    <div class="post-meta"><span title='2018-03-02 00:00:00 +0000 UTC'>March 2, 2018</span>&nbsp;·&nbsp;Ashutosh Ahelleya
+
+</div>
+  </header> 
+  <div class="post-content"><p><strong>Challenge Points</strong>: 100</p>
+<p>We are given an encryption script <a href="https://github.com/ashutosh1206/Crypto-CTF-Writeups/blob/master/2017/MeePwn-CTF/Simpler-Than-RSA/simple.py">simple.py</a>:</p>
+<p>Other than the ciphertext, values of <code>n</code>, <code>g</code>, <code>h</code> are also public. The following function is used to generate values for the challenge:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generate</span>(nbits):
+</span></span><span style="display:flex;"><span>	p <span style="color:#f92672">=</span> getPrime(nbits)
+</span></span><span style="display:flex;"><span>	q <span style="color:#f92672">=</span> getPrime(nbits)
+</span></span><span style="display:flex;"><span>	n <span style="color:#f92672">=</span> p <span style="color:#f92672">*</span> q <span style="color:#f92672">*</span> p
+</span></span><span style="display:flex;"><span>	g <span style="color:#f92672">=</span> random<span style="color:#f92672">.</span>randint(<span style="color:#ae81ff">1</span>, n)
+</span></span><span style="display:flex;"><span>	h <span style="color:#f92672">=</span> pow(g, n, n)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> (n, g, h)
+</span></span></code></pre></div><p>The encryption function:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">encrypt</span>(m, n, g, h):
+</span></span><span style="display:flex;"><span>	r <span style="color:#f92672">=</span> random<span style="color:#f92672">.</span>randint(<span style="color:#ae81ff">1</span>, n)
+</span></span><span style="display:flex;"><span>	c <span style="color:#f92672">=</span> pow(pow(g, m, n) <span style="color:#f92672">*</span> pow(h, r, n), <span style="color:#ae81ff">1</span>, n)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> c
+</span></span></code></pre></div><p>As we can see, the ciphertext for each character in the plaintext is generated separately.<br>
+For \(i^{th}\) byte of message we can write the corresponding ciphertext as:<br>
+$$c_i \equiv ((g^{m_i}\mod n) * (h^r\mod n)) \mod n$$
+Given: \(h \equiv g^n \mod n\). We can now write:<br>
+$$c_i \equiv ((g^{m_i}\mod n) * (g^{nr}\mod n)) \mod n$$
+$$\implies c_i \equiv g^{m_i + nr}\mod n$$</p>
+<p>Since \(n = p*p*q\),<br>
+\(c_i \equiv g^{m_i + p^2qr}\mod n\)<br>
+\(c_i \equiv g^{m_i + npr}\mod n\) &ndash;&gt; <strong>(1)</strong></p>
+<p>Taking power \((p-1)*(q-1)\) on both sides of <strong>(1)</strong>, we get:<br>
+\(c_i^{(p-1)(q-1)}\equiv g^{(m_i + npr)(p-1)(q-1)}\mod n\)<br>
+\(c_i^{(p-1)(q-1)}\equiv g^{m_i(p-1)(q-1)}*g^{nrp(p-1)(q-1)}\mod n \)</p>
+<p>Since \(\phi(n) = p(p-1)(q-1)\),<br>
+$$c_i^{(p-1)(q-1)}\equiv g^{m_i(p-1)(q-1)}*g^{nr\phi(n)}\mod n $$</p>
+<p>From Euler&rsquo;s Theorem, we have:<br>
+\(a^{\phi(n)}\equiv 1\mod n\)</p>
+<p>Hence, we can write:<br>
+\(c_i^{(p-1)(q-1)}\equiv g^{m_i(p-1)(q-1)}\mod n\) &ndash;&gt; <strong>(2)</strong></p>
+<p>Now that we have eliminated <code>r</code> from the equation, let us first get the factors of <code>n</code> using <a href="factordb.com">factordb.com</a>:</p>
+<pre tabindex="0"><code>    p = 1057817919251064684989791981
     q = 1103935256393984899021164397
-</code></pre><p>Now that we have the factors, we can use <strong>(2)</strong> to get solution for each ciphertext byte.<br>For each byte, we just have to check for 256 possibilities of corresponding message byte and a total of 54*256 brute-force checks to get the flag (We already know the other values in <strong>(2)</strong>: p, q, \(c_i\)).</p><p>Full exploit:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> gmpy2
-</span></span><span style=display:flex><span><span style=color:#f92672>from</span> Crypto.Util.number <span style=color:#f92672>import</span> <span style=color:#f92672>*</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>n <span style=color:#f92672>=</span> <span style=color:#ae81ff>1235280093599323856390922798440377476467763531842392869674688408727824382702235317</span>
-</span></span><span style=display:flex><span>g <span style=color:#f92672>=</span> <span style=color:#ae81ff>1110549711091392805024587195974719739929628997819528005374351081843256209971586072</span>
-</span></span><span style=display:flex><span>h <span style=color:#f92672>=</span> <span style=color:#ae81ff>610466084395822279908554174354632326166097007218620288020807622478449585661028278</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>p <span style=color:#f92672>=</span> <span style=color:#ae81ff>1057817919251064684989791981</span>
-</span></span><span style=display:flex><span>q <span style=color:#f92672>=</span> <span style=color:#ae81ff>1103935256393984899021164397</span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>assert</span> (p<span style=color:#f92672>**</span><span style=color:#ae81ff>2</span>)<span style=color:#f92672>*</span>q <span style=color:#f92672>==</span> n
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>phin <span style=color:#f92672>=</span> p<span style=color:#f92672>*</span>(p<span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>)<span style=color:#f92672>*</span>(q<span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>)
-</span></span><span style=display:flex><span><span style=color:#75715e># enc.txt is the ciphertext file</span>
-</span></span><span style=display:flex><span>list1 <span style=color:#f92672>=</span> open(<span style=color:#e6db74>&#34;enc.txt&#34;</span>,<span style=color:#e6db74>&#39;r&#39;</span>)<span style=color:#f92672>.</span>read()[<span style=color:#ae81ff>1</span>:<span style=color:#f92672>-</span><span style=color:#ae81ff>2</span>]
-</span></span><span style=display:flex><span>list1 <span style=color:#f92672>=</span> list1<span style=color:#f92672>.</span>split(<span style=color:#e6db74>&#34;,&#34;</span>)
-</span></span><span style=display:flex><span>list1 <span style=color:#f92672>=</span> [int(i[:<span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>]) <span style=color:#66d9ef>for</span> i <span style=color:#f92672>in</span> list1]
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Exploit</span>
-</span></span><span style=display:flex><span>list1 <span style=color:#f92672>=</span> [pow(i, (p<span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>)<span style=color:#f92672>*</span>(q<span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>), n) <span style=color:#66d9ef>for</span> i <span style=color:#f92672>in</span> list1]
-</span></span><span style=display:flex><span>msg <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;&#34;</span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>for</span> i <span style=color:#f92672>in</span> list1:
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>for</span> j <span style=color:#f92672>in</span> range(<span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>256</span>):
-</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> pow(g, j<span style=color:#f92672>*</span>(p<span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>)<span style=color:#f92672>*</span>(q<span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>), n) <span style=color:#f92672>==</span> i:
-</span></span><span style=display:flex><span>			msg <span style=color:#f92672>+=</span> chr(j)
-</span></span><span style=display:flex><span>	print msg
-</span></span></code></pre></div><p><strong>Flag</strong>: MeePwnCTF{well_is_fact0rizati0n_0nly_w4y_to_s0lve_it?}</p></div><footer class=post-footer><ul class=post-tags><li><a href=https://ashutosh1206.github.io/tags/rsa/>RSA</a></li><li><a href=https://ashutosh1206.github.io/tags/numbertheory/>NumberTheory</a></li></ul></footer></article></main><footer class=footer><span>&copy; 2023 <a href=https://ashutosh1206.github.io/>Ashutosh Ahelleya</a></span>
-<span>Powered by
-<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
-        <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg></a><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script></body></html>
+</code></pre><p>Now that we have the factors, we can use <strong>(2)</strong> to get solution for each ciphertext byte.<br>
+For each byte, we just have to check for 256 possibilities of corresponding message byte and a total of 54*256 brute-force checks to get the flag (We already know the other values in <strong>(2)</strong>: p, q, \(c_i\)).</p>
+<p>Full exploit:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> gmpy2
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> Crypto.Util.number <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>n <span style="color:#f92672">=</span> <span style="color:#ae81ff">1235280093599323856390922798440377476467763531842392869674688408727824382702235317</span>
+</span></span><span style="display:flex;"><span>g <span style="color:#f92672">=</span> <span style="color:#ae81ff">1110549711091392805024587195974719739929628997819528005374351081843256209971586072</span>
+</span></span><span style="display:flex;"><span>h <span style="color:#f92672">=</span> <span style="color:#ae81ff">610466084395822279908554174354632326166097007218620288020807622478449585661028278</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p <span style="color:#f92672">=</span> <span style="color:#ae81ff">1057817919251064684989791981</span>
+</span></span><span style="display:flex;"><span>q <span style="color:#f92672">=</span> <span style="color:#ae81ff">1103935256393984899021164397</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">assert</span> (p<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span>)<span style="color:#f92672">*</span>q <span style="color:#f92672">==</span> n
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>phin <span style="color:#f92672">=</span> p<span style="color:#f92672">*</span>(p<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)<span style="color:#f92672">*</span>(q<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># enc.txt is the ciphertext file</span>
+</span></span><span style="display:flex;"><span>list1 <span style="color:#f92672">=</span> open(<span style="color:#e6db74">&#34;enc.txt&#34;</span>,<span style="color:#e6db74">&#39;r&#39;</span>)<span style="color:#f92672">.</span>read()[<span style="color:#ae81ff">1</span>:<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>]
+</span></span><span style="display:flex;"><span>list1 <span style="color:#f92672">=</span> list1<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#34;,&#34;</span>)
+</span></span><span style="display:flex;"><span>list1 <span style="color:#f92672">=</span> [int(i[:<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]) <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> list1]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Exploit</span>
+</span></span><span style="display:flex;"><span>list1 <span style="color:#f92672">=</span> [pow(i, (p<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)<span style="color:#f92672">*</span>(q<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>), n) <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> list1]
+</span></span><span style="display:flex;"><span>msg <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> list1:
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">256</span>):
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> pow(g, j<span style="color:#f92672">*</span>(p<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)<span style="color:#f92672">*</span>(q<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>), n) <span style="color:#f92672">==</span> i:
+</span></span><span style="display:flex;"><span>			msg <span style="color:#f92672">+=</span> chr(j)
+</span></span><span style="display:flex;"><span>	print msg
+</span></span></code></pre></div><p><strong>Flag</strong>: MeePwnCTF{well_is_fact0rizati0n_0nly_w4y_to_s0lve_it?}</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://ashutosh1206.github.io/tags/rsa/">RSA</a></li>
+      <li><a href="https://ashutosh1206.github.io/tags/numbertheory/">NumberTheory</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://ashutosh1206.github.io/">Ash&#39;s blog</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

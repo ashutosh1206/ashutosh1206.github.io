@@ -1,4 +1,23 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>ECB-byte-at-a-time on Ashutosh Ahelleya</title><link>https://ashutosh1206.github.io/tags/ecb-byte-at-a-time/</link><description>Recent content in ECB-byte-at-a-time on Ashutosh Ahelleya</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 05 Dec 2017 00:00:00 +0000</lastBuildDate><atom:link href="https://ashutosh1206.github.io/tags/ecb-byte-at-a-time/index.xml" rel="self" type="application/rss+xml"/><item><title>BabyCrypto - CSAW CTF Quals</title><link>https://ashutosh1206.github.io/ctf/csawquals17-babycrypto/</link><pubDate>Tue, 05 Dec 2017 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/csawquals17-babycrypto/</guid><description>This challenge was a bit overrated, there were no complications in the challenge, as you will see when we discuss the writeup.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>ECB-byte-at-a-time on Ash&#39;s blog</title>
+    <link>https://ashutosh1206.github.io/tags/ecb-byte-at-a-time/</link>
+    <description>Recent content in ECB-byte-at-a-time on Ash&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 05 Dec 2017 00:00:00 +0000</lastBuildDate><atom:link href="https://ashutosh1206.github.io/tags/ecb-byte-at-a-time/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>BabyCrypto - CSAW CTF Quals</title>
+      <link>https://ashutosh1206.github.io/ctf/csawquals17-babycrypto/</link>
+      <pubDate>Tue, 05 Dec 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://ashutosh1206.github.io/ctf/csawquals17-babycrypto/</guid>
+      <description>This challenge was a bit overrated, there were no complications in the challenge, as you will see when we discuss the writeup.
 In this challenge, we are supposed to get the flag which is present in the server.
 The server has an input-output program running, which gives AES-ECB encryption of the input given to it. The encryption takes place as follows:
-Takes the input from the user Appends secret (which is the flag here) to the input Pads to make it a multiple of blocksize Encrypts the resultant string using AES in ECB mode Gives the ciphertext as the output We are only in control of the input to the server.</description></item></channel></rss>
+Takes the input from the user Appends secret (which is the flag here) to the input Pads to make it a multiple of blocksize Encrypts the resultant string using AES in ECB mode Gives the ciphertext as the output We are only in control of the input to the server.</description>
+    </item>
+    
+  </channel>
+</rss>

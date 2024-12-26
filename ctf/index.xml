@@ -1,98 +1,342 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Ctfs on Ashutosh Ahelleya</title><link>https://ashutosh1206.github.io/ctf/</link><description>Recent content in Ctfs on Ashutosh Ahelleya</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 29 Sep 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://ashutosh1206.github.io/ctf/index.xml" rel="self" type="application/rss+xml"/><item><title>waRSAw - InCTFi 2019</title><link>https://ashutosh1206.github.io/ctf/inctfi19-warsaw/</link><pubDate>Sun, 29 Sep 2019 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/inctfi19-warsaw/</guid><description>&lt;p>Intended solution of waRSAw challenge from InCTF Internationals 2019&lt;/p>
-&lt;p>tl;dr variant of LSB Oracle Attack on unpadded RSA&lt;/p></description></item><item><title>Halloween Party - ASIS CTF Quals</title><link>https://ashutosh1206.github.io/ctf/asisquals19-halloween-party/</link><pubDate>Tue, 23 Apr 2019 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/asisquals19-halloween-party/</guid><description>Challenge Points: 182
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Ctfs on Ash&#39;s blog</title>
+    <link>https://ashutosh1206.github.io/ctf/</link>
+    <description>Recent content in Ctfs on Ash&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 29 Sep 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://ashutosh1206.github.io/ctf/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>waRSAw - InCTFi 2019</title>
+      <link>https://ashutosh1206.github.io/ctf/inctfi19-warsaw/</link>
+      <pubDate>Sun, 29 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://ashutosh1206.github.io/ctf/inctfi19-warsaw/</guid>
+      <description>&lt;p&gt;Intended solution of waRSAw challenge from InCTF Internationals 2019&lt;/p&gt;
+&lt;p&gt;tl;dr variant of LSB Oracle Attack on unpadded RSA&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Halloween Party - ASIS CTF Quals</title>
+      <link>https://ashutosh1206.github.io/ctf/asisquals19-halloween-party/</link>
+      <pubDate>Tue, 23 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://ashutosh1206.github.io/ctf/asisquals19-halloween-party/</guid>
+      <description>Challenge Points: 182
 Challenge Description:
 In the halloween party, we want to half a delicious but small cake!
 tl;dr
-Find Elliptic Curve parameters from given points on the curve Find x-coordinate of 2*P, given y-coordinate of 2*P Invert 2 over mod (P.order()) and multiply the result with 2*P to get P Submit ASIS{P.x} as the flag In case you are new to Elliptic Curves, you can read about them in my library here</description></item><item><title>EZDSA - Midnight Sun CTF Quals</title><link>https://ashutosh1206.github.io/ctf/midnightsunquals19-ezdsa/</link><pubDate>Tue, 09 Apr 2019 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/midnightsunquals19-ezdsa/</guid><description>Challenge Points: 223
+Find Elliptic Curve parameters from given points on the curve Find x-coordinate of 2*P, given y-coordinate of 2*P Invert 2 over mod (P.order()) and multiply the result with 2*P to get P Submit ASIS{P.x} as the flag In case you are new to Elliptic Curves, you can read about them in my library here</description>
+    </item>
+    
+    <item>
+      <title>EZDSA - Midnight Sun CTF Quals</title>
+      <link>https://ashutosh1206.github.io/ctf/midnightsunquals19-ezdsa/</link>
+      <pubDate>Tue, 09 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://ashutosh1206.github.io/ctf/midnightsunquals19-ezdsa/</guid>
+      <description>Challenge Points: 223
 Challenge Description:
 Someone told me not to use DSA, so I came up with this.
 In this challenge, we are given a script that signs any message given as an input:
-class PrivateSigningKey: def __init__(self): self.gen = 0x44120dc98545c6d3d81bfc7898983e7b7f6ac8e08d3943af0be7f5d52264abb3775a905e003151ed0631376165b65c8ef72d0b6880da7e4b5e7b833377bb50fde65846426a5bfdc182673b6b2504ebfe0d6bca36338b3a3be334689c1afb17869baeb2b0380351b61555df31f0cda3445bba4023be72a494588d640a9da7bd16L self.q = 0x926c99d24bd4d5b47adb75bd9933de8be5932f4bL self.p = 0x80000000000001cda6f403d8a752a4e7976173ebfcd2acf69a29f4bada1ca3178b56131c2c1f00cf7875a2e7c497b10fea66b26436e40b7b73952081319e26603810a558f871d6d256fddbec5933b77fa7d1d0d75267dcae1f24ea7cc57b3a30f8ea09310772440f016c13e08b56b1196a687d6a5e5de864068f3fd936a361c5L self.key = int(FLAG.encode(&amp;#34;hex&amp;#34;), 16) def sign(self, m): def bytes_to_long(b): return long(b.encode(&amp;#34;hex&amp;#34;), 16) h = bytes_to_long(sha1(m).digest()) u = bytes_to_long(Random.new().read(20)) assert(bytes_to_long(m) % (self.q - 1) !</description></item><item><title>Blind - Volga CTF Quals</title><link>https://ashutosh1206.github.io/ctf/volgaquals19-blind/</link><pubDate>Sun, 31 Mar 2019 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/volgaquals19-blind/</guid><description>Challenge Points: 200
+class PrivateSigningKey: def __init__(self): self.gen = 0x44120dc98545c6d3d81bfc7898983e7b7f6ac8e08d3943af0be7f5d52264abb3775a905e003151ed0631376165b65c8ef72d0b6880da7e4b5e7b833377bb50fde65846426a5bfdc182673b6b2504ebfe0d6bca36338b3a3be334689c1afb17869baeb2b0380351b61555df31f0cda3445bba4023be72a494588d640a9da7bd16L self.q = 0x926c99d24bd4d5b47adb75bd9933de8be5932f4bL self.p = 0x80000000000001cda6f403d8a752a4e7976173ebfcd2acf69a29f4bada1ca3178b56131c2c1f00cf7875a2e7c497b10fea66b26436e40b7b73952081319e26603810a558f871d6d256fddbec5933b77fa7d1d0d75267dcae1f24ea7cc57b3a30f8ea09310772440f016c13e08b56b1196a687d6a5e5de864068f3fd936a361c5L self.key = int(FLAG.encode(&amp;#34;hex&amp;#34;), 16) def sign(self, m): def bytes_to_long(b): return long(b.encode(&amp;#34;hex&amp;#34;), 16) h = bytes_to_long(sha1(m).digest()) u = bytes_to_long(Random.new().read(20)) assert(bytes_to_long(m) % (self.q - 1) !</description>
+    </item>
+    
+    <item>
+      <title>Blind - Volga CTF Quals</title>
+      <link>https://ashutosh1206.github.io/ctf/volgaquals19-blind/</link>
+      <pubDate>Sun, 31 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://ashutosh1206.github.io/ctf/volgaquals19-blind/</guid>
+      <description>Challenge Points: 200
 Challenge Description:
 Pull the flag&amp;hellip;if you can.
 tl;dr solving RSA Digital Signature using it&amp;rsquo;s homomorphic property:
 Calculate the signature of factors of message M to be signed, separately Combine them by multiplication over modulus to get the signature of M Based on Unpadded RSA Digital Signature about which you can read here-
 https://github.com/ashutosh1206/Crypton/tree/master/Digital-Signatures/Unpadded-RSA-Digital-Signatures
-There are various bash commands the program allows us to execute on the server:</description></item><item><title>RSA - Teaser CONFidence CTF</title><link>https://ashutosh1206.github.io/ctf/confidence-teaser19-rsa/</link><pubDate>Mon, 18 Mar 2019 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/confidence-teaser19-rsa/</guid><description>tl;dr Coppersmith&amp;rsquo;s Attack to recover RSA primes
+There are various bash commands the program allows us to execute on the server:</description>
+    </item>
+    
+    <item>
+      <title>RSA - Teaser CONFidence CTF</title>
+      <link>https://ashutosh1206.github.io/ctf/confidence-teaser19-rsa/</link>
+      <pubDate>Mon, 18 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://ashutosh1206.github.io/ctf/confidence-teaser19-rsa/</guid>
+      <description>tl;dr Coppersmith&amp;rsquo;s Attack to recover RSA primes
 Challenge Points: 99
 Challenge Description:
 You can&amp;rsquo;t break my public key if you don&amp;rsquo;t know it, amirite?
 The challenge is based on RSA and we are given the following script:
-def bytes_to_long(data): return int(data.encode(&amp;#34;hex&amp;#34;),16) def rsa(msg,e,n): return pow(bytes_to_long(msg),e,n) flag = open(&amp;#39;flag.txt&amp;#39;,&amp;#39;r&amp;#39;).read() tmp = randint(2**1023, 2**1024) e = 65537 p = next_prime(0xDEAD*tmp+randint(2, 2**500)) q = next_prime(0xBEEF*tmp+randint(2, 2**500)) N = p*q print(&amp;#39;msg1 = &amp;#39;+str(rsa(&amp;#34;You can&amp;#39;t factor the modulus&amp;#34;,e,N))) print(&amp;#39;msg2 = &amp;#39;+str(rsa(&amp;#34;If you don&amp;#39;t know the modulus!</description></item><item><title>Alice sent Bob a meme - UTCTF</title><link>https://ashutosh1206.github.io/ctf/utctf19-alicebob/</link><pubDate>Tue, 12 Mar 2019 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/utctf19-alicebob/</guid><description>Challenge Points:
+def bytes_to_long(data): return int(data.encode(&amp;#34;hex&amp;#34;),16) def rsa(msg,e,n): return pow(bytes_to_long(msg),e,n) flag = open(&amp;#39;flag.txt&amp;#39;,&amp;#39;r&amp;#39;).read() tmp = randint(2**1023, 2**1024) e = 65537 p = next_prime(0xDEAD*tmp+randint(2, 2**500)) q = next_prime(0xBEEF*tmp+randint(2, 2**500)) N = p*q print(&amp;#39;msg1 = &amp;#39;+str(rsa(&amp;#34;You can&amp;#39;t factor the modulus&amp;#34;,e,N))) print(&amp;#39;msg2 = &amp;#39;+str(rsa(&amp;#34;If you don&amp;#39;t know the modulus!</description>
+    </item>
+    
+    <item>
+      <title>Alice sent Bob a meme - UTCTF</title>
+      <link>https://ashutosh1206.github.io/ctf/utctf19-alicebob/</link>
+      <pubDate>Tue, 12 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://ashutosh1206.github.io/ctf/utctf19-alicebob/</guid>
+      <description>Challenge Points:
 Challenge Description:
 Eve is an Apple Employee who has access to the iMessage KeyStore (because there is nothing stopping them). They know Alice and Bob use iMessage instead of Signal, therefore they decrypted their messages and see that Alice has sent Bob a meme. Eve suspects more is going on. Can you confirm their suspicions?
 tl;dr
-Extract data from given images using binwalk Tranform given diophantine equation into a cubic curve and retrieve EC parameters Solve ECDLP given in extracted data using Pohlig Hellman Algorithm Preliminary Analysis We are given three images: meme.</description></item><item><title>GCM - Nullcon HackIM CTF</title><link>https://ashutosh1206.github.io/ctf/hackim19-gcm/</link><pubDate>Tue, 05 Feb 2019 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/hackim19-gcm/</guid><description>Challenge Points: 300
+Extract data from given images using binwalk Tranform given diophantine equation into a cubic curve and retrieve EC parameters Solve ECDLP given in extracted data using Pohlig Hellman Algorithm Preliminary Analysis We are given three images: meme.</description>
+    </item>
+    
+    <item>
+      <title>GCM - Nullcon HackIM CTF</title>
+      <link>https://ashutosh1206.github.io/ctf/hackim19-gcm/</link>
+      <pubDate>Tue, 05 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://ashutosh1206.github.io/ctf/hackim19-gcm/</guid>
+      <description>Challenge Points: 300
 Challenge Description: [None]
 tl;dr
 CTR Bit Flipping Break GHASH to get authentication key H (unintended approach) Bypass authentication The way we solved it (unintended approach) was pretty interesting!
 Challenge Internals We are given a service that allows us to encrypt/decrypt data using AES-CTR mode. Code for this is as follows:
-def main(): global sessionid username = input(&amp;#39;Enter username: &amp;#39;) sessionid = sha256(username.encode()).digest()[:10] while True: print(&amp;#34;Menu&amp;#34;) print(&amp;#34;[1] Encrypt&amp;#34;) print(&amp;#34;[2] Decrypt&amp;#34;) print(&amp;#34;[3] Exit&amp;#34;) choice = input(&amp;#34;&amp;gt; &amp;#34;) if choice == &amp;#39;1&amp;#39;: msg = input(&amp;#39;Enter message to be encrypted: &amp;#39;) if &amp;#39;flag&amp;#39; in msg: print(&amp;#34;You cant encrypt flag :(&amp;#34;) continue c = encrypt(msg.</description></item><item><title>Daring - Hxp CTF</title><link>https://ashutosh1206.github.io/ctf/hxp18-daring/</link><pubDate>Sun, 09 Dec 2018 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/hxp18-daring/</guid><description>Challenge Points:
+def main(): global sessionid username = input(&amp;#39;Enter username: &amp;#39;) sessionid = sha256(username.encode()).digest()[:10] while True: print(&amp;#34;Menu&amp;#34;) print(&amp;#34;[1] Encrypt&amp;#34;) print(&amp;#34;[2] Decrypt&amp;#34;) print(&amp;#34;[3] Exit&amp;#34;) choice = input(&amp;#34;&amp;gt; &amp;#34;) if choice == &amp;#39;1&amp;#39;: msg = input(&amp;#39;Enter message to be encrypted: &amp;#39;) if &amp;#39;flag&amp;#39; in msg: print(&amp;#34;You cant encrypt flag :(&amp;#34;) continue c = encrypt(msg.</description>
+    </item>
+    
+    <item>
+      <title>Daring - Hxp CTF</title>
+      <link>https://ashutosh1206.github.io/ctf/hxp18-daring/</link>
+      <pubDate>Sun, 09 Dec 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://ashutosh1206.github.io/ctf/hxp18-daring/</guid>
+      <description>Challenge Points:
 Challenge Description:
 We encrypted our flag, but we lost the keys. Can you help?
 This was a simple yet a very tricky challenge aimed at testing Number Theory basics. In this challenge we are given a small script:
-#!/usr/bin/env python3 import os from Crypto.Cipher import AES from Crypto.Hash import SHA256 from Crypto.Util import Counter from Crypto.PublicKey import RSA flag = open(&amp;#39;flag.txt&amp;#39;, &amp;#39;rb&amp;#39;).read().strip() key = RSA.generate(1024, e=3) open(&amp;#39;pubkey.txt&amp;#39;, &amp;#39;w&amp;#39;).write(key.publickey().exportKey(&amp;#39;PEM&amp;#39;).decode() + &amp;#39;\n&amp;#39;) open(&amp;#39;rsa.</description></item><item><title>Crypto writeups - Hack.lu CTF</title><link>https://ashutosh1206.github.io/ctf/hacklu18-crypto/</link><pubDate>Thu, 18 Oct 2018 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/hacklu18-crypto/</guid><description>Hack.lu CTF is over and we (@teambi0s) finished 13th globally and since we were registered as a local team (thanks to @GeethnaTk) and stood first among the teams registered locally, hence we are eligible for prizes! Yay!
-This blog post covers detailed solutions to two of the crypto challenges from Hack.lu CTF 2018- Relations and Multiplayer Part-1. While the former was just about guessing (or detecting the pattern, whatever you want to say) of a black box encryption service, the latter was a more interesting challenge involving Elliptic Curves.</description></item><item><title>Crypto writeups [Part-2] - InCTFi 2018</title><link>https://ashutosh1206.github.io/ctf/inctfi18-crypto-part2/</link><pubDate>Sun, 14 Oct 2018 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/inctfi18-crypto-part2/</guid><description>This blog post covers intended solutions of two crypto challenges from InCTF-2018: Request-Auth and EC-Auth.
+#!/usr/bin/env python3 import os from Crypto.Cipher import AES from Crypto.Hash import SHA256 from Crypto.Util import Counter from Crypto.PublicKey import RSA flag = open(&amp;#39;flag.txt&amp;#39;, &amp;#39;rb&amp;#39;).read().strip() key = RSA.generate(1024, e=3) open(&amp;#39;pubkey.txt&amp;#39;, &amp;#39;w&amp;#39;).write(key.publickey().exportKey(&amp;#39;PEM&amp;#39;).decode() + &amp;#39;\n&amp;#39;) open(&amp;#39;rsa.</description>
+    </item>
+    
+    <item>
+      <title>Crypto writeups - Hack.lu CTF</title>
+      <link>https://ashutosh1206.github.io/ctf/hacklu18-crypto/</link>
+      <pubDate>Thu, 18 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://ashutosh1206.github.io/ctf/hacklu18-crypto/</guid>
+      <description>Hack.lu CTF is over and we (@teambi0s) finished 13th globally and since we were registered as a local team (thanks to @GeethnaTk) and stood first among the teams registered locally, hence we are eligible for prizes! Yay!
+This blog post covers detailed solutions to two of the crypto challenges from Hack.lu CTF 2018- Relations and Multiplayer Part-1. While the former was just about guessing (or detecting the pattern, whatever you want to say) of a black box encryption service, the latter was a more interesting challenge involving Elliptic Curves.</description>
+    </item>
+    
+    <item>
+      <title>Crypto writeups [Part-2] - InCTFi 2018</title>
+      <link>https://ashutosh1206.github.io/ctf/inctfi18-crypto-part2/</link>
+      <pubDate>Sun, 14 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://ashutosh1206.github.io/ctf/inctfi18-crypto-part2/</guid>
+      <description>This blog post covers intended solutions of two crypto challenges from InCTF-2018: Request-Auth and EC-Auth.
 Request-Auth Challenge Description
 This was a medium level crypto challenge that I created for InCTF International-2018. In the challenge you are given multiple files: iv.txt, key.enc, publickey.pem, ServerSide.py, session.enc and also have a service running these files.
 Contents of ServerSide.py:
-#!/usr/bin/env python2.7 from Crypto.Cipher import AES from Crypto.PublicKey import RSA from Crypto.Util.number import * from os import urandom import sys BLOCKSIZE = 16 class Unbuffered(object): def __init__(self, stream): self.</description></item><item><title>Crypto writeups [Part-1] - InCTFi 2018</title><link>https://ashutosh1206.github.io/ctf/inctfi18-crypto-part1/</link><pubDate>Thu, 11 Oct 2018 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/inctfi18-crypto-part1/</guid><description>InCTF is over and I must say that we enjoyed a lot! We stayed for two days straight in front of our laptop screens, sleep deprived, fixing services, solving queries on IRC, eating and what not! My experience organising InCTF-2018, creating crypto challenges, how I came across the idea of creating all the crypto challenges etc. is another blog post I have to write soon, let us jump to what is in scope of this blog post.</description></item><item><title>USSH 3.0 - CTFZone</title><link>https://ashutosh1206.github.io/ctf/ctfzone18-ussh/</link><pubDate>Mon, 23 Jul 2018 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/ctfzone18-ussh/</guid><description>Challenge Points: 138
+#!/usr/bin/env python2.7 from Crypto.Cipher import AES from Crypto.PublicKey import RSA from Crypto.Util.number import * from os import urandom import sys BLOCKSIZE = 16 class Unbuffered(object): def __init__(self, stream): self.</description>
+    </item>
+    
+    <item>
+      <title>Crypto writeups [Part-1] - InCTFi 2018</title>
+      <link>https://ashutosh1206.github.io/ctf/inctfi18-crypto-part1/</link>
+      <pubDate>Thu, 11 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://ashutosh1206.github.io/ctf/inctfi18-crypto-part1/</guid>
+      <description>InCTF is over and I must say that we enjoyed a lot! We stayed for two days straight in front of our laptop screens, sleep deprived, fixing services, solving queries on IRC, eating and what not! My experience organising InCTF-2018, creating crypto challenges, how I came across the idea of creating all the crypto challenges etc. is another blog post I have to write soon, let us jump to what is in scope of this blog post.</description>
+    </item>
+    
+    <item>
+      <title>USSH 3.0 - CTFZone</title>
+      <link>https://ashutosh1206.github.io/ctf/ctfzone18-ussh/</link>
+      <pubDate>Mon, 23 Jul 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://ashutosh1206.github.io/ctf/ctfzone18-ussh/</guid>
+      <description>Challenge Points: 138
 Challenge Description:
 We&amp;rsquo;ve developed a new restricted shell. It also allows to manage user access more securely. Let&amp;rsquo;s try it
 nc crypto-01.v7frkwrfyhsjtbpfcppnu.ctfz.one 1337
-In this post, I will be discussing my solution for USSH-3.0 challenge from CTFZone which I think is the unintended way. The challenge was quite peculiar, involving “blind” exploit as you will see in this write-up. Some parts of the challenge might look like guessing, but if you read this write-up start-to-end, you will see that it was a well-tailored challenge.</description></item><item><title>OPEC - ASIS CTF Quals</title><link>https://ashutosh1206.github.io/ctf/asisquals18-opec/</link><pubDate>Tue, 01 May 2018 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/asisquals18-opec/</guid><description>Challenge Points: 207
+In this post, I will be discussing my solution for USSH-3.0 challenge from CTFZone which I think is the unintended way. The challenge was quite peculiar, involving “blind” exploit as you will see in this write-up. Some parts of the challenge might look like guessing, but if you read this write-up start-to-end, you will see that it was a well-tailored challenge.</description>
+    </item>
+    
+    <item>
+      <title>OPEC - ASIS CTF Quals</title>
+      <link>https://ashutosh1206.github.io/ctf/asisquals18-opec/</link>
+      <pubDate>Tue, 01 May 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://ashutosh1206.github.io/ctf/asisquals18-opec/</guid>
+      <description>Challenge Points: 207
 Challenge Description:
 We like the OPEC, but not oily one!
 This challenge is an Okamoto–Uchiyama cryptosystem. Let us see how encryption/decryption takes place in this public key cryptosystem.
 Okamoto Uchiyama Cryptosystem 101 Key Generation, Encryption and Decryption take place as follows (pasted from Wikipedia): We will see how the decryption formula gives us the message and hence prove it. We want to prove that:
-$$\frac{L(C^{p-1}\mod p^2)}{L(g^{p-1}\mod p^2)} = m \mod p$$ where \(L(x) = \frac{x-1}{p}\)</description></item><item><title>UncleSam - ASIS CTF Quals</title><link>https://ashutosh1206.github.io/ctf/asisquals18-unclesam/</link><pubDate>Tue, 01 May 2018 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/asisquals18-unclesam/</guid><description>Challenge Points: 123
+$$\frac{L(C^{p-1}\mod p^2)}{L(g^{p-1}\mod p^2)} = m \mod p$$ where \(L(x) = \frac{x-1}{p}\)</description>
+    </item>
+    
+    <item>
+      <title>UncleSam - ASIS CTF Quals</title>
+      <link>https://ashutosh1206.github.io/ctf/asisquals18-unclesam/</link>
+      <pubDate>Tue, 01 May 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://ashutosh1206.github.io/ctf/asisquals18-unclesam/</guid>
+      <description>Challenge Points: 123
 Challenge Description:
 Uncle Sam needs your help!
 The given challenge is a Schmidt-Samoa cryptosystem. Let us look at how encryption/decryption takes place in this public key cryptosystem and then move to solving the challenge.
-Schmidt-Samoa Cryptosystem 101 Two large primes p and q are chosen randomly, and the modulus is calculated: \(N = p*p*q\). The private key is calculated as \(d \equiv e^{-1} \mod lcm(p-1, q-1)\). The modulus is the public key too.</description></item><item><title>Locked Dungeons 2 - Swamp CTF</title><link>https://ashutosh1206.github.io/ctf/swamp-locked-dungeons-2/</link><pubDate>Tue, 03 Apr 2018 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/swamp-locked-dungeons-2/</guid><description>Challenge Points: 498
+Schmidt-Samoa Cryptosystem 101 Two large primes p and q are chosen randomly, and the modulus is calculated: \(N = p*p*q\). The private key is calculated as \(d \equiv e^{-1} \mod lcm(p-1, q-1)\). The modulus is the public key too.</description>
+    </item>
+    
+    <item>
+      <title>Locked Dungeons 2 - Swamp CTF</title>
+      <link>https://ashutosh1206.github.io/ctf/swamp-locked-dungeons-2/</link>
+      <pubDate>Tue, 03 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://ashutosh1206.github.io/ctf/swamp-locked-dungeons-2/</guid>
+      <description>Challenge Points: 498
 Challenge Description:
 The Dungeon Keeper learned from its mistake. This next lock is protected by even stronger encryption. We’re so close to the final level…there has to be a way in.
-The Dark Dungeon series of crypto challenges were the only ones I enjoyed solving in the CTF. Rest of the crypto challenges were pathetic, involved a lot of guessing and were not really crypto challenges and can be called as puzzles.</description></item><item><title>RSA-Padding - N1CTF</title><link>https://ashutosh1206.github.io/ctf/n1ctf18-rsa-padding/</link><pubDate>Mon, 12 Mar 2018 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/n1ctf18-rsa-padding/</guid><description>Challenge Points: 303
+The Dark Dungeon series of crypto challenges were the only ones I enjoyed solving in the CTF. Rest of the crypto challenges were pathetic, involved a lot of guessing and were not really crypto challenges and can be called as puzzles.</description>
+    </item>
+    
+    <item>
+      <title>RSA-Padding - N1CTF</title>
+      <link>https://ashutosh1206.github.io/ctf/n1ctf18-rsa-padding/</link>
+      <pubDate>Mon, 12 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://ashutosh1206.github.io/ctf/n1ctf18-rsa-padding/</guid>
+      <description>Challenge Points: 303
 Challenge is running on the service: nc 47.75.39.249 23333
 After surpassing the Proof of Work, we get the following challenge: On selecting the option get code, we get the following code that is being used for encryption:
-#!/usr/bin/env python3 # -*- coding=utf-8 -*- from Crypto.Util.number import getPrime, GCD, bytes_to_long from hashlib import sha256 import random import signal import sys, os signal.alarm(20) m = b&amp;#34;xxxxxxxxxxxxxx&amp;#34; n = 21727106551797231400330796721401157037131178503238742210927927256416073956351568958100038047053002307191569558524956627892618119799679572039939819410371609015002302388267502253326720505214690802942662248282638776986759094777991439524946955458393011802700815763494042802326575866088840712980094975335414387283865492939790773300256234946983831571957038601270911425008907130353723909371646714722730577923843205527739734035515152341673364211058969041089741946974118237091455770042750971424415176552479618605177552145594339271192853653120859740022742221562438237923294609436512995857399568803043924319953346241964071252941 e = 3 def proof(): strings = &amp;#34;abcdefghijklmnopqrstuvwxyzWOERFJASKL&amp;#34; prefix = &amp;#34;&amp;#34;.</description></item><item><title>RSA Quest - Pragyan CTF</title><link>https://ashutosh1206.github.io/ctf/pragyan18-rsaquest/</link><pubDate>Sun, 04 Mar 2018 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/pragyan18-rsaquest/</guid><description>Challenge Points: 200
+#!/usr/bin/env python3 # -*- coding=utf-8 -*- from Crypto.Util.number import getPrime, GCD, bytes_to_long from hashlib import sha256 import random import signal import sys, os signal.alarm(20) m = b&amp;#34;xxxxxxxxxxxxxx&amp;#34; n = 21727106551797231400330796721401157037131178503238742210927927256416073956351568958100038047053002307191569558524956627892618119799679572039939819410371609015002302388267502253326720505214690802942662248282638776986759094777991439524946955458393011802700815763494042802326575866088840712980094975335414387283865492939790773300256234946983831571957038601270911425008907130353723909371646714722730577923843205527739734035515152341673364211058969041089741946974118237091455770042750971424415176552479618605177552145594339271192853653120859740022742221562438237923294609436512995857399568803043924319953346241964071252941 e = 3 def proof(): strings = &amp;#34;abcdefghijklmnopqrstuvwxyzWOERFJASKL&amp;#34; prefix = &amp;#34;&amp;#34;.</description>
+    </item>
+    
+    <item>
+      <title>RSA Quest - Pragyan CTF</title>
+      <link>https://ashutosh1206.github.io/ctf/pragyan18-rsaquest/</link>
+      <pubDate>Sun, 04 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://ashutosh1206.github.io/ctf/pragyan18-rsaquest/</guid>
+      <description>Challenge Points: 200
 Challenge Description:
 Rivest comes up with an encryption, and Shamir creates a service for decrypting any cipher text encrypted using Rivests’s encryption. Adleman is asked to decrypt a specific ciphertext, but he is not able to do so directly through Shamir’s service. Help him out.
-The server code running at 128.199.224.175:34000 allows encryption and decryption of messages using unpadded RSA except decryption of ciphertext of the flag.</description></item><item><title>Simpler Than RSA - MeePwn CTF</title><link>https://ashutosh1206.github.io/ctf/meepwn17-simpler-than-rsa/</link><pubDate>Fri, 02 Mar 2018 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/meepwn17-simpler-than-rsa/</guid><description>Challenge Points: 100
+The server code running at 128.199.224.175:34000 allows encryption and decryption of messages using unpadded RSA except decryption of ciphertext of the flag.</description>
+    </item>
+    
+    <item>
+      <title>Simpler Than RSA - MeePwn CTF</title>
+      <link>https://ashutosh1206.github.io/ctf/meepwn17-simpler-than-rsa/</link>
+      <pubDate>Fri, 02 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://ashutosh1206.github.io/ctf/meepwn17-simpler-than-rsa/</guid>
+      <description>Challenge Points: 100
 We are given an encryption script simple.py:
 Other than the ciphertext, values of n, g, h are also public. The following function is used to generate values for the challenge:
 def generate(nbits): p = getPrime(nbits) q = getPrime(nbits) n = p * q * p g = random.randint(1, n) h = pow(g, n, n) return (n, g, h) The encryption function:
-def encrypt(m, n, g, h): r = random.</description></item><item><title>BabyRSA - Codegate Preliminary CTF</title><link>https://ashutosh1206.github.io/ctf/codegatepre18-babyrsa/</link><pubDate>Thu, 01 Mar 2018 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/codegatepre18-babyrsa/</guid><description>Challenge Points: 349
+def encrypt(m, n, g, h): r = random.</description>
+    </item>
+    
+    <item>
+      <title>BabyRSA - Codegate Preliminary CTF</title>
+      <link>https://ashutosh1206.github.io/ctf/codegatepre18-babyrsa/</link>
+      <pubDate>Thu, 01 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://ashutosh1206.github.io/ctf/codegatepre18-babyrsa/</guid>
+      <description>Challenge Points: 349
 The idea behind the challenge involved knowledge of basic Number Theory which was pretty cool!
 We are given an encryption script and public key parameters that are used for encrypting a message. Everything in the script works normally except the GenerateKeys function:
-def GenerateKeys(p, q): e = 65537 n = p * q pi_n = (p-1)*(q-1) d = mulinv(e, pi_n) h = (d+p)^(d-p) g = d*(p-0xdeadbeef) return [e, n, h, g] There is are two extra variables other than the regular public key parameters whose values are known: g and h</description></item><item><title>DLP - ASIS CTF Quals</title><link>https://ashutosh1206.github.io/ctf/asisquals18-dlp/</link><pubDate>Tue, 16 Jan 2018 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/asisquals18-dlp/</guid><description>Challenge Points: 158
+def GenerateKeys(p, q): e = 65537 n = p * q pi_n = (p-1)*(q-1) d = mulinv(e, pi_n) h = (d+p)^(d-p) g = d*(p-0xdeadbeef) return [e, n, h, g] There is are two extra variables other than the regular public key parameters whose values are known: g and h</description>
+    </item>
+    
+    <item>
+      <title>DLP - ASIS CTF Quals</title>
+      <link>https://ashutosh1206.github.io/ctf/asisquals18-dlp/</link>
+      <pubDate>Tue, 16 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://ashutosh1206.github.io/ctf/asisquals18-dlp/</guid>
+      <description>Challenge Points: 158
 Ciphertext is generated as following:
 def encrypt(nbit, msg): msg = bytes_to_long(msg) p = getPrime(nbit) q = getPrime(nbit) n = p*q s = getPrime(4) enc = pow(n+1, msg, n**(s+1)) return n, enc We have: \((n+1)^{msg}\mod n^{s+1}\)
 Expanding the above equation Binomially, we get:
-$$\binom{msg}{0}n^{msg} + \binom{msg}{1}n^{msg-1} + \binom{msg}{2}n^{msg-2} + &amp;hellip; + \binom{msg}{msg-1}n + \binom{msg}{msg}n^0$$ $$(\binom{msg}{0}n^{msg-2} + \binom{msg}{1}n^{msg-3} + &amp;hellip; + \binom{msg}{2})n^2 + \binom{msg}{msg-1}n + \binom{msg}{msg}n^0$$ This can be written as: \((x)n^2 + mn + 1\), where</description></item><item><title>Multi Layer RSA - InCTFi 2017</title><link>https://ashutosh1206.github.io/ctf/inctfi17-multilayer-rsa/</link><pubDate>Mon, 18 Dec 2017 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/inctfi17-multilayer-rsa/</guid><description>Challenge Points: 100
+$$\binom{msg}{0}n^{msg} + \binom{msg}{1}n^{msg-1} + \binom{msg}{2}n^{msg-2} + &amp;hellip; + \binom{msg}{msg-1}n + \binom{msg}{msg}n^0$$ $$(\binom{msg}{0}n^{msg-2} + \binom{msg}{1}n^{msg-3} + &amp;hellip; + \binom{msg}{2})n^2 + \binom{msg}{msg-1}n + \binom{msg}{msg}n^0$$ This can be written as: \((x)n^2 + mn + 1\), where</description>
+    </item>
+    
+    <item>
+      <title>Multi Layer RSA - InCTFi 2017</title>
+      <link>https://ashutosh1206.github.io/ctf/inctfi17-multilayer-rsa/</link>
+      <pubDate>Mon, 18 Dec 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://ashutosh1206.github.io/ctf/inctfi17-multilayer-rsa/</guid>
+      <description>Challenge Points: 100
 Challenge Description: [None]
 Intended Solution
 This is probably the easiest challenge in the Crypto section for this year&amp;rsquo;s InCTF. The encryption script:
-from Crypto.Util.number import * flag = open(&amp;#34;flag.txt&amp;#34;).read() flag = int(flag.encode(&amp;#34;hex&amp;#34;),16) p = getPrime(512) q = getPrime(512) n = p*q phin = (p-1)*(q-1) encryption_keys = [34961, 3617491, 68962801, 293200159531, 1191694878666066510321450623792489136756229172407332230462797663298426983932272792657383336660801913848162204216417540955677965706955404313949733712340714861638106185597684745174398501025724130404133569866642454996521744281284226124355987843894614599718553178595963014434904833] for i in encryption_keys: assert GCD(i,phin) == 1 for i in encryption_keys: flag = pow(flag, i, n) flag = hex(flag)[2:].</description></item><item><title>RSA 1s Fun - InCTFi 2017</title><link>https://ashutosh1206.github.io/ctf/inctfi17-rsaisfun/</link><pubDate>Sun, 17 Dec 2017 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/inctfi17-rsaisfun/</guid><description>Challenge Points: 150
+from Crypto.Util.number import * flag = open(&amp;#34;flag.txt&amp;#34;).read() flag = int(flag.encode(&amp;#34;hex&amp;#34;),16) p = getPrime(512) q = getPrime(512) n = p*q phin = (p-1)*(q-1) encryption_keys = [34961, 3617491, 68962801, 293200159531, 1191694878666066510321450623792489136756229172407332230462797663298426983932272792657383336660801913848162204216417540955677965706955404313949733712340714861638106185597684745174398501025724130404133569866642454996521744281284226124355987843894614599718553178595963014434904833] for i in encryption_keys: assert GCD(i,phin) == 1 for i in encryption_keys: flag = pow(flag, i, n) flag = hex(flag)[2:].</description>
+    </item>
+    
+    <item>
+      <title>RSA 1s Fun - InCTFi 2017</title>
+      <link>https://ashutosh1206.github.io/ctf/inctfi17-rsaisfun/</link>
+      <pubDate>Sun, 17 Dec 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://ashutosh1206.github.io/ctf/inctfi17-rsaisfun/</guid>
+      <description>Challenge Points: 150
 Challenge Description: Mathematics and Crypto make a deadly combination!
 Intended solution!
 The challenge, as the description suggests, involves applying mathematics to solve the RSA based encryption system. The encryption script:
-from Crypto.Util.number import * e1 = 9 e2 = 123 def prime_gen(): while True: p = getPrime(1024) q = getPrime(1024) n = p*q phin = (p-1)*(q-1) if GCD(e1, phin) == 1 and GCD(e2, phin) == 1: return (p, q, n) p, q, n = prime_gen() print &amp;#34;p: &amp;#34;, p print &amp;#34;q: &amp;#34;, q print &amp;#34;n: &amp;#34;, n flag = bytes_to_long(open(&amp;#34;flag.</description></item><item><title>BabyCrypto - CSAW CTF Quals</title><link>https://ashutosh1206.github.io/ctf/csawquals17-babycrypto/</link><pubDate>Tue, 05 Dec 2017 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/csawquals17-babycrypto/</guid><description>This challenge was a bit overrated, there were no complications in the challenge, as you will see when we discuss the writeup.
+from Crypto.Util.number import * e1 = 9 e2 = 123 def prime_gen(): while True: p = getPrime(1024) q = getPrime(1024) n = p*q phin = (p-1)*(q-1) if GCD(e1, phin) == 1 and GCD(e2, phin) == 1: return (p, q, n) p, q, n = prime_gen() print &amp;#34;p: &amp;#34;, p print &amp;#34;q: &amp;#34;, q print &amp;#34;n: &amp;#34;, n flag = bytes_to_long(open(&amp;#34;flag.</description>
+    </item>
+    
+    <item>
+      <title>BabyCrypto - CSAW CTF Quals</title>
+      <link>https://ashutosh1206.github.io/ctf/csawquals17-babycrypto/</link>
+      <pubDate>Tue, 05 Dec 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://ashutosh1206.github.io/ctf/csawquals17-babycrypto/</guid>
+      <description>This challenge was a bit overrated, there were no complications in the challenge, as you will see when we discuss the writeup.
 In this challenge, we are supposed to get the flag which is present in the server.
 The server has an input-output program running, which gives AES-ECB encryption of the input given to it. The encryption takes place as follows:
-Takes the input from the user Appends secret (which is the flag here) to the input Pads to make it a multiple of blocksize Encrypts the resultant string using AES in ECB mode Gives the ciphertext as the output We are only in control of the input to the server.</description></item><item><title>Gracias - ASIS CTF Finals</title><link>https://ashutosh1206.github.io/ctf/asisfinals-gracias/</link><pubDate>Fri, 24 Nov 2017 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/asisfinals-gracias/</guid><description>Challenge Points: 297
+Takes the input from the user Appends secret (which is the flag here) to the input Pads to make it a multiple of blocksize Encrypts the resultant string using AES in ECB mode Gives the ciphertext as the output We are only in control of the input to the server.</description>
+    </item>
+    
+    <item>
+      <title>Gracias - ASIS CTF Finals</title>
+      <link>https://ashutosh1206.github.io/ctf/asisfinals-gracias/</link>
+      <pubDate>Fri, 24 Nov 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://ashutosh1206.github.io/ctf/asisfinals-gracias/</guid>
+      <description>Challenge Points: 297
 Challenge Solves: 9
 Challenge Description:
 Some people think that combination of cryptographic systems will definitely improve the security. That’s your turn to prove them wrong.
 This is a multi-prime RSA challenge where we are given an encryption script, which has two functions:
-Generating public and private keys - make_pubpri Encrypting data using the public key generated from the first function - encrypt Preliminary Analysis: make_pubpri function Function generating public and private keys:</description></item><item><title>Prime Enigma - Hack.lu CTF</title><link>https://ashutosh1206.github.io/ctf/hacklu17-prime-enigma/</link><pubDate>Fri, 20 Oct 2017 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/hacklu17-prime-enigma/</guid><description>Challenge Points: 50(+100)
+Generating public and private keys - make_pubpri Encrypting data using the public key generated from the first function - encrypt Preliminary Analysis: make_pubpri function Function generating public and private keys:</description>
+    </item>
+    
+    <item>
+      <title>Prime Enigma - Hack.lu CTF</title>
+      <link>https://ashutosh1206.github.io/ctf/hacklu17-prime-enigma/</link>
+      <pubDate>Fri, 20 Oct 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://ashutosh1206.github.io/ctf/hacklu17-prime-enigma/</guid>
+      <description>Challenge Points: 50(+100)
 Challenge Description:
 Hey there fellow lizard how nice of you to drop by! Did you know those filthy humans really think that some numbers have special meanings? Seven, 13 and for some strange reason even 9000. Go and show them that a good prime does not make a secure cryptosystem!
 Given encryption script:
-g = 5 d = key m = int(flag.encode(&amp;#39;hex&amp;#39;), 16) % p B = pow(g, d, p) # Equation-1 k = pow(A, d, p) # Equation-2 c = k * m % p # Equation-3 Values p, A, g, B, c are known.</description></item><item><title>Salad - RC3 CTF 2016</title><link>https://ashutosh1206.github.io/ctf/rc3-16-salad/</link><pubDate>Tue, 22 Nov 2016 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/rc3-16-salad/</guid><description>Challenge Points: 100
+g = 5 d = key m = int(flag.encode(&amp;#39;hex&amp;#39;), 16) % p B = pow(g, d, p) # Equation-1 k = pow(A, d, p) # Equation-2 c = k * m % p # Equation-3 Values p, A, g, B, c are known.</description>
+    </item>
+    
+    <item>
+      <title>Salad - RC3 CTF 2016</title>
+      <link>https://ashutosh1206.github.io/ctf/rc3-16-salad/</link>
+      <pubDate>Tue, 22 Nov 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://ashutosh1206.github.io/ctf/rc3-16-salad/</guid>
+      <description>Challenge Points: 100
 Challenge Description:
 “The fault, dear Brutus, is not in our stars, but in ourselves.”
 (I.ii.141) Julius Caesar in William Shakespeare’s Julius Caesar
 Ciphertext: 7sj-ighm-742q3w4t
 Since every flag in the CTF had to start with &amp;ldquo;RC3-2016&amp;rdquo;, we know partial plaintext value.
-This led me to find a relation between the letters and the digits using the first 7 characters of the ciphertext and &amp;ldquo;RC3-2016&amp;rdquo;. The pattern that I could figure out was this:</description></item></channel></rss>
+This led me to find a relation between the letters and the digits using the first 7 characters of the ciphertext and &amp;ldquo;RC3-2016&amp;rdquo;. The pattern that I could figure out was this:</description>
+    </item>
+    
+  </channel>
+</rss>
