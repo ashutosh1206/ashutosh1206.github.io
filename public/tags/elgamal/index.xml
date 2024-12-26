@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>ElGamal on Ash's blog</title><link>https://ashutosh1206.github.io/tags/elgamal/</link><description>Recent content in ElGamal on Ash's blog</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Fri, 20 Oct 2017 00:00:00 +0000</lastBuildDate><atom:link href="https://ashutosh1206.github.io/tags/elgamal/index.xml" rel="self" type="application/rss+xml"/><item><title>Prime Enigma - Hack.lu CTF</title><link>https://ashutosh1206.github.io/ctf/hacklu17-prime-enigma/</link><pubDate>Fri, 20 Oct 2017 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/hacklu17-prime-enigma/</guid><description>&lt;p>&lt;strong>Challenge Points&lt;/strong>: 50(+100)&lt;br>
+&lt;strong>Challenge Description&lt;/strong>:&lt;/p>
+&lt;blockquote>
+&lt;p>Hey there fellow lizard how nice of you to drop by! Did you know those filthy humans really think that some numbers have special meanings? Seven, 13 and for some strange reason even 9000. Go and show them that a good prime does not make a secure cryptosystem!&lt;/p>
+&lt;/blockquote>
+&lt;p>Given encryption script:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>g &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">5&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>d &lt;span style="color:#f92672">=&lt;/span> key
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>m &lt;span style="color:#f92672">=&lt;/span> int(flag&lt;span style="color:#f92672">.&lt;/span>encode(&lt;span style="color:#e6db74">&amp;#39;hex&amp;#39;&lt;/span>), &lt;span style="color:#ae81ff">16&lt;/span>) &lt;span style="color:#f92672">%&lt;/span> p
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>B &lt;span style="color:#f92672">=&lt;/span> pow(g, d, p) &lt;span style="color:#75715e"># Equation-1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>k &lt;span style="color:#f92672">=&lt;/span> pow(A, d, p) &lt;span style="color:#75715e"># Equation-2&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>c &lt;span style="color:#f92672">=&lt;/span> k &lt;span style="color:#f92672">*&lt;/span> m &lt;span style="color:#f92672">%&lt;/span> p &lt;span style="color:#75715e"># Equation-3&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Values &lt;code>p&lt;/code>, &lt;code>A&lt;/code>, &lt;code>g&lt;/code>, &lt;code>B&lt;/code>, &lt;code>c&lt;/code> are known.
+Prerequisites:&lt;/p></description></item></channel></rss>

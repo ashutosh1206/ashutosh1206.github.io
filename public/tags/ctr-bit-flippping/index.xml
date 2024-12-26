@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CTR-Bit-Flippping on Ash's blog</title><link>https://ashutosh1206.github.io/tags/ctr-bit-flippping/</link><description>Recent content in CTR-Bit-Flippping on Ash's blog</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Tue, 05 Feb 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://ashutosh1206.github.io/tags/ctr-bit-flippping/index.xml" rel="self" type="application/rss+xml"/><item><title>GCM - Nullcon HackIM CTF</title><link>https://ashutosh1206.github.io/ctf/hackim19-gcm/</link><pubDate>Tue, 05 Feb 2019 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/hackim19-gcm/</guid><description>&lt;p>&lt;strong>Challenge Points&lt;/strong>: 300&lt;br>
+&lt;strong>Challenge Description&lt;/strong>: [None]&lt;/p>
+&lt;p>tl;dr&lt;/p>
+&lt;ol>
+&lt;li>CTR Bit Flipping&lt;/li>
+&lt;li>Break GHASH to get authentication key &lt;strong>H&lt;/strong> (unintended approach)&lt;/li>
+&lt;li>Bypass authentication&lt;/li>
+&lt;/ol>
+&lt;p>The way we solved it (unintended approach) was pretty interesting!&lt;/p>
+&lt;h2 id="challenge-internals">Challenge Internals&lt;/h2>
+&lt;p>We are given a service that allows us to encrypt/decrypt data using AES-CTR mode. Code for this is as follows:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>():
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">global&lt;/span> sessionid
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> username &lt;span style="color:#f92672">=&lt;/span> input(&lt;span style="color:#e6db74">&amp;#39;Enter username: &amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> sessionid &lt;span style="color:#f92672">=&lt;/span> sha256(username&lt;span style="color:#f92672">.&lt;/span>encode())&lt;span style="color:#f92672">.&lt;/span>digest()[:&lt;span style="color:#ae81ff">10&lt;/span>]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">while&lt;/span> &lt;span style="color:#66d9ef">True&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print(&lt;span style="color:#e6db74">&amp;#34;Menu&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print(&lt;span style="color:#e6db74">&amp;#34;[1] Encrypt&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print(&lt;span style="color:#e6db74">&amp;#34;[2] Decrypt&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print(&lt;span style="color:#e6db74">&amp;#34;[3] Exit&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> choice &lt;span style="color:#f92672">=&lt;/span> input(&lt;span style="color:#e6db74">&amp;#34;&amp;gt; &amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> choice &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#e6db74">&amp;#39;1&amp;#39;&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> msg &lt;span style="color:#f92672">=&lt;/span> input(&lt;span style="color:#e6db74">&amp;#39;Enter message to be encrypted: &amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#e6db74">&amp;#39;flag&amp;#39;&lt;/span> &lt;span style="color:#f92672">in&lt;/span> msg:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print(&lt;span style="color:#e6db74">&amp;#34;You cant encrypt flag :(&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">continue&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> c &lt;span style="color:#f92672">=&lt;/span> encrypt(msg&lt;span style="color:#f92672">.&lt;/span>encode())
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> nonce &lt;span style="color:#f92672">=&lt;/span> hexlify(c[&lt;span style="color:#ae81ff">0&lt;/span>])&lt;span style="color:#f92672">.&lt;/span>decode()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ciphertext &lt;span style="color:#f92672">=&lt;/span> hexlify(c[&lt;span style="color:#ae81ff">1&lt;/span>])&lt;span style="color:#f92672">.&lt;/span>decode()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> tag &lt;span style="color:#f92672">=&lt;/span> hexlify(c[&lt;span style="color:#ae81ff">2&lt;/span>])&lt;span style="color:#f92672">.&lt;/span>decode()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print(nonce &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#e6db74">&amp;#39;:&amp;#39;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> ciphertext &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#e6db74">&amp;#39;:&amp;#39;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> tag)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">continue&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> choice &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#e6db74">&amp;#39;2&amp;#39;&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> nonce, ciphertext, tag &lt;span style="color:#f92672">=&lt;/span> input(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#39;Enter message to be decrypted: &amp;#39;&lt;/span>)&lt;span style="color:#f92672">.&lt;/span>split(&lt;span style="color:#e6db74">&amp;#39;:&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> nonce &lt;span style="color:#f92672">=&lt;/span> long_to_bytes(int(nonce, &lt;span style="color:#ae81ff">16&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ciphertext &lt;span style="color:#f92672">=&lt;/span> long_to_bytes(int(ciphertext, &lt;span style="color:#ae81ff">16&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> tag &lt;span style="color:#f92672">=&lt;/span> long_to_bytes(int(tag, &lt;span style="color:#ae81ff">16&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> pt &lt;span style="color:#f92672">=&lt;/span> decrypt(nonce, ciphertext, tag)&lt;span style="color:#f92672">.&lt;/span>decode()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> pt &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#e6db74">&amp;#39;may i please have the flag&amp;#39;&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print(&lt;span style="color:#e6db74">&amp;#34;Congrats &lt;/span>&lt;span style="color:#e6db74">%s&lt;/span>&lt;span style="color:#e6db74">&amp;#34;&lt;/span> &lt;span style="color:#f92672">%&lt;/span> username)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print(&lt;span style="color:#e6db74">&amp;#34;Here is your flag: &lt;/span>&lt;span style="color:#e6db74">%s&lt;/span>&lt;span style="color:#e6db74">&amp;#34;&lt;/span> &lt;span style="color:#f92672">%&lt;/span> flag)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print(pt)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">continue&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> choice &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#e6db74">&amp;#39;3&amp;#39;&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">break&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>As you can see, the service does not allow encrypting messages that contain &amp;ldquo;flag&amp;rdquo; as a substring. Also, when we choose to decrypt data, the service checks if the decrypted data is equal to &amp;ldquo;may i please have the flag&amp;rdquo;
+and gives the flag only if it is true.&lt;/p></description></item></channel></rss>

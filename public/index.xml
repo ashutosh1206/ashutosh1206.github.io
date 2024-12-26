@@ -1,0 +1,568 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Ash's blog</title><link>https://ashutosh1206.github.io/</link><description>Recent content on Ash's blog</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Sun, 29 Sep 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://ashutosh1206.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>waRSAw - InCTFi 2019</title><link>https://ashutosh1206.github.io/ctf/inctfi19-warsaw/</link><pubDate>Sun, 29 Sep 2019 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/inctfi19-warsaw/</guid><description>&lt;p>Intended solution of waRSAw challenge from InCTF Internationals 2019&lt;/p>
+&lt;p>tl;dr variant of LSB Oracle Attack on unpadded RSA&lt;/p></description></item><item><title>Halloween Party - ASIS CTF Quals</title><link>https://ashutosh1206.github.io/ctf/asisquals19-halloween-party/</link><pubDate>Tue, 23 Apr 2019 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/asisquals19-halloween-party/</guid><description>&lt;p>&lt;strong>Challenge Points&lt;/strong>: 182&lt;br>
+&lt;strong>Challenge Description&lt;/strong>:&lt;/p>
+&lt;blockquote>
+&lt;p>In the halloween party, we want to half a delicious but small cake!&lt;/p>
+&lt;/blockquote>
+&lt;p>tl;dr&lt;/p>
+&lt;ol>
+&lt;li>Find Elliptic Curve parameters from given points on the curve&lt;/li>
+&lt;li>Find x-coordinate of 2*P, given y-coordinate of 2*P&lt;/li>
+&lt;li>Invert 2 over mod (P.order()) and multiply the result with 2*P to get P&lt;/li>
+&lt;li>Submit ASIS{P.x} as the flag&lt;/li>
+&lt;/ol>
+&lt;p>In case you are new to Elliptic Curves, you can read about them &lt;!-- raw HTML omitted -->&lt;a href="https://github.com/ashutosh1206/Crypton/tree/master/Elliptic-Curves">in my library here&lt;/a>&lt;!-- raw HTML omitted -->&lt;/p></description></item><item><title>EZDSA - Midnight Sun CTF Quals</title><link>https://ashutosh1206.github.io/ctf/midnightsunquals19-ezdsa/</link><pubDate>Tue, 09 Apr 2019 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/midnightsunquals19-ezdsa/</guid><description>&lt;p>&lt;strong>Challenge Points&lt;/strong>: 223&lt;br>
+&lt;strong>Challenge Description&lt;/strong>:&lt;/p>
+&lt;blockquote>
+&lt;p>Someone told me not to use DSA, so I came up with this.&lt;/p>
+&lt;/blockquote>
+&lt;p>In this challenge, we are given a script that signs any message given as an input:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">PrivateSigningKey&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">def&lt;/span> __init__(self):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> self&lt;span style="color:#f92672">.&lt;/span>gen &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0x44120dc98545c6d3d81bfc7898983e7b7f6ac8e08d3943af0be7f5d52264abb3775a905e003151ed0631376165b65c8ef72d0b6880da7e4b5e7b833377bb50fde65846426a5bfdc182673b6b2504ebfe0d6bca36338b3a3be334689c1afb17869baeb2b0380351b61555df31f0cda3445bba4023be72a494588d640a9da7bd16&lt;/span>L
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> self&lt;span style="color:#f92672">.&lt;/span>q &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0x926c99d24bd4d5b47adb75bd9933de8be5932f4b&lt;/span>L
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> self&lt;span style="color:#f92672">.&lt;/span>p &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0x80000000000001cda6f403d8a752a4e7976173ebfcd2acf69a29f4bada1ca3178b56131c2c1f00cf7875a2e7c497b10fea66b26436e40b7b73952081319e26603810a558f871d6d256fddbec5933b77fa7d1d0d75267dcae1f24ea7cc57b3a30f8ea09310772440f016c13e08b56b1196a687d6a5e5de864068f3fd936a361c5&lt;/span>L
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> self&lt;span style="color:#f92672">.&lt;/span>key &lt;span style="color:#f92672">=&lt;/span> int(FLAG&lt;span style="color:#f92672">.&lt;/span>encode(&lt;span style="color:#e6db74">&amp;#34;hex&amp;#34;&lt;/span>), &lt;span style="color:#ae81ff">16&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">sign&lt;/span>(self, m):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">bytes_to_long&lt;/span>(b):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> long(b&lt;span style="color:#f92672">.&lt;/span>encode(&lt;span style="color:#e6db74">&amp;#34;hex&amp;#34;&lt;/span>), &lt;span style="color:#ae81ff">16&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> h &lt;span style="color:#f92672">=&lt;/span> bytes_to_long(sha1(m)&lt;span style="color:#f92672">.&lt;/span>digest())
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> u &lt;span style="color:#f92672">=&lt;/span> bytes_to_long(Random&lt;span style="color:#f92672">.&lt;/span>new()&lt;span style="color:#f92672">.&lt;/span>read(&lt;span style="color:#ae81ff">20&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">assert&lt;/span>(bytes_to_long(m) &lt;span style="color:#f92672">%&lt;/span> (self&lt;span style="color:#f92672">.&lt;/span>q &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>) &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> k &lt;span style="color:#f92672">=&lt;/span> pow(self&lt;span style="color:#f92672">.&lt;/span>gen, u &lt;span style="color:#f92672">*&lt;/span> bytes_to_long(m), self&lt;span style="color:#f92672">.&lt;/span>q)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> r &lt;span style="color:#f92672">=&lt;/span> pow(self&lt;span style="color:#f92672">.&lt;/span>gen, k, self&lt;span style="color:#f92672">.&lt;/span>p) &lt;span style="color:#f92672">%&lt;/span> self&lt;span style="color:#f92672">.&lt;/span>q
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> s &lt;span style="color:#f92672">=&lt;/span> pow(k, self&lt;span style="color:#f92672">.&lt;/span>q &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>, self&lt;span style="color:#f92672">.&lt;/span>q) &lt;span style="color:#f92672">*&lt;/span> (h &lt;span style="color:#f92672">+&lt;/span> self&lt;span style="color:#f92672">.&lt;/span>key &lt;span style="color:#f92672">*&lt;/span> r) &lt;span style="color:#f92672">%&lt;/span> self&lt;span style="color:#f92672">.&lt;/span>q
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">assert&lt;/span>(s &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> r, s
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We will use the notation below to represent the following variables:&lt;/p></description></item><item><title>Blind - Volga CTF Quals</title><link>https://ashutosh1206.github.io/ctf/volgaquals19-blind/</link><pubDate>Sun, 31 Mar 2019 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/volgaquals19-blind/</guid><description>&lt;p>&lt;strong>Challenge Points&lt;/strong>: 200&lt;br>
+&lt;strong>Challenge Description&lt;/strong>:&lt;/p>
+&lt;blockquote>
+&lt;p>Pull the flag&amp;hellip;if you can.&lt;/p>
+&lt;/blockquote>
+&lt;p>tl;dr solving RSA Digital Signature using it&amp;rsquo;s homomorphic property:&lt;/p>
+&lt;ol>
+&lt;li>Calculate the signature of factors of message &lt;code>M&lt;/code> to be signed, separately&lt;/li>
+&lt;li>Combine them by multiplication over modulus to get the signature of &lt;code>M&lt;/code>&lt;/li>
+&lt;/ol>
+&lt;p>Based on Unpadded RSA Digital Signature about which you can read here-&lt;br>
+&lt;a href="https://github.com/ashutosh1206/Crypton/tree/master/Digital-Signatures/Unpadded-RSA-Digital-Signatures">https://github.com/ashutosh1206/Crypton/tree/master/Digital-Signatures/Unpadded-RSA-Digital-Signatures&lt;/a>&lt;/p>
+&lt;p>There are various bash commands the program allows us to execute on the server:&lt;/p>
+&lt;ol>
+&lt;li>&lt;code>ls&lt;/code> – list all files in a directory&lt;/li>
+&lt;li>&lt;code>dir&lt;/code> – list all files in a directory&lt;/li>
+&lt;li>&lt;code>cd&lt;/code> – change directory&lt;/li>
+&lt;li>&lt;code>cat&lt;/code> – print contents of a file&lt;/li>
+&lt;li>&lt;code>exit&lt;/code> – exit the program&lt;/li>
+&lt;/ol>
+&lt;p>Notice in the given source code that the server allows execution of &lt;code>ls&lt;/code> and &lt;code>dir&lt;/code> commands without a signature, while it requires signature of the whole command when we want to execute &lt;code>cd&lt;/code>, &lt;code>cat&lt;/code>, &lt;code>exit&lt;/code> commands.&lt;/p></description></item><item><title>RSA - Teaser CONFidence CTF</title><link>https://ashutosh1206.github.io/ctf/confidence-teaser19-rsa/</link><pubDate>Mon, 18 Mar 2019 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/confidence-teaser19-rsa/</guid><description>&lt;p>tl;dr Coppersmith&amp;rsquo;s Attack to recover RSA primes&lt;/p>
+&lt;p>&lt;strong>Challenge Points&lt;/strong>: 99&lt;br>
+&lt;strong>Challenge Description&lt;/strong>:&lt;/p>
+&lt;blockquote>
+&lt;p>You can&amp;rsquo;t break my public key if you don&amp;rsquo;t know it, amirite?&lt;/p>
+&lt;/blockquote>
+&lt;p>The challenge is based on RSA and we are given the following script:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">bytes_to_long&lt;/span>(data):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> int(data&lt;span style="color:#f92672">.&lt;/span>encode(&lt;span style="color:#e6db74">&amp;#34;hex&amp;#34;&lt;/span>),&lt;span style="color:#ae81ff">16&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">rsa&lt;/span>(msg,e,n):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> pow(bytes_to_long(msg),e,n)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>flag &lt;span style="color:#f92672">=&lt;/span> open(&lt;span style="color:#e6db74">&amp;#39;flag.txt&amp;#39;&lt;/span>,&lt;span style="color:#e6db74">&amp;#39;r&amp;#39;&lt;/span>)&lt;span style="color:#f92672">.&lt;/span>read()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>tmp &lt;span style="color:#f92672">=&lt;/span> randint(&lt;span style="color:#ae81ff">2&lt;/span>&lt;span style="color:#f92672">**&lt;/span>&lt;span style="color:#ae81ff">1023&lt;/span>, &lt;span style="color:#ae81ff">2&lt;/span>&lt;span style="color:#f92672">**&lt;/span>&lt;span style="color:#ae81ff">1024&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>e &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">65537&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>p &lt;span style="color:#f92672">=&lt;/span> next_prime(&lt;span style="color:#ae81ff">0xDEAD&lt;/span>&lt;span style="color:#f92672">*&lt;/span>tmp&lt;span style="color:#f92672">+&lt;/span>randint(&lt;span style="color:#ae81ff">2&lt;/span>, &lt;span style="color:#ae81ff">2&lt;/span>&lt;span style="color:#f92672">**&lt;/span>&lt;span style="color:#ae81ff">500&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>q &lt;span style="color:#f92672">=&lt;/span> next_prime(&lt;span style="color:#ae81ff">0xBEEF&lt;/span>&lt;span style="color:#f92672">*&lt;/span>tmp&lt;span style="color:#f92672">+&lt;/span>randint(&lt;span style="color:#ae81ff">2&lt;/span>, &lt;span style="color:#ae81ff">2&lt;/span>&lt;span style="color:#f92672">**&lt;/span>&lt;span style="color:#ae81ff">500&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>N &lt;span style="color:#f92672">=&lt;/span> p&lt;span style="color:#f92672">*&lt;/span>q
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print(&lt;span style="color:#e6db74">&amp;#39;msg1 = &amp;#39;&lt;/span>&lt;span style="color:#f92672">+&lt;/span>str(rsa(&lt;span style="color:#e6db74">&amp;#34;You can&amp;#39;t factor the modulus&amp;#34;&lt;/span>,e,N)))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print(&lt;span style="color:#e6db74">&amp;#39;msg2 = &amp;#39;&lt;/span>&lt;span style="color:#f92672">+&lt;/span>str(rsa(&lt;span style="color:#e6db74">&amp;#34;If you don&amp;#39;t know the modulus!&amp;#34;&lt;/span>,e,N)))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print(&lt;span style="color:#e6db74">&amp;#39;flag = &amp;#39;&lt;/span>&lt;span style="color:#f92672">+&lt;/span>str(rsa(flag,e,N)))
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We are given ciphertext of two plaintext messages \(m_1\) “You can’t factor the modulus” and \(m_2\) “If you don’t know the modulus!”, and encrypted text of the flag in &lt;code>output.txt&lt;/code>:&lt;/p></description></item><item><title>Alice sent Bob a meme - UTCTF</title><link>https://ashutosh1206.github.io/ctf/utctf19-alicebob/</link><pubDate>Tue, 12 Mar 2019 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/utctf19-alicebob/</guid><description>&lt;p>&lt;strong>Challenge Points&lt;/strong>:&lt;br>
+&lt;strong>Challenge Description&lt;/strong>:&lt;/p>
+&lt;blockquote>
+&lt;p>Eve is an Apple Employee who has access to the iMessage KeyStore (because there is nothing stopping them). They know Alice and Bob use iMessage instead of Signal, therefore they decrypted their messages and see that Alice has sent Bob a meme. Eve suspects more is going on. Can you confirm their suspicions?&lt;/p>
+&lt;/blockquote>
+&lt;p>tl;dr&lt;/p>
+&lt;ol>
+&lt;li>Extract data from given images using binwalk&lt;/li>
+&lt;li>Tranform given diophantine equation into a cubic curve and retrieve EC parameters&lt;/li>
+&lt;li>Solve ECDLP given in extracted data using Pohlig Hellman Algorithm&lt;/li>
+&lt;/ol>
+&lt;h2 id="preliminary-analysis">Preliminary Analysis&lt;/h2>
+&lt;p>We are given three images: &lt;strong>meme.png&lt;/strong>, &lt;strong>screenshot.jpg&lt;/strong> and &lt;strong>bobresponse.jpg&lt;/strong>
+&lt;!-- raw HTML omitted -->&lt;/p></description></item><item><title>GCM - Nullcon HackIM CTF</title><link>https://ashutosh1206.github.io/ctf/hackim19-gcm/</link><pubDate>Tue, 05 Feb 2019 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/hackim19-gcm/</guid><description>&lt;p>&lt;strong>Challenge Points&lt;/strong>: 300&lt;br>
+&lt;strong>Challenge Description&lt;/strong>: [None]&lt;/p>
+&lt;p>tl;dr&lt;/p>
+&lt;ol>
+&lt;li>CTR Bit Flipping&lt;/li>
+&lt;li>Break GHASH to get authentication key &lt;strong>H&lt;/strong> (unintended approach)&lt;/li>
+&lt;li>Bypass authentication&lt;/li>
+&lt;/ol>
+&lt;p>The way we solved it (unintended approach) was pretty interesting!&lt;/p>
+&lt;h2 id="challenge-internals">Challenge Internals&lt;/h2>
+&lt;p>We are given a service that allows us to encrypt/decrypt data using AES-CTR mode. Code for this is as follows:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>():
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">global&lt;/span> sessionid
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> username &lt;span style="color:#f92672">=&lt;/span> input(&lt;span style="color:#e6db74">&amp;#39;Enter username: &amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> sessionid &lt;span style="color:#f92672">=&lt;/span> sha256(username&lt;span style="color:#f92672">.&lt;/span>encode())&lt;span style="color:#f92672">.&lt;/span>digest()[:&lt;span style="color:#ae81ff">10&lt;/span>]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">while&lt;/span> &lt;span style="color:#66d9ef">True&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print(&lt;span style="color:#e6db74">&amp;#34;Menu&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print(&lt;span style="color:#e6db74">&amp;#34;[1] Encrypt&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print(&lt;span style="color:#e6db74">&amp;#34;[2] Decrypt&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print(&lt;span style="color:#e6db74">&amp;#34;[3] Exit&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> choice &lt;span style="color:#f92672">=&lt;/span> input(&lt;span style="color:#e6db74">&amp;#34;&amp;gt; &amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> choice &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#e6db74">&amp;#39;1&amp;#39;&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> msg &lt;span style="color:#f92672">=&lt;/span> input(&lt;span style="color:#e6db74">&amp;#39;Enter message to be encrypted: &amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#e6db74">&amp;#39;flag&amp;#39;&lt;/span> &lt;span style="color:#f92672">in&lt;/span> msg:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print(&lt;span style="color:#e6db74">&amp;#34;You cant encrypt flag :(&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">continue&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> c &lt;span style="color:#f92672">=&lt;/span> encrypt(msg&lt;span style="color:#f92672">.&lt;/span>encode())
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> nonce &lt;span style="color:#f92672">=&lt;/span> hexlify(c[&lt;span style="color:#ae81ff">0&lt;/span>])&lt;span style="color:#f92672">.&lt;/span>decode()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ciphertext &lt;span style="color:#f92672">=&lt;/span> hexlify(c[&lt;span style="color:#ae81ff">1&lt;/span>])&lt;span style="color:#f92672">.&lt;/span>decode()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> tag &lt;span style="color:#f92672">=&lt;/span> hexlify(c[&lt;span style="color:#ae81ff">2&lt;/span>])&lt;span style="color:#f92672">.&lt;/span>decode()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print(nonce &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#e6db74">&amp;#39;:&amp;#39;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> ciphertext &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#e6db74">&amp;#39;:&amp;#39;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> tag)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">continue&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> choice &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#e6db74">&amp;#39;2&amp;#39;&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> nonce, ciphertext, tag &lt;span style="color:#f92672">=&lt;/span> input(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#39;Enter message to be decrypted: &amp;#39;&lt;/span>)&lt;span style="color:#f92672">.&lt;/span>split(&lt;span style="color:#e6db74">&amp;#39;:&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> nonce &lt;span style="color:#f92672">=&lt;/span> long_to_bytes(int(nonce, &lt;span style="color:#ae81ff">16&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ciphertext &lt;span style="color:#f92672">=&lt;/span> long_to_bytes(int(ciphertext, &lt;span style="color:#ae81ff">16&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> tag &lt;span style="color:#f92672">=&lt;/span> long_to_bytes(int(tag, &lt;span style="color:#ae81ff">16&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> pt &lt;span style="color:#f92672">=&lt;/span> decrypt(nonce, ciphertext, tag)&lt;span style="color:#f92672">.&lt;/span>decode()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> pt &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#e6db74">&amp;#39;may i please have the flag&amp;#39;&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print(&lt;span style="color:#e6db74">&amp;#34;Congrats &lt;/span>&lt;span style="color:#e6db74">%s&lt;/span>&lt;span style="color:#e6db74">&amp;#34;&lt;/span> &lt;span style="color:#f92672">%&lt;/span> username)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print(&lt;span style="color:#e6db74">&amp;#34;Here is your flag: &lt;/span>&lt;span style="color:#e6db74">%s&lt;/span>&lt;span style="color:#e6db74">&amp;#34;&lt;/span> &lt;span style="color:#f92672">%&lt;/span> flag)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print(pt)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">continue&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> choice &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#e6db74">&amp;#39;3&amp;#39;&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">break&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>As you can see, the service does not allow encrypting messages that contain &amp;ldquo;flag&amp;rdquo; as a substring. Also, when we choose to decrypt data, the service checks if the decrypted data is equal to &amp;ldquo;may i please have the flag&amp;rdquo;
+and gives the flag only if it is true.&lt;/p></description></item><item><title>Daring - Hxp CTF</title><link>https://ashutosh1206.github.io/ctf/hxp18-daring/</link><pubDate>Sun, 09 Dec 2018 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/hxp18-daring/</guid><description>&lt;p>&lt;strong>Challenge Points&lt;/strong>:&lt;br>
+&lt;strong>Challenge Description&lt;/strong>:&lt;/p>
+&lt;blockquote>
+&lt;p>We encrypted our flag, but we lost the keys. Can you help?&lt;/p>
+&lt;/blockquote>
+&lt;p>This was a simple yet a very tricky challenge aimed at testing Number Theory basics. In this challenge we are given a small script:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#!/usr/bin/env python3&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> os
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> Crypto.Cipher &lt;span style="color:#f92672">import&lt;/span> AES
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> Crypto.Hash &lt;span style="color:#f92672">import&lt;/span> SHA256
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> Crypto.Util &lt;span style="color:#f92672">import&lt;/span> Counter
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> Crypto.PublicKey &lt;span style="color:#f92672">import&lt;/span> RSA
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>flag &lt;span style="color:#f92672">=&lt;/span> open(&lt;span style="color:#e6db74">&amp;#39;flag.txt&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;rb&amp;#39;&lt;/span>)&lt;span style="color:#f92672">.&lt;/span>read()&lt;span style="color:#f92672">.&lt;/span>strip()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>key &lt;span style="color:#f92672">=&lt;/span> RSA&lt;span style="color:#f92672">.&lt;/span>generate(&lt;span style="color:#ae81ff">1024&lt;/span>, e&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">3&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>open(&lt;span style="color:#e6db74">&amp;#39;pubkey.txt&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;w&amp;#39;&lt;/span>)&lt;span style="color:#f92672">.&lt;/span>write(key&lt;span style="color:#f92672">.&lt;/span>publickey()&lt;span style="color:#f92672">.&lt;/span>exportKey(&lt;span style="color:#e6db74">&amp;#39;PEM&amp;#39;&lt;/span>)&lt;span style="color:#f92672">.&lt;/span>decode() &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#e6db74">&amp;#39;&lt;/span>&lt;span style="color:#ae81ff">\n&lt;/span>&lt;span style="color:#e6db74">&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>open(&lt;span style="color:#e6db74">&amp;#39;rsa.enc&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;wb&amp;#39;&lt;/span>)&lt;span style="color:#f92672">.&lt;/span>write(pow(int&lt;span style="color:#f92672">.&lt;/span>from_bytes(flag&lt;span style="color:#f92672">.&lt;/span>ljust(&lt;span style="color:#ae81ff">128&lt;/span>, &lt;span style="color:#e6db74">b&lt;/span>&lt;span style="color:#e6db74">&amp;#39;&lt;/span>&lt;span style="color:#ae81ff">\0&lt;/span>&lt;span style="color:#e6db74">&amp;#39;&lt;/span>), &lt;span style="color:#e6db74">&amp;#39;big&amp;#39;&lt;/span>), key&lt;span style="color:#f92672">.&lt;/span>e, key&lt;span style="color:#f92672">.&lt;/span>n)&lt;span style="color:#f92672">.&lt;/span>to_bytes(&lt;span style="color:#ae81ff">128&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;big&amp;#39;&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>key &lt;span style="color:#f92672">=&lt;/span> SHA256&lt;span style="color:#f92672">.&lt;/span>new(key&lt;span style="color:#f92672">.&lt;/span>exportKey(&lt;span style="color:#e6db74">&amp;#39;DER&amp;#39;&lt;/span>))&lt;span style="color:#f92672">.&lt;/span>digest()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>open(&lt;span style="color:#e6db74">&amp;#39;aes.enc&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;wb&amp;#39;&lt;/span>)&lt;span style="color:#f92672">.&lt;/span>write(AES&lt;span style="color:#f92672">.&lt;/span>new(key, AES&lt;span style="color:#f92672">.&lt;/span>MODE_CTR, counter&lt;span style="color:#f92672">=&lt;/span>Counter&lt;span style="color:#f92672">.&lt;/span>new(&lt;span style="color:#ae81ff">128&lt;/span>))&lt;span style="color:#f92672">.&lt;/span>encrypt(flag))
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>If we analyse the script carefully, we would notice that the same flag is encrypted in two different, independent ways:&lt;/p></description></item><item><title>Playing around with MQTT Protocol</title><link>https://ashutosh1206.github.io/blog/mqtt-protocol/</link><pubDate>Sun, 04 Nov 2018 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/blog/mqtt-protocol/</guid><description>&lt;p>Recently, I happened to come across MQTT Protocol while doing background work for a project as a part of IoT course offered at the University. I liked it due to reasons which I will justify, hence this blog post!&lt;/p>
+&lt;p>I spent some time yesterday looking at the working and specifications of MQTT v3.1.1 from the &lt;a href="https://blog.teserakt.io/2018/11/01/introduction-to-mqtt/">blog post by teserakt&lt;/a> and through the documentation: &lt;a href="http://docs.oasis-open.org/mqtt/mqtt/v3.1.1/mqtt-v3.1.1.html">http://docs.oasis-open.org/mqtt/mqtt/v3.1.1/mqtt-v3.1.1.html&lt;/a>, since I enjoy reading about the protocols and their implementation.&lt;/p></description></item><item><title>Crypto writeups - Hack.lu CTF</title><link>https://ashutosh1206.github.io/ctf/hacklu18-crypto/</link><pubDate>Thu, 18 Oct 2018 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/hacklu18-crypto/</guid><description>&lt;p>Hack.lu CTF is over and we (&lt;a href="https://twitter.com/teambi0s">@teambi0s&lt;/a>) finished 13th globally and since we were registered as a local team (thanks to &lt;a href="https://twitter.com/geethnatk">@GeethnaTk&lt;/a>) and stood first among the teams registered locally, hence we are eligible for prizes! Yay!&lt;/p>
+&lt;p>This blog post covers detailed solutions to two of the crypto challenges from Hack.lu CTF 2018- &lt;strong>Relations&lt;/strong> and &lt;strong>Multiplayer Part-1&lt;/strong>. While the former was just about guessing (or detecting the pattern, whatever you want to say) of a black box encryption service, the latter was a more interesting challenge involving Elliptic Curves.&lt;/p></description></item><item><title>Crypto writeups [Part-2] - InCTFi 2018</title><link>https://ashutosh1206.github.io/ctf/inctfi18-crypto-part2/</link><pubDate>Sun, 14 Oct 2018 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/inctfi18-crypto-part2/</guid><description>&lt;p>This blog post covers intended solutions of two crypto challenges from InCTF-2018: &lt;strong>Request-Auth&lt;/strong> and &lt;strong>EC-Auth&lt;/strong>.&lt;/p>
+&lt;h1 id="request-auth">Request-Auth&lt;/h1>
+&lt;p>&lt;img src="https://ashutosh1206.github.io/inctfi18-crypto-part2-1.png" alt="picture">&lt;br>
+&lt;em>Challenge Description&lt;/em>&lt;/p>
+&lt;p>This was a medium level crypto challenge that I created for InCTF International-2018. In the challenge you are given multiple files: &lt;code>iv.txt&lt;/code>, &lt;code>key.enc&lt;/code>, &lt;code>publickey.pem&lt;/code>, &lt;code>ServerSide.py&lt;/code>, &lt;code>session.enc&lt;/code> and also have a service running these files.&lt;/p>
+&lt;p>Contents of &lt;code>ServerSide.py&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#!/usr/bin/env python2.7&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> Crypto.Cipher &lt;span style="color:#f92672">import&lt;/span> AES
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> Crypto.PublicKey &lt;span style="color:#f92672">import&lt;/span> RSA
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> Crypto.Util.number &lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#f92672">*&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> os &lt;span style="color:#f92672">import&lt;/span> urandom
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> sys
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>BLOCKSIZE &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">16&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">Unbuffered&lt;/span>(object):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">def&lt;/span> __init__(self, stream):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> self&lt;span style="color:#f92672">.&lt;/span>stream &lt;span style="color:#f92672">=&lt;/span> stream
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">write&lt;/span>(self, data):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> self&lt;span style="color:#f92672">.&lt;/span>stream&lt;span style="color:#f92672">.&lt;/span>write(data)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> self&lt;span style="color:#f92672">.&lt;/span>stream&lt;span style="color:#f92672">.&lt;/span>flush()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">writelines&lt;/span>(self, datas):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> self&lt;span style="color:#f92672">.&lt;/span>stream&lt;span style="color:#f92672">.&lt;/span>writelines(datas)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> self&lt;span style="color:#f92672">.&lt;/span>stream&lt;span style="color:#f92672">.&lt;/span>flush()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">def&lt;/span> __getattr__(self, attr):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> getattr(self&lt;span style="color:#f92672">.&lt;/span>stream, attr)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sys&lt;span style="color:#f92672">.&lt;/span>stdout &lt;span style="color:#f92672">=&lt;/span> Unbuffered(sys&lt;span style="color:#f92672">.&lt;/span>stdout)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">colors&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> reset&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;&lt;/span>&lt;span style="color:#ae81ff">\033&lt;/span>&lt;span style="color:#e6db74">[0m&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> red&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;&lt;/span>&lt;span style="color:#ae81ff">\033&lt;/span>&lt;span style="color:#e6db74">[31m&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> green&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;&lt;/span>&lt;span style="color:#ae81ff">\033&lt;/span>&lt;span style="color:#e6db74">[32m&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> orange&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;&lt;/span>&lt;span style="color:#ae81ff">\033&lt;/span>&lt;span style="color:#e6db74">[33m&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> blue&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;&lt;/span>&lt;span style="color:#ae81ff">\033&lt;/span>&lt;span style="color:#e6db74">[34m&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">unpad&lt;/span>(s):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> s &lt;span style="color:#f92672">=&lt;/span> s[:&lt;span style="color:#f92672">-&lt;/span>ord(s[len(s) &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>])]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> s
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">check_valid_request&lt;/span>(s):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">try&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> s &lt;span style="color:#f92672">=&lt;/span> s&lt;span style="color:#f92672">.&lt;/span>split(&lt;span style="color:#e6db74">&amp;#34;:&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">except&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">False&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> len(s) &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#ae81ff">3&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">False&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> s[&lt;span style="color:#ae81ff">0&lt;/span>] &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;bi0s&amp;#34;&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">False&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> s[&lt;span style="color:#ae81ff">1&lt;/span>][:&lt;span style="color:#ae81ff">7&lt;/span>] &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;userid=&amp;#34;&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">False&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> s[&lt;span style="color:#ae81ff">2&lt;/span>][:&lt;span style="color:#ae81ff">5&lt;/span>] &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;user=&amp;#34;&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">False&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">True&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">ServerSide&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">def&lt;/span> __init__(self, key, iv):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> self&lt;span style="color:#f92672">.&lt;/span>key &lt;span style="color:#f92672">=&lt;/span> key[&lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">16&lt;/span>:]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> self&lt;span style="color:#f92672">.&lt;/span>iv &lt;span style="color:#f92672">=&lt;/span> iv[&lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">16&lt;/span>:]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">process_request&lt;/span>(self, req_enc):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">try&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> obj2 &lt;span style="color:#f92672">=&lt;/span> AES&lt;span style="color:#f92672">.&lt;/span>new(self&lt;span style="color:#f92672">.&lt;/span>key, AES&lt;span style="color:#f92672">.&lt;/span>MODE_CBC, self&lt;span style="color:#f92672">.&lt;/span>iv)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> request &lt;span style="color:#f92672">=&lt;/span> obj2&lt;span style="color:#f92672">.&lt;/span>decrypt(req_enc)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> check_valid_request(request)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">except&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">False&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">get_AES_key&lt;/span>():
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">try&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> key_enc &lt;span style="color:#f92672">=&lt;/span> raw_input(&lt;span style="color:#e6db74">&amp;#34;Enter encrypted key value in hex: &amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> key_enc &lt;span style="color:#f92672">=&lt;/span> int(key_enc, &lt;span style="color:#ae81ff">16&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">except&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print colors&lt;span style="color:#f92672">.&lt;/span>red &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#e6db74">&amp;#34;Enter valid input!&amp;#34;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> colors&lt;span style="color:#f92672">.&lt;/span>reset
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> sys&lt;span style="color:#f92672">.&lt;/span>exit()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> priv_key &lt;span style="color:#f92672">=&lt;/span> RSA&lt;span style="color:#f92672">.&lt;/span>importKey(open(&lt;span style="color:#e6db74">&amp;#34;privatekey.pem&amp;#34;&lt;/span>)&lt;span style="color:#f92672">.&lt;/span>read())
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> n, d &lt;span style="color:#f92672">=&lt;/span> priv_key&lt;span style="color:#f92672">.&lt;/span>n, priv_key&lt;span style="color:#f92672">.&lt;/span>d
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> key_AES &lt;span style="color:#f92672">=&lt;/span> pow(key_enc, d, n)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> key_AES &lt;span style="color:#f92672">=&lt;/span> long_to_bytes(key_AES)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> key_AES
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>string1 &lt;span style="color:#f92672">=&lt;/span> colors&lt;span style="color:#f92672">.&lt;/span>blue &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&amp;#34;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">$$\ $$\ $$$$$$&lt;/span>&lt;span style="color:#ae81ff">\\&lt;/span>&lt;span style="color:#e6db74">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">$$ | \__|$$$ __$$&lt;/span>&lt;span style="color:#ae81ff">\\&lt;/span>&lt;span style="color:#e6db74">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">$$$$$$$\ $$\ $$$$\ $$ | $$$$$$$&lt;/span>&lt;span style="color:#ae81ff">\\&lt;/span>&lt;span style="color:#e6db74">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">$$ __$$\ $$ |$$\$$\$$ |$$ _____|
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">$$ | $$ |$$ |$$ \$$$$ |\$$$$$$&lt;/span>&lt;span style="color:#ae81ff">\\&lt;/span>&lt;span style="color:#e6db74">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">$$ | $$ |$$ |$$ |\$$$ | \____$$&lt;/span>&lt;span style="color:#ae81ff">\\&lt;/span>&lt;span style="color:#e6db74">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">$$$$$$$ |$$ |\$$$$$$ /$$$$$$$ |
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">\_______/ \__| \______/ \_______/
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">&amp;#34;&amp;#34;&amp;#34;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> colors&lt;span style="color:#f92672">.&lt;/span>reset
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> __name__ &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#e6db74">&amp;#39;__main__&amp;#39;&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print colors&lt;span style="color:#f92672">.&lt;/span>orange &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#e6db74">&amp;#34;Welcome to bi0s Request Validation Service&amp;#34;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> colors&lt;span style="color:#f92672">.&lt;/span>reset
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print string1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> key &lt;span style="color:#f92672">=&lt;/span> get_AES_key()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> iv &lt;span style="color:#f92672">=&lt;/span> open(&lt;span style="color:#e6db74">&amp;#34;iv.txt&amp;#34;&lt;/span>)&lt;span style="color:#f92672">.&lt;/span>read()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> obj1 &lt;span style="color:#f92672">=&lt;/span> ServerSide(key, iv)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">try&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ct &lt;span style="color:#f92672">=&lt;/span> raw_input(&lt;span style="color:#e6db74">&amp;#34;&lt;/span>&lt;span style="color:#ae81ff">\n&lt;/span>&lt;span style="color:#e6db74">Enter value of encrypted session request in hex: &amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ct &lt;span style="color:#f92672">=&lt;/span> ct&lt;span style="color:#f92672">.&lt;/span>decode(&lt;span style="color:#e6db74">&amp;#34;hex&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">except&lt;/span> &lt;span style="color:#a6e22e">TypeError&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print colors&lt;span style="color:#f92672">.&lt;/span>red &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#e6db74">&amp;#34;Enter a valid hex string!&amp;#34;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> colors&lt;span style="color:#f92672">.&lt;/span>reset
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> sys&lt;span style="color:#f92672">.&lt;/span>exit()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> obj1&lt;span style="color:#f92672">.&lt;/span>process_request(ct) &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#66d9ef">True&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print colors&lt;span style="color:#f92672">.&lt;/span>green &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#e6db74">&amp;#34;&lt;/span>&lt;span style="color:#ae81ff">\n&lt;/span>&lt;span style="color:#e6db74">Valid request!&amp;#34;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> colors&lt;span style="color:#f92672">.&lt;/span>reset
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">else&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print colors&lt;span style="color:#f92672">.&lt;/span>red &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#e6db74">&amp;#34;&lt;/span>&lt;span style="color:#ae81ff">\n&lt;/span>&lt;span style="color:#e6db74">Invalid request!&amp;#34;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> colors&lt;span style="color:#f92672">.&lt;/span>reset
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Okay, so the service is basically implementing a hybrid cipher- a combination of RSA and AES to authenticate session requests coming from a user and is internally using a public and a private key in this process.&lt;/p></description></item><item><title>Crypto writeups [Part-1] - InCTFi 2018</title><link>https://ashutosh1206.github.io/ctf/inctfi18-crypto-part1/</link><pubDate>Thu, 11 Oct 2018 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/inctfi18-crypto-part1/</guid><description>&lt;p>InCTF is over and I must say that we enjoyed a lot! We stayed for two days straight in front of our laptop screens, sleep deprived, fixing services, solving queries on IRC, eating and what not! My experience organising InCTF-2018, creating crypto challenges, how I came across the idea of creating all the crypto challenges etc. is another blog post I have to write soon, let us jump to what is in scope of this blog post.&lt;/p></description></item><item><title>Announcing Crypton v1.0</title><link>https://ashutosh1206.github.io/blog/crypton-announcement/</link><pubDate>Sun, 12 Aug 2018 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/blog/crypton-announcement/</guid><description>&lt;p>In this blog post, I will be talking about my new library Crypton, my journey of building this library, future plans and much more!&lt;/p>
+&lt;p>Check out the library on GitHub: &lt;a href="https://github.com/ashutosh1206/Crypton">https://github.com/ashutosh1206/Crypton&lt;/a>&lt;/p>
+&lt;h2 id="introduction">Introduction&lt;/h2>
+&lt;p>This library is an attempt by the author to help provide a platform to learn and practice Offensive and Defensive cryptography for people interested in this field .&lt;/p>
+&lt;p>With the increasing number of attacks on implementations of cryptographic protocols every year, it has become essential that we give as much importance to secure implementation of these protocols as we give to internals of the protocol itself.&lt;/p></description></item><item><title>USSH 3.0 - CTFZone</title><link>https://ashutosh1206.github.io/ctf/ctfzone18-ussh/</link><pubDate>Mon, 23 Jul 2018 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/ctfzone18-ussh/</guid><description>&lt;p>&lt;strong>Challenge Points&lt;/strong>: 138&lt;br>
+&lt;strong>Challenge Description&lt;/strong>:&lt;/p>
+&lt;blockquote>
+&lt;p>We&amp;rsquo;ve developed a new restricted shell. It also allows to manage user access more securely. Let&amp;rsquo;s try it&lt;br>
+&lt;code>nc crypto-01.v7frkwrfyhsjtbpfcppnu.ctfz.one 1337&lt;/code>&lt;/p>
+&lt;/blockquote>
+&lt;p>In this post, I will be discussing my solution for USSH-3.0 challenge from CTFZone which I think is the unintended way. The challenge was quite peculiar, involving “blind” exploit as you will see in this write-up. Some parts of the challenge might look like guessing, but if you read this write-up start-to-end, you will see that it was a well-tailored challenge.&lt;/p></description></item><item><title>OPEC - ASIS CTF Quals</title><link>https://ashutosh1206.github.io/ctf/asisquals18-opec/</link><pubDate>Tue, 01 May 2018 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/asisquals18-opec/</guid><description>&lt;p>&lt;strong>Challenge Points&lt;/strong>: 207&lt;br>
+&lt;strong>Challenge Description&lt;/strong>:&lt;/p>
+&lt;blockquote>
+&lt;p>We like the OPEC, but not oily one!&lt;/p>
+&lt;/blockquote>
+&lt;p>This challenge is an &lt;a href="https://en.wikipedia.org/wiki/Okamoto%E2%80%93Uchiyama_cryptosystem">Okamoto–Uchiyama cryptosystem&lt;/a>. Let us see how encryption/decryption takes place in this public key cryptosystem.&lt;/p>
+&lt;h2 id="okamoto-uchiyama-cryptosystem-101">Okamoto Uchiyama Cryptosystem 101&lt;/h2>
+&lt;p>Key Generation, Encryption and Decryption take place as follows (pasted from Wikipedia):
+&lt;img src="https://ashutosh1206.github.io/asisquals18-opec-1.png" alt="picture">&lt;/p>
+&lt;p>We will see how the decryption formula gives us the message and hence prove it. We want to prove that:&lt;br>
+$$\frac{L(C^{p-1}\mod p^2)}{L(g^{p-1}\mod p^2)} = m \mod p$$
+where \(L(x) = \frac{x-1}{p}\)&lt;/p></description></item><item><title>UncleSam - ASIS CTF Quals</title><link>https://ashutosh1206.github.io/ctf/asisquals18-unclesam/</link><pubDate>Tue, 01 May 2018 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/asisquals18-unclesam/</guid><description>&lt;p>&lt;strong>Challenge Points&lt;/strong>: 123&lt;br>
+&lt;strong>Challenge Description&lt;/strong>:&lt;/p>
+&lt;blockquote>
+&lt;p>Uncle Sam needs your help!&lt;/p>
+&lt;/blockquote>
+&lt;p>The given challenge is a &lt;a href="https://en.wikipedia.org/wiki/Schmidt-Samoa_cryptosystem">Schmidt-Samoa cryptosystem&lt;/a>. Let us look at how encryption/decryption takes place in this public key cryptosystem and then move to solving the challenge.&lt;/p>
+&lt;h2 id="schmidt-samoa-cryptosystem-101">Schmidt-Samoa Cryptosystem 101&lt;/h2>
+&lt;ol>
+&lt;li>Two large primes p and q are chosen randomly, and the modulus is calculated: \(N = p*p*q\). The private key is calculated as \(d \equiv e^{-1} \mod lcm(p-1, q-1)\). The modulus is the public key too.&lt;/li>
+&lt;li>&lt;strong>Encryption&lt;/strong>: Message &lt;code>m &amp;lt; N&lt;/code> is encrypted as \(enc = m^N \mod N\).&lt;/li>
+&lt;/ol>
+&lt;ul>
+&lt;li>Note that, unlike RSA, the encryption exponent and modulus is the same.&lt;/li>
+&lt;/ul>
+&lt;ol start="3">
+&lt;li>&lt;strong>Decryption&lt;/strong>: Message &lt;code>m&lt;/code> is decrypted as \(m = enc^d \mod (pq)\)&lt;/li>
+&lt;/ol>
+&lt;p>The security of this cryptosystem depends on the difficulty of factorisation of &lt;code>N&lt;/code>.&lt;/p></description></item><item><title>Locked Dungeons 2 - Swamp CTF</title><link>https://ashutosh1206.github.io/ctf/swamp-locked-dungeons-2/</link><pubDate>Tue, 03 Apr 2018 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/swamp-locked-dungeons-2/</guid><description>&lt;p>&lt;strong>Challenge Points&lt;/strong>: 498&lt;br>
+&lt;strong>Challenge Description&lt;/strong>:&lt;/p>
+&lt;blockquote>
+&lt;p>The Dungeon Keeper learned from its mistake. This next lock is protected by even stronger encryption. We’re so close to the final level…there has to be a way in.&lt;/p>
+&lt;/blockquote>
+&lt;p>The Dark Dungeon series of crypto challenges were the only ones I enjoyed solving in the CTF. Rest of the crypto challenges were pathetic, involved a lot of guessing and were not really crypto challenges and can be called as puzzles.&lt;/p></description></item><item><title>RSA-Padding - N1CTF</title><link>https://ashutosh1206.github.io/ctf/n1ctf18-rsa-padding/</link><pubDate>Mon, 12 Mar 2018 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/n1ctf18-rsa-padding/</guid><description>&lt;p>&lt;strong>Challenge Points&lt;/strong>: 303&lt;/p>
+&lt;p>Challenge is running on the service: &lt;code>nc 47.75.39.249 23333&lt;/code>&lt;br>
+After surpassing the Proof of Work, we get the following challenge:
+&lt;img src="https://ashutosh1206.github.io/n1ctf18-rsapadding1.png" alt="picture">&lt;/p>
+&lt;p>On selecting the option &lt;strong>&lt;code>get code&lt;/code>&lt;/strong>, we get the following code that is being used for encryption:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#!/usr/bin/env python3&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># -*- coding=utf-8 -*-&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> Crypto.Util.number &lt;span style="color:#f92672">import&lt;/span> getPrime, GCD, bytes_to_long
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> hashlib &lt;span style="color:#f92672">import&lt;/span> sha256
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> random
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> signal
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> sys&lt;span style="color:#f92672">,&lt;/span> os
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>signal&lt;span style="color:#f92672">.&lt;/span>alarm(&lt;span style="color:#ae81ff">20&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>m &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">b&lt;/span>&lt;span style="color:#e6db74">&amp;#34;xxxxxxxxxxxxxx&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>n &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">21727106551797231400330796721401157037131178503238742210927927256416073956351568958100038047053002307191569558524956627892618119799679572039939819410371609015002302388267502253326720505214690802942662248282638776986759094777991439524946955458393011802700815763494042802326575866088840712980094975335414387283865492939790773300256234946983831571957038601270911425008907130353723909371646714722730577923843205527739734035515152341673364211058969041089741946974118237091455770042750971424415176552479618605177552145594339271192853653120859740022742221562438237923294609436512995857399568803043924319953346241964071252941&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>e &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">3&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">proof&lt;/span>():
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> strings &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;abcdefghijklmnopqrstuvwxyzWOERFJASKL&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> prefix &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>join(random&lt;span style="color:#f92672">.&lt;/span>sample(strings, &lt;span style="color:#ae81ff">6&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> starwith &lt;span style="color:#f92672">=&lt;/span> str(random&lt;span style="color:#f92672">.&lt;/span>randint(&lt;span style="color:#ae81ff">10000&lt;/span>, &lt;span style="color:#ae81ff">99999&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> pf &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&amp;#34;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">sha256(&amp;#34;&lt;/span>&lt;span style="color:#e6db74">%s&lt;/span>&lt;span style="color:#e6db74">&amp;#34;+str).hexdigest().startswith(&amp;#34;&lt;/span>&lt;span style="color:#e6db74">%s&lt;/span>&lt;span style="color:#e6db74">&amp;#34;) == True
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">Please give me str
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">&amp;#34;&amp;#34;&amp;#34;&lt;/span>&lt;span style="color:#f92672">%&lt;/span>(prefix, starwith)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print(pf)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> s &lt;span style="color:#f92672">=&lt;/span> input()&lt;span style="color:#f92672">.&lt;/span>strip()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> sha256((prefix&lt;span style="color:#f92672">+&lt;/span>s)&lt;span style="color:#f92672">.&lt;/span>encode())&lt;span style="color:#f92672">.&lt;/span>hexdigest()&lt;span style="color:#f92672">.&lt;/span>startswith(starwith):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">True&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">else&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">False&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">cmd&lt;/span>():
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> help &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&amp;#34;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">1. get code
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">2. get flag
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">Please tell me, what you want?
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">&amp;#34;&amp;#34;&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">while&lt;/span> &lt;span style="color:#66d9ef">True&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print(help)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> c &lt;span style="color:#f92672">=&lt;/span> input()&lt;span style="color:#f92672">.&lt;/span>strip()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> c &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#e6db74">&amp;#34;1&amp;#34;&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">True&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">elif&lt;/span> c &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#e6db74">&amp;#34;2&amp;#34;&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">False&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">else&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print(&lt;span style="color:#e6db74">&amp;#34;Enter Error!&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>():
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#f92672">not&lt;/span> proof():
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print(&lt;span style="color:#e6db74">&amp;#34;Check Failed!&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> welcom()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> cmd():
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> f &lt;span style="color:#f92672">=&lt;/span> open(&lt;span style="color:#e6db74">&amp;#34;file.py&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print(f&lt;span style="color:#f92672">.&lt;/span>read())
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> mm &lt;span style="color:#f92672">=&lt;/span> bytes_to_long(m)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">assert&lt;/span> pow(mm, e) &lt;span style="color:#f92672">!=&lt;/span> pow(mm, e, n)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> sys&lt;span style="color:#f92672">.&lt;/span>stdout&lt;span style="color:#f92672">.&lt;/span>write(&lt;span style="color:#e6db74">&amp;#34;Please give me a padding: &amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> padding &lt;span style="color:#f92672">=&lt;/span> input()&lt;span style="color:#f92672">.&lt;/span>strip()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> padding &lt;span style="color:#f92672">=&lt;/span> int(sha256(padding&lt;span style="color:#f92672">.&lt;/span>encode())&lt;span style="color:#f92672">.&lt;/span>hexdigest(),&lt;span style="color:#ae81ff">16&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> c &lt;span style="color:#f92672">=&lt;/span> pow(mm&lt;span style="color:#f92672">+&lt;/span>padding, e, n)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print(&lt;span style="color:#e6db74">&amp;#34;Your Ciphertext is: &lt;/span>&lt;span style="color:#e6db74">%s&lt;/span>&lt;span style="color:#e6db74">&amp;#34;&lt;/span>&lt;span style="color:#f92672">%&lt;/span>c)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> __name__ &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#e6db74">&amp;#39;__main__&amp;#39;&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> main()
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Upon selecting the &lt;strong>&lt;code>get flag&lt;/code>&lt;/strong> option, the following computation is done:&lt;br>
+$$c \equiv (flag + sha256(input))^3\mod n$$
+where &lt;code>input&lt;/code> is an input string that we give to the server, sha256() is a function that generates integer representation of SHA-256 hash of the &lt;code>input&lt;/code> and &lt;code>c&lt;/code> is the corresponding ciphertext.&lt;/p></description></item><item><title>RSA Quest - Pragyan CTF</title><link>https://ashutosh1206.github.io/ctf/pragyan18-rsaquest/</link><pubDate>Sun, 04 Mar 2018 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/pragyan18-rsaquest/</guid><description>&lt;p>&lt;strong>Challenge Points&lt;/strong>: 200&lt;br>
+&lt;strong>Challenge Description&lt;/strong>:&lt;/p>
+&lt;blockquote>
+&lt;p>Rivest comes up with an encryption, and Shamir creates a service for decrypting any cipher text encrypted using Rivests’s encryption. Adleman is asked to decrypt a specific ciphertext, but he is not able to do so directly through Shamir’s service. Help him out.&lt;/p>
+&lt;/blockquote>
+&lt;p>The server code running at 128.199.224.175:34000 allows encryption and decryption of messages using unpadded RSA except decryption of ciphertext of the flag.&lt;/p></description></item><item><title>Simpler Than RSA - MeePwn CTF</title><link>https://ashutosh1206.github.io/ctf/meepwn17-simpler-than-rsa/</link><pubDate>Fri, 02 Mar 2018 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/meepwn17-simpler-than-rsa/</guid><description>&lt;p>&lt;strong>Challenge Points&lt;/strong>: 100&lt;/p>
+&lt;p>We are given an encryption script &lt;a href="https://github.com/ashutosh1206/Crypto-CTF-Writeups/blob/master/2017/MeePwn-CTF/Simpler-Than-RSA/simple.py">simple.py&lt;/a>:&lt;/p>
+&lt;p>Other than the ciphertext, values of &lt;code>n&lt;/code>, &lt;code>g&lt;/code>, &lt;code>h&lt;/code> are also public. The following function is used to generate values for the challenge:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">generate&lt;/span>(nbits):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	p &lt;span style="color:#f92672">=&lt;/span> getPrime(nbits)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	q &lt;span style="color:#f92672">=&lt;/span> getPrime(nbits)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	n &lt;span style="color:#f92672">=&lt;/span> p &lt;span style="color:#f92672">*&lt;/span> q &lt;span style="color:#f92672">*&lt;/span> p
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	g &lt;span style="color:#f92672">=&lt;/span> random&lt;span style="color:#f92672">.&lt;/span>randint(&lt;span style="color:#ae81ff">1&lt;/span>, n)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	h &lt;span style="color:#f92672">=&lt;/span> pow(g, n, n)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#66d9ef">return&lt;/span> (n, g, h)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The encryption function:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">encrypt&lt;/span>(m, n, g, h):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	r &lt;span style="color:#f92672">=&lt;/span> random&lt;span style="color:#f92672">.&lt;/span>randint(&lt;span style="color:#ae81ff">1&lt;/span>, n)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	c &lt;span style="color:#f92672">=&lt;/span> pow(pow(g, m, n) &lt;span style="color:#f92672">*&lt;/span> pow(h, r, n), &lt;span style="color:#ae81ff">1&lt;/span>, n)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#66d9ef">return&lt;/span> c
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>As we can see, the ciphertext for each character in the plaintext is generated separately.&lt;br>
+For \(i^{th}\) byte of message we can write the corresponding ciphertext as:&lt;br>
+$$c_i \equiv ((g^{m_i}\mod n) * (h^r\mod n)) \mod n$$
+Given: \(h \equiv g^n \mod n\). We can now write:&lt;br>
+$$c_i \equiv ((g^{m_i}\mod n) * (g^{nr}\mod n)) \mod n$$
+$$\implies c_i \equiv g^{m_i + nr}\mod n$$&lt;/p></description></item><item><title>BabyRSA - Codegate Preliminary CTF</title><link>https://ashutosh1206.github.io/ctf/codegatepre18-babyrsa/</link><pubDate>Thu, 01 Mar 2018 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/codegatepre18-babyrsa/</guid><description>&lt;p>&lt;strong>Challenge Points&lt;/strong>: 349&lt;/p>
+&lt;p>The idea behind the challenge involved knowledge of basic Number Theory which was pretty cool!&lt;/p>
+&lt;p>We are given &lt;a href="">an encryption script&lt;/a> and public key parameters that are used for encrypting a message. Everything in the script works normally except the &lt;code>GenerateKeys&lt;/code> function:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">GenerateKeys&lt;/span>(p, q):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> e &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">65537&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> n &lt;span style="color:#f92672">=&lt;/span> p &lt;span style="color:#f92672">*&lt;/span> q
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> pi_n &lt;span style="color:#f92672">=&lt;/span> (p&lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>)&lt;span style="color:#f92672">*&lt;/span>(q&lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> d &lt;span style="color:#f92672">=&lt;/span> mulinv(e, pi_n)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> h &lt;span style="color:#f92672">=&lt;/span> (d&lt;span style="color:#f92672">+&lt;/span>p)&lt;span style="color:#f92672">^&lt;/span>(d&lt;span style="color:#f92672">-&lt;/span>p)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> g &lt;span style="color:#f92672">=&lt;/span> d&lt;span style="color:#f92672">*&lt;/span>(p&lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">0xdeadbeef&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> [e, n, h, g]
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>There is are two extra variables other than the regular public key parameters whose values are known: &lt;code>g&lt;/code> and &lt;code>h&lt;/code>&lt;/p></description></item><item><title>DLP - ASIS CTF Quals</title><link>https://ashutosh1206.github.io/ctf/asisquals18-dlp/</link><pubDate>Tue, 16 Jan 2018 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/asisquals18-dlp/</guid><description>&lt;p>&lt;strong>Challenge Points&lt;/strong>: 158&lt;/p>
+&lt;p>Ciphertext is generated as following:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">encrypt&lt;/span>(nbit, msg):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> msg &lt;span style="color:#f92672">=&lt;/span> bytes_to_long(msg)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> p &lt;span style="color:#f92672">=&lt;/span> getPrime(nbit)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> q &lt;span style="color:#f92672">=&lt;/span> getPrime(nbit)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> n &lt;span style="color:#f92672">=&lt;/span> p&lt;span style="color:#f92672">*&lt;/span>q
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> s &lt;span style="color:#f92672">=&lt;/span> getPrime(&lt;span style="color:#ae81ff">4&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> enc &lt;span style="color:#f92672">=&lt;/span> pow(n&lt;span style="color:#f92672">+&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>, msg, n&lt;span style="color:#f92672">**&lt;/span>(s&lt;span style="color:#f92672">+&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> n, enc
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We have: \((n+1)^{msg}\mod n^{s+1}\)&lt;/p>
+&lt;p>Expanding the above equation Binomially, we get:&lt;br>
+$$\binom{msg}{0}n^{msg} + \binom{msg}{1}n^{msg-1} + \binom{msg}{2}n^{msg-2} + &amp;hellip; + \binom{msg}{msg-1}n + \binom{msg}{msg}n^0$$
+$$(\binom{msg}{0}n^{msg-2} + \binom{msg}{1}n^{msg-3} + &amp;hellip; + \binom{msg}{2})n^2 + \binom{msg}{msg-1}n + \binom{msg}{msg}n^0$$
+This can be written as:
+\((x)n^2 + mn + 1\), where&lt;br>
+$$x = \binom{msg}{0}n^{msg-2} + \binom{msg}{1}n^{msg-3} + &amp;hellip; + \binom{msg}{2}$$&lt;/p></description></item><item><title>Multi Layer RSA - InCTFi 2017</title><link>https://ashutosh1206.github.io/ctf/inctfi17-multilayer-rsa/</link><pubDate>Mon, 18 Dec 2017 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/inctfi17-multilayer-rsa/</guid><description>&lt;p>&lt;strong>Challenge Points&lt;/strong>: 100&lt;br>
+&lt;strong>Challenge Description&lt;/strong>: [None]&lt;/p>
+&lt;p>Intended Solution&lt;/p>
+&lt;p>This is probably the easiest challenge in the Crypto section for this year&amp;rsquo;s InCTF. The encryption script:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> Crypto.Util.number &lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#f92672">*&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>flag &lt;span style="color:#f92672">=&lt;/span> open(&lt;span style="color:#e6db74">&amp;#34;flag.txt&amp;#34;&lt;/span>)&lt;span style="color:#f92672">.&lt;/span>read()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>flag &lt;span style="color:#f92672">=&lt;/span> int(flag&lt;span style="color:#f92672">.&lt;/span>encode(&lt;span style="color:#e6db74">&amp;#34;hex&amp;#34;&lt;/span>),&lt;span style="color:#ae81ff">16&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>p &lt;span style="color:#f92672">=&lt;/span> getPrime(&lt;span style="color:#ae81ff">512&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>q &lt;span style="color:#f92672">=&lt;/span> getPrime(&lt;span style="color:#ae81ff">512&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>n &lt;span style="color:#f92672">=&lt;/span> p&lt;span style="color:#f92672">*&lt;/span>q
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>phin &lt;span style="color:#f92672">=&lt;/span> (p&lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>)&lt;span style="color:#f92672">*&lt;/span>(q&lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>encryption_keys &lt;span style="color:#f92672">=&lt;/span> [&lt;span style="color:#ae81ff">34961&lt;/span>, &lt;span style="color:#ae81ff">3617491&lt;/span>, &lt;span style="color:#ae81ff">68962801&lt;/span>, &lt;span style="color:#ae81ff">293200159531&lt;/span>, &lt;span style="color:#ae81ff">1191694878666066510321450623792489136756229172407332230462797663298426983932272792657383336660801913848162204216417540955677965706955404313949733712340714861638106185597684745174398501025724130404133569866642454996521744281284226124355987843894614599718553178595963014434904833&lt;/span>]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">for&lt;/span> i &lt;span style="color:#f92672">in&lt;/span> encryption_keys:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">assert&lt;/span> GCD(i,phin) &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">for&lt;/span> i &lt;span style="color:#f92672">in&lt;/span> encryption_keys:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> flag &lt;span style="color:#f92672">=&lt;/span> pow(flag, i, n)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>flag &lt;span style="color:#f92672">=&lt;/span> hex(flag)[&lt;span style="color:#ae81ff">2&lt;/span>:]&lt;span style="color:#f92672">.&lt;/span>replace(&lt;span style="color:#e6db74">&amp;#34;L&amp;#34;&lt;/span>,&lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>obj1 &lt;span style="color:#f92672">=&lt;/span> open(&lt;span style="color:#e6db74">&amp;#34;ciphertext.txt&amp;#34;&lt;/span>,&lt;span style="color:#e6db74">&amp;#39;w&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>obj1&lt;span style="color:#f92672">.&lt;/span>write(flag)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>As we can see, the encryption is &lt;strong>layered&lt;/strong>; after the message is encrypted using the first public key i.e. first element of &lt;code>encryption_keys&lt;/code>, the result is then encrypted with the next public key i.e. second element of &lt;code>encryption_keys&lt;/code> and so on. We can write it mathematically as:
+$$c_1 \equiv m_1^{e_1}\mod n$$
+$$c_2 \equiv c_1^{e_2}\mod n$$
+$$&amp;hellip;$$
+$$c_5 \equiv c_4^{e_5}\mod n$$&lt;/p></description></item><item><title>RSA 1s Fun - InCTFi 2017</title><link>https://ashutosh1206.github.io/ctf/inctfi17-rsaisfun/</link><pubDate>Sun, 17 Dec 2017 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/inctfi17-rsaisfun/</guid><description>&lt;p>&lt;strong>Challenge Points&lt;/strong>: 150&lt;br>
+&lt;strong>Challenge Description&lt;/strong>: Mathematics and Crypto make a deadly combination!&lt;/p>
+&lt;p>Intended solution!&lt;/p>
+&lt;p>The challenge, as the description suggests, involves applying mathematics to solve the RSA based encryption system. The encryption script:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> Crypto.Util.number &lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#f92672">*&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>e1 &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">9&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>e2 &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">123&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">prime_gen&lt;/span>():
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">while&lt;/span> &lt;span style="color:#66d9ef">True&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> p &lt;span style="color:#f92672">=&lt;/span> getPrime(&lt;span style="color:#ae81ff">1024&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> q &lt;span style="color:#f92672">=&lt;/span> getPrime(&lt;span style="color:#ae81ff">1024&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> n &lt;span style="color:#f92672">=&lt;/span> p&lt;span style="color:#f92672">*&lt;/span>q
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> phin &lt;span style="color:#f92672">=&lt;/span> (p&lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>)&lt;span style="color:#f92672">*&lt;/span>(q&lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> GCD(e1, phin) &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span> &lt;span style="color:#f92672">and&lt;/span> GCD(e2, phin) &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> (p, q, n)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>p, q, n &lt;span style="color:#f92672">=&lt;/span> prime_gen()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print &lt;span style="color:#e6db74">&amp;#34;p: &amp;#34;&lt;/span>, p
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print &lt;span style="color:#e6db74">&amp;#34;q: &amp;#34;&lt;/span>, q
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print &lt;span style="color:#e6db74">&amp;#34;n: &amp;#34;&lt;/span>, n
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>flag &lt;span style="color:#f92672">=&lt;/span> bytes_to_long(open(&lt;span style="color:#e6db74">&amp;#34;flag.txt&amp;#34;&lt;/span>)&lt;span style="color:#f92672">.&lt;/span>read()&lt;span style="color:#f92672">.&lt;/span>strip())
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">assert&lt;/span> flag &lt;span style="color:#f92672">&amp;lt;&lt;/span> n &lt;span style="color:#66d9ef">assert&lt;/span> flag&lt;span style="color:#f92672">**&lt;/span>&lt;span style="color:#ae81ff">9&lt;/span> &lt;span style="color:#f92672">&amp;gt;&lt;/span> n
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>c1 &lt;span style="color:#f92672">=&lt;/span> pow(flag, e1, n)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>c2 &lt;span style="color:#f92672">=&lt;/span> pow(flag, e2, n)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print &lt;span style="color:#e6db74">&amp;#34;c1: &amp;#34;&lt;/span>, c1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print &lt;span style="color:#e6db74">&amp;#34;c2: &amp;#34;&lt;/span>, c2
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Two different public key exponents \(e_1 = 9\) and \(e_2 = 123\) are being used to encrypt the same message and generate ciphertexts \(c_1\) and \(c_2\) respectively. By &lt;a href="https://en.wikipedia.org/wiki/Extended_Euclidean_algorithm">Extended Euclidean Algorithm&lt;/a>, we can calculate coefficients of Bezout&amp;rsquo;s identity \(a, b\) as:&lt;br>
+$$e_1*a + e_2*b = gcd(e_1, e_2)$$
+$$(9*14) + (123*(-1)) = 3$$&lt;/p></description></item><item><title>BabyCrypto - CSAW CTF Quals</title><link>https://ashutosh1206.github.io/ctf/csawquals17-babycrypto/</link><pubDate>Tue, 05 Dec 2017 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/csawquals17-babycrypto/</guid><description>&lt;p>This challenge was a bit overrated, there were no complications in the challenge, as you will see when we discuss the writeup.&lt;/p>
+&lt;p>In this challenge, we are supposed to get the flag which is present in the server.&lt;br>
+The server has an input-output program running, which gives AES-ECB encryption of the input given to it. The encryption takes place as follows:&lt;/p>
+&lt;ol>
+&lt;li>Takes the input from the user&lt;/li>
+&lt;li>Appends &lt;code>secret&lt;/code> (which is the flag here) to the input&lt;/li>
+&lt;li>Pads to make it a multiple of blocksize&lt;/li>
+&lt;li>Encrypts the resultant string using AES in ECB mode&lt;/li>
+&lt;li>Gives the ciphertext as the output&lt;/li>
+&lt;/ol>
+&lt;p>We are only in control of the input to the server. Using the input that we give, we need to get the &lt;code>secret&lt;/code>.&lt;/p></description></item><item><title>Finite Fields - Number Theory</title><link>https://ashutosh1206.github.io/blog/finite-fields/</link><pubDate>Tue, 28 Nov 2017 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/blog/finite-fields/</guid><description>&lt;p>This blog post covers one of the most important Mathematical Structures for Cryptography- &lt;strong>Fields&lt;/strong>. It is used in both Symmetric and Asymmetric key Cryptography.&lt;/p>
+&lt;p>This blog post gives a basic introduction to Finite Fields and arithmetic operations on it, but I hope the purpose of it is served- to make people, who don’t have basic knowledge about this, understand a few upcoming CTF write-ups, that are based on Finite Fields.&lt;/p></description></item><item><title>Gracias - ASIS CTF Finals</title><link>https://ashutosh1206.github.io/ctf/asisfinals-gracias/</link><pubDate>Fri, 24 Nov 2017 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/asisfinals-gracias/</guid><description>&lt;p>&lt;strong>Challenge Points&lt;/strong>: 297&lt;br>
+&lt;strong>Challenge Solves&lt;/strong>: 9&lt;br>
+&lt;strong>Challenge Description&lt;/strong>:&lt;/p>
+&lt;blockquote>
+&lt;p>Some people think that combination of cryptographic systems will definitely improve the security.
+That’s your turn to prove them wrong.&lt;/p>
+&lt;/blockquote>
+&lt;p>This is a multi-prime RSA challenge where we are given an encryption script, which has two functions:&lt;/p>
+&lt;ol>
+&lt;li>Generating public and private keys - &lt;code>make_pubpri&lt;/code>&lt;/li>
+&lt;li>Encrypting data using the public key generated from the first function - &lt;code>encrypt&lt;/code>&lt;/li>
+&lt;/ol>
+&lt;h2 id="preliminary-analysis-make_pubpri-function">Preliminary Analysis: &lt;code>make_pubpri&lt;/code> function&lt;/h2>
+&lt;p>Function generating public and private keys:&lt;/p></description></item><item><title>Prime Enigma - Hack.lu CTF</title><link>https://ashutosh1206.github.io/ctf/hacklu17-prime-enigma/</link><pubDate>Fri, 20 Oct 2017 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/hacklu17-prime-enigma/</guid><description>&lt;p>&lt;strong>Challenge Points&lt;/strong>: 50(+100)&lt;br>
+&lt;strong>Challenge Description&lt;/strong>:&lt;/p>
+&lt;blockquote>
+&lt;p>Hey there fellow lizard how nice of you to drop by! Did you know those filthy humans really think that some numbers have special meanings? Seven, 13 and for some strange reason even 9000. Go and show them that a good prime does not make a secure cryptosystem!&lt;/p>
+&lt;/blockquote>
+&lt;p>Given encryption script:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>g &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">5&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>d &lt;span style="color:#f92672">=&lt;/span> key
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>m &lt;span style="color:#f92672">=&lt;/span> int(flag&lt;span style="color:#f92672">.&lt;/span>encode(&lt;span style="color:#e6db74">&amp;#39;hex&amp;#39;&lt;/span>), &lt;span style="color:#ae81ff">16&lt;/span>) &lt;span style="color:#f92672">%&lt;/span> p
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>B &lt;span style="color:#f92672">=&lt;/span> pow(g, d, p) &lt;span style="color:#75715e"># Equation-1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>k &lt;span style="color:#f92672">=&lt;/span> pow(A, d, p) &lt;span style="color:#75715e"># Equation-2&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>c &lt;span style="color:#f92672">=&lt;/span> k &lt;span style="color:#f92672">*&lt;/span> m &lt;span style="color:#f92672">%&lt;/span> p &lt;span style="color:#75715e"># Equation-3&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Values &lt;code>p&lt;/code>, &lt;code>A&lt;/code>, &lt;code>g&lt;/code>, &lt;code>B&lt;/code>, &lt;code>c&lt;/code> are known.
+Prerequisites:&lt;/p></description></item><item><title>Blinding Attack on RSA Signatures</title><link>https://ashutosh1206.github.io/blog/rsa-blinding-attack/</link><pubDate>Mon, 10 Jul 2017 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/blog/rsa-blinding-attack/</guid><description>&lt;p>This blog primarily focuses on Blinding Attack- an elementary vulnerability in unpadded RSA digital signature algorithm that can be exploited to forge signatures. The working and properties of Digital Signatures will be described before directly jumping onto the attack. In the end, we discuss ways to prevent this attack.&lt;/p>
+&lt;h2 id="unpadded-digital-signatures-using-rsa">Unpadded Digital Signatures using RSA&lt;/h2>
+&lt;p>RSA is a kind of &lt;strong>Trapdoor One-way Function&lt;/strong>. Wikipedia describes a one-way function as a function that is easy to compute on every input, but hard to invert given the image of a random input. Here, “easy” and “hard” are to be understood in the sense of computational complexity theory, specifically the theory of polynomial time problems.&lt;/p></description></item><item><title>Polynomial Interpolation</title><link>https://ashutosh1206.github.io/blog/polynomial-interpolation/</link><pubDate>Wed, 31 May 2017 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/blog/polynomial-interpolation/</guid><description>&lt;p>I have been reading the paper &amp;ndash; &lt;a href="http://passguardian.com/assets/1979_HowToShareASecret_Shamir.pdf">“How to Share a Secret”&lt;/a> in detail for the past few weeks, a revolutionary research paper written by Adi Shamir. This paper, applies some of the concepts of Number Theory and Algebra, one of which is polynomial interpolation, and has been used to construct a secure and reliable key management system. The theorem is simple and easy to understand, and has been applied in the best way one ever could.&lt;/p></description></item><item><title>CBC Bit Flipping Attack</title><link>https://ashutosh1206.github.io/blog/cbc-bit-flipping/</link><pubDate>Wed, 03 May 2017 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/blog/cbc-bit-flipping/</guid><description>&lt;p>In this blog post, the attack on CBC mode of block cipher encryption will be discussed and in the end, detailed writeup for the &lt;a href="https://cryptopals.com/sets/2/challenges/16">16th challenge of Matasano-Crypto-Challenge&lt;/a> i.e. about the Bit Flipping Attack in AES-CBC will be provided with explanation!&lt;/p>
+&lt;p>I want the reader to go through these concepts discussed in the following blog posts, before actually understanding how the CBC Bit-Flipping Attack works:&lt;/p>
+&lt;ol>
+&lt;li>&lt;a href="https://github.com/ashutosh1206/Crypton/tree/master/Block-Cipher#mode-detection">Mode Detection Oracle&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/ashutosh1206/Crypton/tree/master/Block-Cipher#block-size-detection">Blocksize Detection Oracle&lt;/a>&lt;/li>
+&lt;/ol>
+&lt;p>We will list down all the information one must have access to, in order to initiate this attack:&lt;/p></description></item><item><title>Salad - RC3 CTF 2016</title><link>https://ashutosh1206.github.io/ctf/rc3-16-salad/</link><pubDate>Tue, 22 Nov 2016 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/ctf/rc3-16-salad/</guid><description>&lt;p>&lt;strong>Challenge Points&lt;/strong>: 100&lt;br>
+&lt;strong>Challenge Description&lt;/strong>:&lt;/p>
+&lt;blockquote>
+&lt;p>“The fault, dear Brutus, is not in our stars, but in ourselves.”&lt;br>
+(I.ii.141) Julius Caesar in William Shakespeare’s Julius Caesar&lt;/p>
+&lt;p>&lt;strong>Ciphertext&lt;/strong>: 7sj-ighm-742q3w4t&lt;/p>
+&lt;/blockquote>
+&lt;p>Since every flag in the CTF had to start with &amp;ldquo;RC3-2016&amp;rdquo;, we know partial plaintext value.&lt;/p>
+&lt;p>This led me to find a relation between the letters and the digits using the first 7 characters of the ciphertext and &amp;ldquo;RC3-2016&amp;rdquo;. The pattern that I could figure out was this:&lt;/p></description></item><item><title>About Me</title><link>https://ashutosh1206.github.io/about/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/about/</guid><description>about</description></item><item><title>Archive</title><link>https://ashutosh1206.github.io/archive/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://ashutosh1206.github.io/archive/</guid><description>archive</description></item></channel></rss>
