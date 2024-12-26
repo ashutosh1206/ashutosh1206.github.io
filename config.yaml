@@ -1,11 +1,18 @@
 baseURL: "https://ashutosh1206.github.io/"
 languageCode: "en-us"
-title: "Ashutosh Ahelleya"
+title: "Ash's blog"
 theme: "PaperMod"
 paginate: 5
 
 params:
   env: production
+
+  # OpenGraph and Twitter tags
+  # og:title
+  title: Ash's blog
+  # og:description
+  description: Security Software Engineer
+
   defaultTheme: auto
   label:
     text: "Home"
@@ -15,7 +22,7 @@ params:
   profileMode:
     enabled: true
     title: "Ashutosh Ahelleya"
-    subtitle: "Software Engineer interested in Security and Cryptography"
+    subtitle: "Security Software Engineer at a startup. Infosec masters student at <strong>[UCL](https://ucl.ac.uk/)</strong>"
     imageUrl: "/avatar.jpeg"
     imageTitle: "henlo"
     imageWidth: 200
@@ -37,6 +44,8 @@ params:
 
 menu:
   main:
+    - name: About
+      url: about/
     - name: Blog
       url: blog/
       weight: 5
